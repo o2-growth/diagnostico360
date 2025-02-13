@@ -38,15 +38,78 @@ const Department = () => {
           icon: <ChartBar className="w-5 h-5 text-blue-400" />,
           description: 'Gestão financeira',
           questions: [
-            'Como está o fluxo de caixa da empresa?',
-            'Qual é a margem de lucro atual?',
-            'Como está o controle de despesas?',
-            'A empresa possui sistema de análise de custos implementado?',
-            'Existe controle e acompanhamento da rentabilidade por produto/serviço?',
-            'Como está o processo de formação de preços?',
-            'Existe orçamento anual definido e aprovado?',
-            'Como está o acompanhamento periódico da execução orçamentária?',
-            'São realizadas previsões financeiras regularmente?'
+            {
+              number: '1',
+              text: 'Como está o fluxo de caixa da empresa?',
+              isApplicable: true,
+              applicationForm: 'Análise mensal do fluxo de caixa',
+              evidence: 'Relatórios de fluxo de caixa, extratos bancários',
+              hasSolution: true
+            },
+            {
+              number: '2',
+              text: 'Qual é a margem de lucro atual?',
+              isApplicable: true,
+              applicationForm: 'Cálculo mensal das margens',
+              evidence: 'DRE, relatórios gerenciais',
+              hasSolution: true
+            },
+            {
+              number: '3',
+              text: 'Como está o controle de despesas?',
+              isApplicable: true,
+              applicationForm: 'Controle diário de despesas',
+              evidence: 'Planilhas de controle, sistema financeiro',
+              hasSolution: true
+            },
+            {
+              number: '4',
+              text: 'A empresa possui sistema de análise de custos implementado?',
+              isApplicable: true,
+              applicationForm: 'Sistema de custos integrado',
+              evidence: 'Sistema ERP, relatórios de custos',
+              hasSolution: true
+            },
+            {
+              number: '5',
+              text: 'Existe controle e acompanhamento da rentabilidade por produto/serviço?',
+              isApplicable: true,
+              applicationForm: 'Análise mensal de rentabilidade',
+              evidence: 'Relatórios de rentabilidade por produto',
+              hasSolution: true
+            },
+            {
+              number: '6',
+              text: 'Como está o processo de formação de preços?',
+              isApplicable: true,
+              applicationForm: 'Política de preços definida',
+              evidence: 'Planilhas de formação de preços',
+              hasSolution: true
+            },
+            {
+              number: '7',
+              text: 'Existe orçamento anual definido e aprovado?',
+              isApplicable: true,
+              applicationForm: 'Planejamento orçamentário anual',
+              evidence: 'Documento de orçamento aprovado',
+              hasSolution: true
+            },
+            {
+              number: '8',
+              text: 'Como está o acompanhamento periódico da execução orçamentária?',
+              isApplicable: true,
+              applicationForm: 'Reuniões mensais de acompanhamento',
+              evidence: 'Atas de reunião, relatórios de execução',
+              hasSolution: true
+            },
+            {
+              number: '9',
+              text: 'São realizadas previsões financeiras regularmente?',
+              isApplicable: true,
+              applicationForm: 'Previsões trimestrais',
+              evidence: 'Relatórios de previsão financeira',
+              hasSolution: true
+            }
           ]
         };
       case 'tecnologia':
@@ -55,9 +118,30 @@ const Department = () => {
           icon: <Server className="w-5 h-5 text-purple-400" />,
           description: 'Infraestrutura e sistemas',
           questions: [
-            'Os sistemas estão atualizados?',
-            'Como está a segurança da informação?',
-            'Qual é o nível de automação dos processos?'
+            {
+              number: '1',
+              text: 'Os sistemas estão atualizados?',
+              isApplicable: true,
+              applicationForm: 'Verificação mensal de versões',
+              evidence: 'Logs de atualização',
+              hasSolution: true
+            },
+            {
+              number: '2',
+              text: 'Como está a segurança da informação?',
+              isApplicable: true,
+              applicationForm: 'Políticas de segurança',
+              evidence: 'Documentação de segurança',
+              hasSolution: true
+            },
+            {
+              number: '3',
+              text: 'Qual é o nível de automação dos processos?',
+              isApplicable: true,
+              applicationForm: 'Mapeamento de processos',
+              evidence: 'Documentação de processos',
+              hasSolution: true
+            }
           ]
         };
       case 'planejamento':
@@ -66,9 +150,30 @@ const Department = () => {
           icon: <Calendar className="w-5 h-5 text-green-400" />,
           description: 'Estratégia e projetos',
           questions: [
-            'Existem metas claras definidas?',
-            'Como está o acompanhamento dos projetos?',
-            'As estratégias estão alinhadas com o mercado?'
+            {
+              number: '1',
+              text: 'Existem metas claras definidas?',
+              isApplicable: true,
+              applicationForm: 'Definição anual de metas',
+              evidence: 'Documento de metas',
+              hasSolution: true
+            },
+            {
+              number: '2',
+              text: 'Como está o acompanhamento dos projetos?',
+              isApplicable: true,
+              applicationForm: 'Reuniões semanais',
+              evidence: 'Relatórios de progresso',
+              hasSolution: true
+            },
+            {
+              number: '3',
+              text: 'As estratégias estão alinhadas com o mercado?',
+              isApplicable: true,
+              applicationForm: 'Análise trimestral',
+              evidence: 'Relatórios de mercado',
+              hasSolution: true
+            }
           ]
         };
       default:
@@ -159,15 +264,34 @@ const Department = () => {
               <div className="space-y-4">
                 {departmentInfo.questions.map((question, index) => (
                   <div key={index} className="glass-card p-4">
-                    <p className="font-medium">{question}</p>
-                    <div className="mt-2">
-                      <select className="w-full bg-transparent border border-white/10 rounded-md px-3 py-2">
-                        <option value="">Selecione uma resposta</option>
-                        <option value="otimo">Ótimo</option>
-                        <option value="bom">Bom</option>
-                        <option value="regular">Regular</option>
-                        <option value="ruim">Ruim</option>
-                      </select>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                      <div className="col-span-1 lg:col-span-2">
+                        <p className="font-medium">
+                          {question.number}. {question.text}
+                        </p>
+                      </div>
+                      <div>
+                        <label className="block text-sm text-dashboard-muted mb-1">
+                          É aplicável nessa unidade?
+                        </label>
+                        <select className="w-full bg-transparent border border-white/10 rounded-md px-3 py-2">
+                          <option value="">Selecione</option>
+                          <option value="sim">Sim</option>
+                          <option value="nao">Não</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm text-dashboard-muted mb-1">
+                          Forma de Aplicação
+                        </label>
+                        <p className="text-sm">{question.applicationForm}</p>
+                      </div>
+                      <div>
+                        <label className="block text-sm text-dashboard-muted mb-1">
+                          Evidências
+                        </label>
+                        <p className="text-sm">{question.evidence}</p>
+                      </div>
                     </div>
                   </div>
                 ))}

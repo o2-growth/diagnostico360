@@ -14,10 +14,20 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
   const handleTabChange = (value: string) => {
     onTabChange(value);
     
-    // Se clicar em áreas e estiver em uma página de departamento específico,
-    // navega para a página principal (/)
-    if (value === 'areas' && location.pathname.includes('/department/')) {
-      navigate('/', { state: { activeTab: 'areas' } });
+    // Sempre navega para a página principal correspondente
+    switch (value) {
+      case 'dashboard':
+        navigate('/', { state: { activeTab: 'dashboard' } });
+        break;
+      case 'evolution':
+        navigate('/', { state: { activeTab: 'evolution' } });
+        break;
+      case 'areas':
+        navigate('/', { state: { activeTab: 'areas' } });
+        break;
+      case 'settings':
+        navigate('/', { state: { activeTab: 'settings' } });
+        break;
     }
   };
 

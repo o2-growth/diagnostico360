@@ -93,7 +93,7 @@ const DepartmentsList = ({ onDepartmentClick }: DepartmentsListProps) => {
   return (
     <>
       <header className="mb-8">
-        <h1 className="text-3xl font-medium mb-2">Departamentos</h1>
+        <h1 className="text-3xl font-medium mb-2">Áreas</h1>
         <p className="text-dashboard-muted">Gerencie os diferentes setores da empresa</p>
       </header>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

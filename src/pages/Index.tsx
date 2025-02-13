@@ -1,4 +1,4 @@
-import { ShoppingCart, Smartphone, Box, UserPlus, Key, Bell, Globe, Shield, Moon } from 'lucide-react';
+import { ChartBar, Server, Calendar, Calculator, DollarSign, Scale, ShoppingCart, Megaphone, Building2, User, Box, Bell, Globe, Shield, Moon } from 'lucide-react';
 import MetricCard from '@/components/MetricCard';
 import MonthlyChart from '@/components/MonthlyChart';
 import CustomerRequests from '@/components/CustomerRequests';
@@ -43,67 +43,109 @@ const Index = () => {
             </div>
           </>
         );
-      case 'users':
+      case 'departments':
         return (
           <>
             <header className="mb-8">
-              <h1 className="text-3xl font-medium mb-2">Users</h1>
-              <p className="text-dashboard-muted">Manage your users and their permissions</p>
+              <h1 className="text-3xl font-medium mb-2">Departamentos</h1>
+              <p className="text-dashboard-muted">Gerencie os diferentes setores da empresa</p>
             </header>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="dashboard-card">
-                <div className="flex items-center gap-3 mb-4">
-                  <UserPlus className="w-5 h-5 text-blue-400" />
-                  <h2 className="text-xl font-medium">Active Users</h2>
-                </div>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-3 glass-card">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">JD</div>
+                      <ChartBar className="w-5 h-5 text-blue-400" />
                       <div>
-                        <p className="font-medium">John Doe</p>
-                        <p className="text-sm text-gray-400">Administrator</p>
+                        <p className="font-medium">Financeiro</p>
+                        <p className="text-sm text-gray-400">Gestão financeira</p>
                       </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Key className="w-4 h-4 text-green-400" />
-                      <span className="text-sm text-green-400">Active</span>
                     </div>
                   </div>
                   <div className="flex items-center justify-between p-3 glass-card">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center">AS</div>
+                      <Server className="w-5 h-5 text-purple-400" />
                       <div>
-                        <p className="font-medium">Alice Smith</p>
-                        <p className="text-sm text-gray-400">Editor</p>
+                        <p className="font-medium">Tecnologia</p>
+                        <p className="text-sm text-gray-400">Infraestrutura e sistemas</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Key className="w-4 h-4 text-green-400" />
-                      <span className="text-sm text-green-400">Active</span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 glass-card">
+                    <div className="flex items-center gap-3">
+                      <Calendar className="w-5 h-5 text-green-400" />
+                      <div>
+                        <p className="font-medium">Planejamento</p>
+                        <p className="text-sm text-gray-400">Estratégia e projetos</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between p-3 glass-card">
+                    <div className="flex items-center gap-3">
+                      <Calculator className="w-5 h-5 text-yellow-400" />
+                      <div>
+                        <p className="font-medium">Contábil</p>
+                        <p className="text-sm text-gray-400">Contabilidade</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between p-3 glass-card">
+                    <div className="flex items-center gap-3">
+                      <DollarSign className="w-5 h-5 text-blue-400" />
+                      <div>
+                        <p className="font-medium">Controladoria</p>
+                        <p className="text-sm text-gray-400">Controle e auditoria</p>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="dashboard-card">
-                <div className="flex items-center gap-3 mb-4">
-                  <Shield className="w-5 h-5 text-purple-400" />
-                  <h2 className="text-xl font-medium">Permissions</h2>
-                </div>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-3 glass-card">
-                    <div>
-                      <p className="font-medium">Admin Access</p>
-                      <p className="text-sm text-gray-400">Full system access</p>
+                    <div className="flex items-center gap-3">
+                      <Scale className="w-5 h-5 text-indigo-400" />
+                      <div>
+                        <p className="font-medium">Fiscal</p>
+                        <p className="text-sm text-gray-400">Gestão tributária</p>
+                      </div>
                     </div>
-                    <Switch />
                   </div>
                   <div className="flex items-center justify-between p-3 glass-card">
-                    <div>
-                      <p className="font-medium">Editor Access</p>
-                      <p className="text-sm text-gray-400">Content management</p>
+                    <div className="flex items-center gap-3">
+                      <ShoppingCart className="w-5 h-5 text-red-400" />
+                      <div>
+                        <p className="font-medium">Comercial</p>
+                        <p className="text-sm text-gray-400">Vendas e negócios</p>
+                      </div>
                     </div>
-                    <Switch />
+                  </div>
+                  <div className="flex items-center justify-between p-3 glass-card">
+                    <div className="flex items-center gap-3">
+                      <Megaphone className="w-5 h-5 text-orange-400" />
+                      <div>
+                        <p className="font-medium">Marketing</p>
+                        <p className="text-sm text-gray-400">Comunicação e marca</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between p-3 glass-card">
+                    <div className="flex items-center gap-3">
+                      <Building2 className="w-5 h-5 text-teal-400" />
+                      <div>
+                        <p className="font-medium">Societário</p>
+                        <p className="text-sm text-gray-400">Gestão corporativa</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between p-3 glass-card">
+                    <div className="flex items-center gap-3">
+                      <User className="w-5 h-5 text-pink-400" />
+                      <div>
+                        <p className="font-medium">Capital Humano</p>
+                        <p className="text-sm text-gray-400">Recursos humanos</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

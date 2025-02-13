@@ -2,17 +2,17 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import SidePanel from '@/components/SidePanel';
-import DepartmentEvolution from '@/components/department/DepartmentEvolution';
-import DepartmentDiagnostic from '@/components/department/DepartmentDiagnostic';
-import { getDepartmentInfo, getDepartmentEvolutionData } from '@/utils/departmentData';
+import AreaEvolution from '@/components/area/AreaEvolution';
+import AreaDiagnostic from '@/components/area/AreaDiagnostic';
+import { getAreaInfo, getAreaEvolutionData } from '@/utils/areaData';
 
-const Department = () => {
+const Area = () => {
   const { id } = useParams();
   const [showChart, setShowChart] = useState(true);
   const [activeTab, setActiveTab] = useState('areas');
 
-  const departmentInfo = getDepartmentInfo(id);
-  const evolutionData = getDepartmentEvolutionData(id);
+  const areaInfo = getAreaInfo(id);
+  const evolutionData = getAreaEvolutionData(id);
 
   return (
     <div className="min-h-screen">
@@ -21,21 +21,21 @@ const Department = () => {
         <div className="p-8">
           <header className="mb-8">
             <div className="flex items-center gap-3 mb-2">
-              {departmentInfo.icon}
-              <h1 className="text-3xl font-medium">{departmentInfo.name}</h1>
+              {areaInfo.icon}
+              <h1 className="text-3xl font-medium">{areaInfo.name}</h1>
             </div>
-            <p className="text-dashboard-muted">{departmentInfo.description}</p>
+            <p className="text-dashboard-muted">{areaInfo.description}</p>
           </header>
 
           <div className="space-y-6">
-            <DepartmentEvolution
-              departmentName={departmentInfo.name}
+            <AreaEvolution
+              areaName={areaInfo.name}
               evolutionData={evolutionData}
               showChart={showChart}
               onToggleChart={() => setShowChart(!showChart)}
             />
 
-            <DepartmentDiagnostic questions={departmentInfo.questions} />
+            <AreaDiagnostic questions={areaInfo.questions} />
           </div>
         </div>
       </div>
@@ -43,4 +43,4 @@ const Department = () => {
   );
 };
 
-export default Department;
+export default Area;

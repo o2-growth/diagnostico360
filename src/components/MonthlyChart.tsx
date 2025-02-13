@@ -30,9 +30,9 @@ const data = [
 
 const MonthlyChart = () => {
   return (
-    <div className="dashboard-card h-[400px]">
+    <div className="dashboard-card">
       <h2 className="text-xl font-medium mb-6">Nível de Excelência</h2>
-      <div className="h-[calc(100%-4rem)]">
+      <div className="h-[400px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />

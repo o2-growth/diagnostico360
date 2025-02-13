@@ -95,7 +95,7 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
       <Button
         variant="ghost"
         size="icon"
-        className="fixed left-0 top-4 z-50 ml-2"
+        className="fixed right-0 top-4 z-50 mr-2"
         onClick={() => setIsOpen(!isOpen)}
       >
         {isOpen ? (
@@ -109,4 +109,3 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
 };
 
 export default SidePanel;
-

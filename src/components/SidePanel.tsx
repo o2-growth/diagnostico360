@@ -47,11 +47,11 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
     <>
       <div 
         className={`h-screen fixed left-0 top-0 glass-card border-r border-white/10 transition-all duration-300 flex flex-col ${
-          isOpen ? 'w-64' : 'w-0 overflow-hidden'
+          isOpen ? 'w-64' : 'w-16'
         }`}
       >
         <div className="p-6 flex flex-col h-full">
-          <h2 className="text-xl font-medium mb-6">Navegação</h2>
+          <h2 className={`text-xl font-medium mb-6 ${!isOpen && 'hidden'}`}>Navegação</h2>
           <Tabs 
             defaultValue={getCurrentTab()}
             value={getCurrentTab()}
@@ -62,34 +62,42 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
             <TabsList className="flex flex-col h-auto bg-transparent text-white">
               <TabsTrigger 
                 value="dashboard" 
-                className="w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white"
+                className={`w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white ${
+                  !isOpen ? 'px-2 justify-center' : ''
+                }`}
               >
                 <LayoutDashboard className="w-4 h-4" />
-                Resultado
+                {isOpen && "Resultado"}
               </TabsTrigger>
               <TabsTrigger 
                 value="evolution" 
-                className="w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white"
+                className={`w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white ${
+                  !isOpen ? 'px-2 justify-center' : ''
+                }`}
               >
                 <TrendingUp className="w-4 h-4" />
-                Evolução
+                {isOpen && "Evolução"}
               </TabsTrigger>
               <TabsTrigger 
                 value="areas" 
-                className="w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white"
+                className={`w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white ${
+                  !isOpen ? 'px-2 justify-center' : ''
+                }`}
               >
                 <Building2 className="w-4 h-4" />
-                Áreas
+                {isOpen && "Áreas"}
               </TabsTrigger>
             </TabsList>
             <div className="flex-1" />
             <TabsList className="flex flex-col h-auto bg-transparent text-white mt-auto">
               <TabsTrigger 
                 value="settings" 
-                className="w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white"
+                className={`w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white ${
+                  !isOpen ? 'px-2 justify-center' : ''
+                }`}
               >
                 <Settings className="w-4 h-4" />
-                Configurações
+                {isOpen && "Configurações"}
               </TabsTrigger>
             </TabsList>
           </Tabs>
@@ -98,7 +106,7 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
       <Button
         variant="ghost"
         size="icon"
-        className="fixed right-0 top-4 z-50 mr-2"
+        className="fixed left-0 top-4 z-50 ml-2"
         onClick={() => setIsOpen(!isOpen)}
       >
         {isOpen ? (

@@ -4,6 +4,7 @@ import { LayoutDashboard, Settings, Building2, TrendingUp, PanelLeftClose, Panel
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import CustomerRequests from '@/components/CustomerRequests';
 
 interface SidePanelProps {
   onTabChange: (value: string) => void;
@@ -44,9 +45,9 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex w-full gap-6">
       <div 
-        className={`fixed left-0 top-0 h-screen glass-card border-r border-white/10 transition-all duration-300 ${
+        className={`glass-card transition-all duration-300 ${
           isExpanded ? 'w-64' : 'w-16'
         }`}
       >
@@ -117,9 +118,11 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
           </Tabs>
         </div>
       </div>
-      <div className={`transition-all duration-300 ${isExpanded ? 'ml-64' : 'ml-16'} flex-1`}>
-        {/* Resto do conteúdo */}
-      </div>
+      {getCurrentTab() === 'dashboard' && (
+        <div className="flex-1">
+          <CustomerRequests />
+        </div>
+      )}
     </div>
   );
 };

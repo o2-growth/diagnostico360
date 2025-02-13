@@ -30,8 +30,6 @@ const DashboardContent = () => {
       </header>
 
       <div className="flex flex-col gap-6">
-        <CustomerRequests />
-
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {areas.map((area) => (
             <div 

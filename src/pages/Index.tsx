@@ -39,7 +39,9 @@ const Index = () => {
 
   return (
     <div className="min-h-screen w-full">
-      <SidePanel onTabChange={handleTabChange} />
+      <div className="flex">
+        <SidePanel onTabChange={handleTabChange} />
+      </div>
       <div className="p-8">
         {renderContent()}
       </div>

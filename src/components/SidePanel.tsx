@@ -104,6 +104,9 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
           <PanelLeftOpen className="h-4 w-4" />
         )}
       </Button>
+      <div className={`transition-all duration-300 ${isOpen ? 'pl-64' : 'pl-0'}`}>
+        {/* Resto do conteúdo */}
+      </div>
     </>
   );
 };

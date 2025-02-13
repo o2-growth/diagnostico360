@@ -26,7 +26,7 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
               Dashboard
             </TabsTrigger>
             <TabsTrigger 
-              value="departments" 
+              value="areas" 
               className="w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white"
             >
               <Building2 className="w-4 h-4" />

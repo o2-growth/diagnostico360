@@ -44,69 +44,68 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
   };
 
   return (
-    <>
-      <div 
-        className={`h-screen fixed left-0 top-0 glass-card border-r border-white/10 transition-all duration-300 flex flex-col ${
-          isOpen ? 'w-64' : 'w-16'
-        }`}
-      >
-        <div className="p-4 flex flex-col h-full">
-          <Tabs 
-            defaultValue={getCurrentTab()}
-            value={getCurrentTab()}
-            orientation="vertical" 
-            className="w-full flex flex-col h-full"
-            onValueChange={handleTabChange}
-          >
-            <TabsList className="flex flex-col h-auto bg-transparent text-white">
-              <TabsTrigger 
-                value="dashboard" 
-                className={`w-full justify-${isOpen ? 'start' : 'center'} gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white p-3`}
-              >
-                <LayoutDashboard className="w-5 h-5 shrink-0" />
-                {isOpen && "Resultado"}
-              </TabsTrigger>
-              <TabsTrigger 
-                value="evolution" 
-                className={`w-full justify-${isOpen ? 'start' : 'center'} gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white p-3`}
-              >
-                <TrendingUp className="w-5 h-5 shrink-0" />
-                {isOpen && "Evolução"}
-              </TabsTrigger>
-              <TabsTrigger 
-                value="areas" 
-                className={`w-full justify-${isOpen ? 'start' : 'center'} gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white p-3`}
-              >
-                <Building2 className="w-5 h-5 shrink-0" />
-                {isOpen && "Áreas"}
-              </TabsTrigger>
-            </TabsList>
-            <div className="flex-1" />
-            <TabsList className="flex flex-col h-auto bg-transparent text-white mt-auto">
-              <TabsTrigger 
-                value="settings" 
-                className={`w-full justify-${isOpen ? 'start' : 'center'} gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white p-3`}
-              >
-                <Settings className="w-5 h-5 shrink-0" />
-                {isOpen && "Configurações"}
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
+    <div 
+      className={`h-screen fixed left-0 top-0 glass-card border-r border-white/10 transition-all duration-300 flex flex-col ${
+        isOpen ? 'w-64' : 'w-16'
+      }`}
+    >
+      <div className="p-4 flex flex-col h-full">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="mb-4 self-end"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          {isOpen ? (
+            <PanelLeftClose className="h-5 w-5" />
+          ) : (
+            <PanelLeftOpen className="h-5 w-5" />
+          )}
+        </Button>
+
+        <Tabs 
+          defaultValue={getCurrentTab()}
+          value={getCurrentTab()}
+          orientation="vertical" 
+          className="w-full flex flex-col h-full"
+          onValueChange={handleTabChange}
+        >
+          <TabsList className="flex flex-col h-auto bg-transparent text-white">
+            <TabsTrigger 
+              value="dashboard" 
+              className={`w-full justify-${isOpen ? 'start' : 'center'} gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white p-3`}
+            >
+              <LayoutDashboard className="w-5 h-5 shrink-0" />
+              {isOpen && "Resultado"}
+            </TabsTrigger>
+            <TabsTrigger 
+              value="evolution" 
+              className={`w-full justify-${isOpen ? 'start' : 'center'} gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white p-3`}
+            >
+              <TrendingUp className="w-5 h-5 shrink-0" />
+              {isOpen && "Evolução"}
+            </TabsTrigger>
+            <TabsTrigger 
+              value="areas" 
+              className={`w-full justify-${isOpen ? 'start' : 'center'} gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white p-3`}
+            >
+              <Building2 className="w-5 h-5 shrink-0" />
+              {isOpen && "Áreas"}
+            </TabsTrigger>
+          </TabsList>
+          <div className="flex-1" />
+          <TabsList className="flex flex-col h-auto bg-transparent text-white mt-auto">
+            <TabsTrigger 
+              value="settings" 
+              className={`w-full justify-${isOpen ? 'start' : 'center'} gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white p-3`}
+            >
+              <Settings className="w-5 h-5 shrink-0" />
+              {isOpen && "Configurações"}
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
-      <Button
-        variant="ghost"
-        size="icon"
-        className={`fixed top-4 z-50 transition-all duration-300 ${isOpen ? 'left-56' : 'left-4'}`}
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        {isOpen ? (
-          <PanelLeftClose className="h-4 w-4" />
-        ) : (
-          <PanelLeftOpen className="h-4 w-4" />
-        )}
-      </Button>
-    </>
+    </div>
   );
 };
 

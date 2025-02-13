@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import SidePanel from '@/components/SidePanel';
 import { ChevronLeft, Users } from 'lucide-react';
@@ -10,6 +10,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
 
 const Department = () => {
   const { id } = useParams();
@@ -98,6 +99,15 @@ const Department = () => {
     };
   });
 
+  const evolutionData = [
+    { month: 'Jan', value: 65 },
+    { month: 'Fev', value: 70 },
+    { month: 'Mar', value: 75 },
+    { month: 'Abr', value: 78 },
+    { month: 'Mai', value: 82 },
+    { month: 'Jun', value: 85 }
+  ];
+
   const handleTabChange = (value: string) => {
     setActiveTab(value);
   };
@@ -132,73 +142,81 @@ const Department = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2">
-              <div className="dashboard-card">
-                <img
-                  src={departmentInfo.image}
-                  alt={departmentInfo.title}
-                  className="w-full h-48 object-cover rounded-lg mb-6"
-                />
-                <Tabs defaultValue="overview" className="w-full">
-                  <TabsList className="w-full justify-start mb-6">
-                    <TabsTrigger value="overview">Visão Geral</TabsTrigger>
-                    <TabsTrigger value="processes">Processos</TabsTrigger>
-                    <TabsTrigger value="questions">Perguntas</TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="overview">
-                    <div className="space-y-6">
-                      <div>
-                        <h3 className="text-xl font-medium mb-4">Sobre a área</h3>
-                        <p className="text-dashboard-muted">
-                          Esta seção conterá uma visão geral detalhada da área, incluindo suas principais responsabilidades e objetivos.
-                        </p>
-                      </div>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                          <h4 className="font-medium">Responsável pela área</h4>
-                          <p className="text-dashboard-muted">{departmentInfo.leader}</p>
-                        </div>
-                        <div className="space-y-2">
-                          <h4 className="font-medium">Colaboradores</h4>
-                          <div className="flex items-center gap-2 text-dashboard-muted">
-                            <Users className="h-4 w-4" />
-                            <span>{departmentInfo.employees}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </TabsContent>
-                  <TabsContent value="processes">
-                    <div className="space-y-4">
-                      <h3 className="text-xl font-medium">Processos</h3>
-                      <p className="text-dashboard-muted">
-                        Aqui serão listados os principais processos e fluxos de trabalho da área.
-                      </p>
-                    </div>
-                  </TabsContent>
-                  <TabsContent value="questions">
-                    <div className="space-y-4">
-                      <h3 className="text-xl font-medium">Perguntas Frequentes</h3>
-                      <p className="text-dashboard-muted">
-                        Esta seção será expandida com perguntas e respostas específicas sobre diversos aspectos da área.
-                      </p>
-                    </div>
-                  </TabsContent>
-                </Tabs>
-              </div>
+          <div className="dashboard-card">
+            <div className="h-[250px] mb-6">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={evolutionData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                  <XAxis 
+                    dataKey="month"
+                    stroke="#828179"
+                    fontSize={12}
+                  />
+                  <YAxis
+                    stroke="#828179"
+                    fontSize={12}
+                    domain={[0, 100]}
+                  />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#1A1A19',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      borderRadius: '8px'
+                    }}
+                    labelStyle={{ color: '#C4C3BB' }}
+                  />
+                  <Bar dataKey="value" fill="#8989DE" />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
-            <div className="lg:col-span-1">
-              <div className="dashboard-card">
-                <h3 className="text-xl font-medium mb-4">Informações Adicionais</h3>
+
+            <Tabs defaultValue="overview" className="w-full">
+              <TabsList className="w-full justify-start mb-6">
+                <TabsTrigger value="overview">Visão Geral</TabsTrigger>
+                <TabsTrigger value="processes">Processos</TabsTrigger>
+                <TabsTrigger value="questions">Perguntas</TabsTrigger>
+              </TabsList>
+              <TabsContent value="overview">
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-xl font-medium mb-4">Sobre a área</h3>
+                    <p className="text-dashboard-muted">
+                      Esta seção conterá uma visão geral detalhada da área, incluindo suas principais responsabilidades e objetivos.
+                    </p>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <h4 className="font-medium">Responsável pela área</h4>
+                      <p className="text-dashboard-muted">{departmentInfo.leader}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <h4 className="font-medium">Colaboradores</h4>
+                      <div className="flex items-center gap-2 text-dashboard-muted">
+                        <Users className="h-4 w-4" />
+                        <span>{departmentInfo.employees}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+              <TabsContent value="processes">
                 <div className="space-y-4">
+                  <h3 className="text-xl font-medium">Processos</h3>
                   <p className="text-dashboard-muted">
-                    Este painel lateral pode conter métricas, links rápidos e outras informações relevantes específicas da área.
+                    Aqui serão listados os principais processos e fluxos de trabalho da área.
                   </p>
                 </div>
-              </div>
-            </div>
+              </TabsContent>
+              <TabsContent value="questions">
+                <div className="space-y-4">
+                  <h3 className="text-xl font-medium">Perguntas Frequentes</h3>
+                  <p className="text-dashboard-muted">
+                    Esta seção será expandida com perguntas e respostas específicas sobre diversos aspectos da área.
+                  </p>
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
       </div>

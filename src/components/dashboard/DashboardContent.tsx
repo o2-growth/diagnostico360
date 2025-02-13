@@ -30,9 +30,9 @@ const DashboardContent = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <MonthlyChart />
+      <div className="flex flex-col gap-6">
         <CustomerRequests />
+        <MonthlyChart />
       </div>
     </>
   );

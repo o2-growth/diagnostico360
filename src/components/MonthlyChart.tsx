@@ -2,10 +2,30 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 
 const data = [
-  { period: '2024/T1', value: 35 },
-  { period: '2024/T2', value: 43 },
-  { period: '2024/T3', value: 44 },
-  { period: '2024/T4', value: 47 },
+  { period: 'Jan/23', value: 30 },
+  { period: 'Fev/23', value: 32 },
+  { period: 'Mar/23', value: 35 },
+  { period: 'Abr/23', value: 38 },
+  { period: 'Mai/23', value: 40 },
+  { period: 'Jun/23', value: 42 },
+  { period: 'Jul/23', value: 45 },
+  { period: 'Ago/23', value: 47 },
+  { period: 'Set/23', value: 48 },
+  { period: 'Out/23', value: 50 },
+  { period: 'Nov/23', value: 52 },
+  { period: 'Dez/23', value: 55 },
+  { period: 'Jan/24', value: 57 },
+  { period: 'Fev/24', value: 58 },
+  { period: 'Mar/24', value: 60 },
+  { period: 'Abr/24', value: 62 },
+  { period: 'Mai/24', value: 65 },
+  { period: 'Jun/24', value: 67 },
+  { period: 'Jul/24', value: 70 },
+  { period: 'Ago/24', value: 72 },
+  { period: 'Set/24', value: 75 },
+  { period: 'Out/24', value: 77 },
+  { period: 'Nov/24', value: 80 },
+  { period: 'Dez/24', value: 82 },
 ];
 
 const MonthlyChart = () => {
@@ -21,6 +41,7 @@ const MonthlyChart = () => {
               stroke="#828179"
               fontSize={12}
               tickMargin={10}
+              interval={2}
             />
             <YAxis 
               stroke="#828179"

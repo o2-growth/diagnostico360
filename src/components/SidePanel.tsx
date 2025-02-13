@@ -12,7 +12,7 @@ interface SidePanelProps {
 const SidePanel = ({ onTabChange }: SidePanelProps) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isOpen, setIsOpen] = useState(true);
 
   const handleTabChange = (value: string) => {
     onTabChange(value);
@@ -44,27 +44,14 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
   };
 
   return (
-    <div className="flex min-h-screen">
+    <>
       <div 
-        className={`fixed left-0 top-0 h-screen glass-card border-r border-white/10 transition-all duration-300 ${
-          isExpanded ? 'w-64' : 'w-16'
+        className={`h-screen fixed left-0 top-0 glass-card border-r border-white/10 transition-all duration-300 ${
+          isOpen ? 'w-64' : 'w-0 overflow-hidden'
         }`}
       >
-        <div className={`relative p-6 ${!isExpanded && 'px-3'}`}>
-          {isExpanded && <h2 className="text-xl font-medium mb-6">Navegação</h2>}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute right-2 top-4"
-            onClick={() => setIsExpanded(!isExpanded)}
-          >
-            {isExpanded ? (
-              <PanelLeftClose className="h-4 w-4" />
-            ) : (
-              <PanelLeftOpen className="h-4 w-4" />
-            )}
-          </Button>
-          
+        <div className="p-6">
+          <h2 className="text-xl font-medium mb-6">Navegação</h2>
           <Tabs 
             defaultValue={getCurrentTab()}
             value={getCurrentTab()}
@@ -75,52 +62,52 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
             <TabsList className="flex flex-col h-auto bg-transparent text-white">
               <TabsTrigger 
                 value="dashboard" 
-                className={`w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white ${
-                  !isExpanded && 'px-2 justify-center'
-                }`}
-                title={!isExpanded ? "Resultado" : undefined}
+                className="w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white"
               >
                 <LayoutDashboard className="w-4 h-4" />
-                {isExpanded && "Resultado"}
+                Resultado
               </TabsTrigger>
               <TabsTrigger 
                 value="evolution" 
-                className={`w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white ${
-                  !isExpanded && 'px-2 justify-center'
-                }`}
-                title={!isExpanded ? "Evolução" : undefined}
+                className="w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white"
               >
                 <TrendingUp className="w-4 h-4" />
-                {isExpanded && "Evolução"}
+                Evolução
               </TabsTrigger>
               <TabsTrigger 
                 value="areas" 
-                className={`w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white ${
-                  !isExpanded && 'px-2 justify-center'
-                }`}
-                title={!isExpanded ? "Áreas" : undefined}
+                className="w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white"
               >
                 <Building2 className="w-4 h-4" />
-                {isExpanded && "Áreas"}
+                Áreas
               </TabsTrigger>
               <TabsTrigger 
                 value="settings" 
-                className={`w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white ${
-                  !isExpanded && 'px-2 justify-center'
-                }`}
-                title={!isExpanded ? "Configurações" : undefined}
+                className="w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white"
               >
                 <Settings className="w-4 h-4" />
-                {isExpanded && "Configurações"}
+                Configurações
               </TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
       </div>
-      <div className={`transition-all duration-300 ${isExpanded ? 'ml-64' : 'ml-16'} flex-1`}>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="fixed right-0 top-4 z-50 mr-2"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        {isOpen ? (
+          <PanelLeftClose className="h-4 w-4" />
+        ) : (
+          <PanelLeftOpen className="h-4 w-4" />
+        )}
+      </Button>
+      <div className={`transition-all duration-300 ${isOpen ? 'pl-64' : 'pl-0'}`}>
         {/* Resto do conteúdo */}
       </div>
-    </div>
+    </>
   );
 };
 

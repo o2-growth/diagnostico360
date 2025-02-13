@@ -1,14 +1,14 @@
 
-import { Question } from '@/utils/areaData';
+import { Question } from '@/utils/departmentData';
 
-interface AreaDiagnosticProps {
+interface DepartmentDiagnosticProps {
   questions: Question[];
 }
 
-const AreaDiagnostic = ({ questions }: AreaDiagnosticProps) => {
+const DepartmentDiagnostic = ({ questions }: DepartmentDiagnosticProps) => {
   return (
     <div className="dashboard-card">
-      <h2 className="text-xl font-medium mb-4">Diagnóstico da Área</h2>
+      <h2 className="text-xl font-medium mb-4">Diagnóstico do Departamento</h2>
       <div className="space-y-4">
         {questions.map((question, index) => (
           <div key={index} className="glass-card p-4">
@@ -48,4 +48,4 @@ const AreaDiagnostic = ({ questions }: AreaDiagnosticProps) => {
   );
 };
 
-export default AreaDiagnostic;
+export default DepartmentDiagnostic;

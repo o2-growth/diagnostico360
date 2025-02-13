@@ -2,18 +2,10 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 
 const data = [
-  { month: 'Jan/24', value: 30 },
-  { month: 'Fev/24', value: 35 },
-  { month: 'Mar/24', value: 40 },
-  { month: 'Abr/24', value: 38 },
-  { month: 'Mai/24', value: 42 },
-  { month: 'Jun/24', value: 48 },
-  { month: 'Jul/24', value: 45 },
-  { month: 'Ago/24', value: 43 },
-  { month: 'Set/24', value: 44 },
-  { month: 'Out/24', value: 45 },
-  { month: 'Nov/24', value: 47 },
-  { month: 'Dez/24', value: 49 },
+  { period: '2024/T1', value: 35 },
+  { period: '2024/T2', value: 43 },
+  { period: '2024/T3', value: 44 },
+  { period: '2024/T4', value: 47 },
 ];
 
 const MonthlyChart = () => {
@@ -25,7 +17,7 @@ const MonthlyChart = () => {
           <LineChart data={data} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
             <XAxis 
-              dataKey="month" 
+              dataKey="period" 
               stroke="#828179"
               fontSize={12}
               tickMargin={10}

@@ -48,78 +48,85 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
     <div className={`glass-card h-screen sticky top-0 transition-all duration-300 ${
       isExpanded ? 'w-64' : 'w-16'
     }`}>
-      <div className={`relative p-6 ${!isExpanded && 'px-3'}`}>
-        {isExpanded && <h2 className="text-xl font-medium mb-6">Navegação</h2>}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute right-2 top-4"
-          onClick={() => setIsExpanded(!isExpanded)}
-        >
-          {isExpanded ? (
-            <PanelLeftClose className="h-4 w-4" />
-          ) : (
-            <PanelLeftOpen className="h-4 w-4" />
-          )}
-        </Button>
-        
-        <Tabs 
-          defaultValue={getCurrentTab()}
-          value={getCurrentTab()}
-          orientation="vertical" 
-          className="w-full"
-          onValueChange={handleTabChange}
-        >
-          <TabsList className="flex flex-col h-auto bg-transparent text-white">
-            <TabsTrigger 
-              value="dashboard" 
-              className={`w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white ${
-                !isExpanded && 'px-2 justify-center'
-              }`}
-              title={!isExpanded ? "Resultado" : undefined}
-            >
-              <LayoutDashboard className="w-4 h-4" />
-              {isExpanded && "Resultado"}
-            </TabsTrigger>
-            <TabsTrigger 
-              value="evolution" 
-              className={`w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white ${
-                !isExpanded && 'px-2 justify-center'
-              }`}
-              title={!isExpanded ? "Evolução" : undefined}
-            >
-              <TrendingUp className="w-4 h-4" />
-              {isExpanded && "Evolução"}
-            </TabsTrigger>
-            <TabsTrigger 
-              value="areas" 
-              className={`w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white ${
-                !isExpanded && 'px-2 justify-center'
-              }`}
-              title={!isExpanded ? "Áreas" : undefined}
-            >
-              <Building2 className="w-4 h-4" />
-              {isExpanded && "Áreas"}
-            </TabsTrigger>
-            <TabsTrigger 
-              value="settings" 
-              className={`w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white ${
-                !isExpanded && 'px-2 justify-center'
-              }`}
-              title={!isExpanded ? "Configurações" : undefined}
-            >
-              <Settings className="w-4 h-4" />
-              {isExpanded && "Configurações"}
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-      </div>
-      
-      {getCurrentTab() === 'dashboard' && isExpanded && (
-        <div className="mt-6 px-6">
-          <CustomerRequests />
+      <div className={`flex flex-col h-full ${!isExpanded && 'px-3'}`}>
+        {/* Botão Toggle no topo */}
+        <div className="p-6 pb-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="w-full flex justify-center"
+          >
+            {isExpanded ? (
+              <PanelLeftClose className="h-4 w-4" />
+            ) : (
+              <PanelLeftOpen className="h-4 w-4" />
+            )}
+          </Button>
         </div>
-      )}
+        
+        {/* Navegação */}
+        <div className="flex-1">
+          {isExpanded && <h2 className="text-xl font-medium mb-6 px-6">Navegação</h2>}
+          <Tabs 
+            defaultValue={getCurrentTab()}
+            value={getCurrentTab()}
+            orientation="vertical" 
+            className="w-full"
+            onValueChange={handleTabChange}
+          >
+            <TabsList className="flex flex-col h-auto bg-transparent text-white">
+              <TabsTrigger 
+                value="dashboard" 
+                className={`w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white ${
+                  !isExpanded && 'px-2 justify-center'
+                }`}
+                title={!isExpanded ? "Resultado" : undefined}
+              >
+                <LayoutDashboard className="w-4 h-4" />
+                {isExpanded && "Resultado"}
+              </TabsTrigger>
+              <TabsTrigger 
+                value="evolution" 
+                className={`w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white ${
+                  !isExpanded && 'px-2 justify-center'
+                }`}
+                title={!isExpanded ? "Evolução" : undefined}
+              >
+                <TrendingUp className="w-4 h-4" />
+                {isExpanded && "Evolução"}
+              </TabsTrigger>
+              <TabsTrigger 
+                value="areas" 
+                className={`w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white ${
+                  !isExpanded && 'px-2 justify-center'
+                }`}
+                title={!isExpanded ? "Áreas" : undefined}
+              >
+                <Building2 className="w-4 h-4" />
+                {isExpanded && "Áreas"}
+              </TabsTrigger>
+              <TabsTrigger 
+                value="settings" 
+                className={`w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white ${
+                  !isExpanded && 'px-2 justify-center'
+                }`}
+                title={!isExpanded ? "Configurações" : undefined}
+              >
+                <Settings className="w-4 h-4" />
+                {isExpanded && "Configurações"}
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+        
+        {/* Customer Requests no final */}
+        {getCurrentTab() === 'dashboard' && isExpanded && (
+          <div className="mt-auto px-6 pb-6">
+            <CustomerRequests />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

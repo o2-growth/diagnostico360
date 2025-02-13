@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import SidePanel from '@/components/SidePanel';
-import { ChevronLeft, Users } from 'lucide-react';
+import { ChevronLeft, Users, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Tabs,
@@ -17,6 +17,7 @@ const Department = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
   const [isMenuExpanded, setIsMenuExpanded] = useState(true);
+  const [isChartVisible, setIsChartVisible] = useState(true);
   const [departmentInfo, setDepartmentInfo] = useState(() => {
     const departments = {
       'financeiro': {
@@ -134,6 +135,10 @@ const Department = () => {
     setIsMenuExpanded(isOpen);
   };
 
+  const toggleChart = () => {
+    setIsChartVisible(!isChartVisible);
+  };
+
   return (
     <div className="min-h-screen">
       <SidePanel 
@@ -161,42 +166,58 @@ const Department = () => {
           </div>
 
           <div className="dashboard-card">
-            <h2 className="text-xl font-medium mb-6">Nível de Excelência</h2>
-            <div className="h-[400px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={evolutionData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                  <XAxis 
-                    dataKey="period"
-                    stroke="#828179"
-                    fontSize={12}
-                    tickMargin={10}
-                    interval={2}
-                  />
-                  <YAxis 
-                    stroke="#828179"
-                    domain={[0, 100]}
-                    ticks={[0, 20, 40, 60, 80, 100]}
-                    fontSize={12}
-                  />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: '#1A1A19',
-                      border: '1px solid rgba(255,255,255,0.1)',
-                      borderRadius: '8px'
-                    }}
-                    labelStyle={{ color: '#C4C3BB' }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="value"
-                    stroke="#8989DE"
-                    strokeWidth={2}
-                    dot={{ fill: '#8989DE' }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-medium">Evolução da {departmentInfo.title}</h2>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleChart}
+              >
+                {isChartVisible ? (
+                  <ChevronUp className="h-4 w-4" />
+                ) : (
+                  <ChevronDown className="h-4 w-4" />
+                )}
+              </Button>
             </div>
+            
+            {isChartVisible && (
+              <div className="h-[400px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={evolutionData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                    <XAxis 
+                      dataKey="period"
+                      stroke="#828179"
+                      fontSize={12}
+                      tickMargin={10}
+                      interval={2}
+                    />
+                    <YAxis 
+                      stroke="#828179"
+                      domain={[0, 100]}
+                      ticks={[0, 20, 40, 60, 80, 100]}
+                      fontSize={12}
+                    />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#1A1A19',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '8px'
+                      }}
+                      labelStyle={{ color: '#C4C3BB' }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="value"
+                      stroke="#8989DE"
+                      strokeWidth={2}
+                      dot={{ fill: '#8989DE' }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            )}
 
             <Tabs defaultValue="overview" className="w-full">
               <TabsList className="w-full justify-start mb-6">

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import SidePanel from '@/components/SidePanel';
-import { ChartBar, Server, Calendar, Calculator, DollarSign, Scale, ShoppingCart, Megaphone, Building2, User, ArrowLeft, ChevronUp, ChevronDown } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { ChartBar, Server, Calendar, Calculator, DollarSign, Scale, ShoppingCart, Megaphone, Building2, User, ChevronUp, ChevronDown } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
 
 const Department = () => {
@@ -10,10 +9,6 @@ const Department = () => {
   const navigate = useNavigate();
   const [showChart, setShowChart] = useState(true);
   const [activeTab, setActiveTab] = useState('areas');
-
-  const handleBack = () => {
-    navigate('/', { state: { activeTab: 'areas' } });
-  };
 
   const getDepartmentEvolutionData = (deptId: string | undefined) => {
     // Dados de exemplo - em uma aplicação real, estes dados viriam de uma API
@@ -87,15 +82,6 @@ const Department = () => {
       <SidePanel onTabChange={setActiveTab} />
       <div className="pl-64">
         <div className="p-8">
-          <Button 
-            variant="outline" 
-            className="mb-6 flex items-center gap-2" 
-            onClick={handleBack}
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Voltar
-          </Button>
-
           <header className="mb-8">
             <div className="flex items-center gap-3 mb-2">
               {departmentInfo.icon}

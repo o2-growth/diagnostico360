@@ -46,17 +46,17 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
   return (
     <>
       <div 
-        className={`h-screen fixed left-0 top-0 glass-card border-r border-white/10 transition-all duration-300 ${
+        className={`h-screen fixed left-0 top-0 glass-card border-r border-white/10 transition-all duration-300 flex flex-col ${
           isOpen ? 'w-64' : 'w-0 overflow-hidden'
         }`}
       >
-        <div className="p-6">
+        <div className="p-6 flex flex-col h-full">
           <h2 className="text-xl font-medium mb-6">Navegação</h2>
           <Tabs 
             defaultValue={getCurrentTab()}
             value={getCurrentTab()}
             orientation="vertical" 
-            className="w-full"
+            className="w-full flex flex-col h-full"
             onValueChange={handleTabChange}
           >
             <TabsList className="flex flex-col h-auto bg-transparent text-white">
@@ -81,6 +81,9 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
                 <Building2 className="w-4 h-4" />
                 Áreas
               </TabsTrigger>
+            </TabsList>
+            <div className="flex-1" />
+            <TabsList className="flex flex-col h-auto bg-transparent text-white mt-auto">
               <TabsTrigger 
                 value="settings" 
                 className="w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white"

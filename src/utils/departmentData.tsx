@@ -9,15 +9,15 @@ export interface Question {
   hasSolution: boolean;
 }
 
-export interface AreaInfo {
+export interface DepartmentInfo {
   name: string;
   icon: JSX.Element;
   description: string;
   questions: Question[];
 }
 
-export const getAreaInfo = (areaId: string | undefined): AreaInfo => {
-  switch (areaId) {
+export const getDepartmentInfo = (deptId: string | undefined): DepartmentInfo => {
+  switch (deptId) {
     case 'financeiro':
       return {
         name: 'Financeiro',
@@ -164,7 +164,7 @@ export const getAreaInfo = (areaId: string | undefined): AreaInfo => {
       };
     default:
       return {
-        name: 'Área não encontrada',
+        name: 'Departamento não encontrado',
         icon: <Building2 className="w-5 h-5 text-gray-400" />,
         description: '',
         questions: []
@@ -172,7 +172,7 @@ export const getAreaInfo = (areaId: string | undefined): AreaInfo => {
   }
 };
 
-export const getAreaEvolutionData = (areaId: string | undefined) => {
+export const getDepartmentEvolutionData = (deptId: string | undefined) => {
   return [
     { period: 'Jan/23', value: 30 },
     { period: 'Fev/23', value: 32 },

@@ -5,9 +5,15 @@ import CustomerRequests from '@/components/CustomerRequests';
 import SidePanel from '@/components/SidePanel';
 import { useState } from 'react';
 import { Switch } from "@/components/ui/switch";
+import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const navigate = useNavigate();
+
+  const handleDepartmentClick = (deptId: string) => {
+    navigate(`/department/${deptId}`);
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -53,7 +59,10 @@ const Index = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="dashboard-card">
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 glass-card">
+                  <div 
+                    className="flex items-center justify-between p-3 glass-card cursor-pointer hover:bg-white/5 transition-colors"
+                    onClick={() => handleDepartmentClick('financeiro')}
+                  >
                     <div className="flex items-center gap-3">
                       <ChartBar className="w-5 h-5 text-blue-400" />
                       <div>
@@ -62,7 +71,10 @@ const Index = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between p-3 glass-card">
+                  <div 
+                    className="flex items-center justify-between p-3 glass-card cursor-pointer hover:bg-white/5 transition-colors"
+                    onClick={() => handleDepartmentClick('tecnologia')}
+                  >
                     <div className="flex items-center gap-3">
                       <Server className="w-5 h-5 text-purple-400" />
                       <div>
@@ -71,7 +83,10 @@ const Index = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between p-3 glass-card">
+                  <div 
+                    className="flex items-center justify-between p-3 glass-card cursor-pointer hover:bg-white/5 transition-colors"
+                    onClick={() => handleDepartmentClick('planejamento')}
+                  >
                     <div className="flex items-center gap-3">
                       <Calendar className="w-5 h-5 text-green-400" />
                       <div>
@@ -80,7 +95,10 @@ const Index = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between p-3 glass-card">
+                  <div 
+                    className="flex items-center justify-between p-3 glass-card cursor-pointer hover:bg-white/5 transition-colors"
+                    onClick={() => handleDepartmentClick('contabil')}
+                  >
                     <div className="flex items-center gap-3">
                       <Calculator className="w-5 h-5 text-yellow-400" />
                       <div>
@@ -89,7 +107,10 @@ const Index = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between p-3 glass-card">
+                  <div 
+                    className="flex items-center justify-between p-3 glass-card cursor-pointer hover:bg-white/5 transition-colors"
+                    onClick={() => handleDepartmentClick('controladoria')}
+                  >
                     <div className="flex items-center gap-3">
                       <DollarSign className="w-5 h-5 text-blue-400" />
                       <div>
@@ -102,7 +123,10 @@ const Index = () => {
               </div>
               <div className="dashboard-card">
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 glass-card">
+                  <div 
+                    className="flex items-center justify-between p-3 glass-card cursor-pointer hover:bg-white/5 transition-colors"
+                    onClick={() => handleDepartmentClick('fiscal')}
+                  >
                     <div className="flex items-center gap-3">
                       <Scale className="w-5 h-5 text-indigo-400" />
                       <div>
@@ -111,7 +135,10 @@ const Index = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between p-3 glass-card">
+                  <div 
+                    className="flex items-center justify-between p-3 glass-card cursor-pointer hover:bg-white/5 transition-colors"
+                    onClick={() => handleDepartmentClick('comercial')}
+                  >
                     <div className="flex items-center gap-3">
                       <ShoppingCart className="w-5 h-5 text-red-400" />
                       <div>
@@ -120,7 +147,10 @@ const Index = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between p-3 glass-card">
+                  <div 
+                    className="flex items-center justify-between p-3 glass-card cursor-pointer hover:bg-white/5 transition-colors"
+                    onClick={() => handleDepartmentClick('marketing')}
+                  >
                     <div className="flex items-center gap-3">
                       <Megaphone className="w-5 h-5 text-orange-400" />
                       <div>
@@ -129,7 +159,10 @@ const Index = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between p-3 glass-card">
+                  <div 
+                    className="flex items-center justify-between p-3 glass-card cursor-pointer hover:bg-white/5 transition-colors"
+                    onClick={() => handleDepartmentClick('societario')}
+                  >
                     <div className="flex items-center gap-3">
                       <Building2 className="w-5 h-5 text-teal-400" />
                       <div>
@@ -138,7 +171,10 @@ const Index = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between p-3 glass-card">
+                  <div 
+                    className="flex items-center justify-between p-3 glass-card cursor-pointer hover:bg-white/5 transition-colors"
+                    onClick={() => handleDepartmentClick('capital-humano')}
+                  >
                     <div className="flex items-center gap-3">
                       <User className="w-5 h-5 text-pink-400" />
                       <div>

@@ -21,12 +21,27 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
     }
   };
 
+  // Determina o valor inicial com base na localização atual
+  const getCurrentTab = () => {
+    if (location.state?.activeTab) {
+      return location.state.activeTab;
+    }
+    if (location.pathname === '/') {
+      return 'dashboard';
+    }
+    if (location.pathname.includes('/department/')) {
+      return 'areas';
+    }
+    return 'dashboard';
+  };
+
   return (
     <div className="h-screen fixed left-0 top-0 w-64 glass-card border-r border-white/10">
       <div className="p-6">
         <h2 className="text-xl font-medium mb-6">Navegação</h2>
         <Tabs 
-          defaultValue="dashboard" 
+          defaultValue={getCurrentTab()}
+          value={getCurrentTab()}
           orientation="vertical" 
           className="w-full"
           onValueChange={handleTabChange}

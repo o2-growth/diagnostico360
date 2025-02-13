@@ -9,17 +9,18 @@ import SettingsContent from '@/components/settings/SettingsContent';
 
 const Index = () => {
   const location = useLocation();
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState(() => {
+    // Inicializa o estado com base no location.state, se existir
+    return location.state?.activeTab || 'dashboard';
+  });
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (location.state?.activeTab) {
-      setActiveTab(location.state.activeTab);
-    }
-  }, [location.state]);
 
   const handleDepartmentClick = (deptId: string) => {
     navigate(`/department/${deptId}`);
+  };
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
   };
 
   const renderContent = () => {
@@ -39,7 +40,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
-      <SidePanel onTabChange={setActiveTab} />
+      <SidePanel onTabChange={handleTabChange} />
       <div className="pl-64">
         <div className="p-8">
           {renderContent()}
@@ -50,4 +51,3 @@ const Index = () => {
 };
 
 export default Index;
-

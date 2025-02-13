@@ -10,10 +10,10 @@ import SettingsContent from '@/components/settings/SettingsContent';
 const Index = () => {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState(() => {
-    // Inicializa o estado com base no location.state, se existir
     return location.state?.activeTab || 'dashboard';
   });
   const navigate = useNavigate();
+  const [isMenuExpanded, setIsMenuExpanded] = useState(true);
 
   const handleDepartmentClick = (deptId: string) => {
     navigate(`/department/${deptId}`);
@@ -21,6 +21,10 @@ const Index = () => {
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
+  };
+
+  const handleMenuToggle = (isOpen: boolean) => {
+    setIsMenuExpanded(isOpen);
   };
 
   const renderContent = () => {
@@ -40,8 +44,12 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
-      <SidePanel onTabChange={handleTabChange} />
-      <div className="pl-64">
+      <SidePanel onTabChange={handleTabChange} onMenuToggle={handleMenuToggle} />
+      <div 
+        className={`transition-all duration-300 ${
+          isMenuExpanded ? 'pl-64' : 'pl-16'
+        }`}
+      >
         <div className="p-8">
           {renderContent()}
         </div>

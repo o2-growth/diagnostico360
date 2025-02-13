@@ -7,9 +7,10 @@ import { Button } from "@/components/ui/button";
 
 interface SidePanelProps {
   onTabChange: (value: string) => void;
+  onMenuToggle: (isOpen: boolean) => void;
 }
 
-const SidePanel = ({ onTabChange }: SidePanelProps) => {
+const SidePanel = ({ onTabChange, onMenuToggle }: SidePanelProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(true);
@@ -33,6 +34,12 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
     }
   };
 
+  const toggleMenu = () => {
+    const newState = !isOpen;
+    setIsOpen(newState);
+    onMenuToggle(newState);
+  };
+
   const getCurrentTab = () => {
     if (location.pathname === '/') {
       return location.state?.activeTab || 'dashboard';
@@ -54,7 +61,7 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
           variant="ghost"
           size="icon"
           className="mb-4 self-end"
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={toggleMenu}
         >
           {isOpen ? (
             <PanelLeftClose className="h-5 w-5" />

@@ -51,7 +51,6 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
         }`}
       >
         <div className="p-6 flex flex-col h-full">
-          <h2 className={`text-xl font-medium mb-6 ${!isOpen && 'hidden'}`}>Navegação</h2>
           <Tabs 
             defaultValue={getCurrentTab()}
             value={getCurrentTab()}

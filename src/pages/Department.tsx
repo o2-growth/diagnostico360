@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import SidePanel from '@/components/SidePanel';
 import { ChartBar, Server, Calendar, Calculator, DollarSign, Scale, ShoppingCart, Megaphone, Building2, User, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
 
 const Department = () => {
   const { id } = useParams();
@@ -11,6 +12,24 @@ const Department = () => {
 
   const handleBack = () => {
     navigate('/', { state: { activeTab: 'departments' } });
+  };
+
+  const getDepartmentEvolutionData = (deptId: string | undefined) => {
+    // Dados de exemplo - em uma aplicação real, estes dados viriam de uma API
+    return [
+      { period: 'Jan/23', value: 30 },
+      { period: 'Fev/23', value: 32 },
+      { period: 'Mar/23', value: 35 },
+      { period: 'Abr/23', value: 38 },
+      { period: 'Mai/23', value: 40 },
+      { period: 'Jun/23', value: 42 },
+      { period: 'Jul/23', value: 45 },
+      { period: 'Ago/23', value: 47 },
+      { period: 'Set/23', value: 48 },
+      { period: 'Out/23', value: 50 },
+      { period: 'Nov/23', value: 52 },
+      { period: 'Dez/23', value: 55 },
+    ];
   };
 
   const getDepartmentInfo = (deptId: string | undefined) => {
@@ -60,6 +79,7 @@ const Department = () => {
   };
 
   const departmentInfo = getDepartmentInfo(id);
+  const evolutionData = getDepartmentEvolutionData(id);
 
   return (
     <div className="min-h-screen">
@@ -84,6 +104,45 @@ const Department = () => {
           </header>
 
           <div className="space-y-6">
+            <div className="dashboard-card h-[400px]">
+              <h2 className="text-xl font-medium mb-6">Evolução do Nível de Excelência</h2>
+              <div className="h-[calc(100%-4rem)]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={evolutionData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                    <XAxis 
+                      dataKey="period" 
+                      stroke="#828179"
+                      fontSize={12}
+                      tickMargin={10}
+                      interval={2}
+                    />
+                    <YAxis 
+                      stroke="#828179"
+                      domain={[0, 100]}
+                      ticks={[0, 20, 40, 60, 80, 100]}
+                      fontSize={12}
+                    />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#1A1A19',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '8px'
+                      }}
+                      labelStyle={{ color: '#C4C3BB' }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="value"
+                      stroke="#8989DE"
+                      strokeWidth={2}
+                      dot={{ fill: '#8989DE' }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
             <div className="dashboard-card">
               <h2 className="text-xl font-medium mb-4">Diagnóstico do Departamento</h2>
               <div className="space-y-4">

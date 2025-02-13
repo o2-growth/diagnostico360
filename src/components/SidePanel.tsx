@@ -1,12 +1,26 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LayoutDashboard, Settings, Building2, TrendingUp } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 interface SidePanelProps {
   onTabChange: (value: string) => void;
 }
 
 const SidePanel = ({ onTabChange }: SidePanelProps) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleTabChange = (value: string) => {
+    onTabChange(value);
+    
+    // Se estiver na página de departamento e clicar em áreas,
+    // volta para a listagem principal
+    if (value === 'areas' && location.pathname.includes('/department/')) {
+      navigate('/');
+    }
+  };
+
   return (
     <div className="h-screen fixed left-0 top-0 w-64 glass-card border-r border-white/10">
       <div className="p-6">
@@ -15,7 +29,7 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
           defaultValue="dashboard" 
           orientation="vertical" 
           className="w-full"
-          onValueChange={onTabChange}
+          onValueChange={handleTabChange}
         >
           <TabsList className="flex flex-col h-auto bg-transparent text-white">
             <TabsTrigger 

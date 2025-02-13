@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import SidePanel from '@/components/SidePanel';
 import { ChartBar, Server, Calendar, Calculator, DollarSign, Scale, ShoppingCart, Megaphone, Building2, User, ArrowLeft, ChevronUp, ChevronDown } from 'lucide-react';
@@ -10,9 +9,10 @@ const Department = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [showChart, setShowChart] = useState(true);
+  const [activeTab, setActiveTab] = useState('areas');
 
   const handleBack = () => {
-    navigate('/', { state: { activeTab: 'departments' } });
+    navigate('/', { state: { activeTab: 'areas' } });
   };
 
   const getDepartmentEvolutionData = (deptId: string | undefined) => {
@@ -84,7 +84,7 @@ const Department = () => {
 
   return (
     <div className="min-h-screen">
-      <SidePanel onTabChange={() => {}} />
+      <SidePanel onTabChange={setActiveTab} />
       <div className="pl-64">
         <div className="p-8">
           <Button 

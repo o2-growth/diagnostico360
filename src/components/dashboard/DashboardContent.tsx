@@ -1,6 +1,4 @@
-
 import { ChartBar } from 'lucide-react';
-import MonthlyChart from '@/components/MonthlyChart';
 import CustomerRequests from '@/components/CustomerRequests';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
 
@@ -146,7 +144,6 @@ const DashboardContent = () => {
       </header>
 
       <div className="flex flex-col gap-6">
-        <MonthlyChart />
         <CustomerRequests />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

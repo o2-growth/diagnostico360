@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import SidePanel from '@/components/SidePanel';
 import DashboardContent from '@/components/dashboard/DashboardContent';
 import DepartmentsList from '@/components/departments/DepartmentsList';
+import EvolutionContent from '@/components/evolution/EvolutionContent';
 import SettingsContent from '@/components/settings/SettingsContent';
 
 const Index = () => {
@@ -25,7 +26,9 @@ const Index = () => {
     switch (activeTab) {
       case 'dashboard':
         return <DashboardContent />;
-      case 'departments':
+      case 'evolution':
+        return <EvolutionContent />;
+      case 'areas':
         return <DepartmentsList onDepartmentClick={handleDepartmentClick} />;
       case 'settings':
         return <SettingsContent />;
@@ -47,3 +50,4 @@ const Index = () => {
 };
 
 export default Index;
+

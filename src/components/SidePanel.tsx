@@ -1,6 +1,6 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LayoutDashboard, Settings, Building2 } from "lucide-react";
+import { LayoutDashboard, Settings, Building2, TrendingUp } from "lucide-react";
 
 interface SidePanelProps {
   onTabChange: (value: string) => void;
@@ -26,6 +26,13 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
               Dashboard
             </TabsTrigger>
             <TabsTrigger 
+              value="evolution" 
+              className="w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white"
+            >
+              <TrendingUp className="w-4 h-4" />
+              Evolução
+            </TabsTrigger>
+            <TabsTrigger 
               value="areas" 
               className="w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white"
             >
@@ -47,3 +54,4 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
 };
 
 export default SidePanel;
+

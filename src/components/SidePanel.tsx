@@ -4,7 +4,6 @@ import { LayoutDashboard, Settings, Building2, TrendingUp, PanelLeftClose, Panel
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import CustomerRequests from '@/components/CustomerRequests';
 
 interface SidePanelProps {
   onTabChange: (value: string) => void;
@@ -45,17 +44,19 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
   };
 
   return (
-    <div className={`glass-card h-screen sticky top-0 transition-all duration-300 ${
-      isExpanded ? 'w-64' : 'w-16'
-    }`}>
-      <div className={`flex flex-col h-full ${!isExpanded && 'px-3'}`}>
-        {/* Botão Toggle no topo */}
-        <div className="p-6 pb-2">
+    <div className="flex min-h-screen">
+      <div 
+        className={`fixed left-0 top-0 h-screen glass-card border-r border-white/10 transition-all duration-300 ${
+          isExpanded ? 'w-64' : 'w-16'
+        }`}
+      >
+        <div className={`relative p-6 ${!isExpanded && 'px-3'}`}>
+          {isExpanded && <h2 className="text-xl font-medium mb-6">Navegação</h2>}
           <Button
             variant="ghost"
             size="icon"
+            className="absolute right-2 top-4"
             onClick={() => setIsExpanded(!isExpanded)}
-            className="w-full flex justify-center"
           >
             {isExpanded ? (
               <PanelLeftClose className="h-4 w-4" />
@@ -63,11 +64,7 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
               <PanelLeftOpen className="h-4 w-4" />
             )}
           </Button>
-        </div>
-        
-        {/* Navegação */}
-        <div className="flex-1">
-          {isExpanded && <h2 className="text-xl font-medium mb-6 px-6">Navegação</h2>}
+          
           <Tabs 
             defaultValue={getCurrentTab()}
             value={getCurrentTab()}
@@ -119,13 +116,9 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
             </TabsList>
           </Tabs>
         </div>
-        
-        {/* Customer Requests no final */}
-        {getCurrentTab() === 'dashboard' && isExpanded && (
-          <div className="mt-auto px-6 pb-6">
-            <CustomerRequests />
-          </div>
-        )}
+      </div>
+      <div className={`transition-all duration-300 ${isExpanded ? 'ml-64' : 'ml-16'} flex-1`}>
+        {/* Resto do conteúdo */}
       </div>
     </div>
   );

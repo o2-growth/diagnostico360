@@ -1,14 +1,21 @@
 
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import SidePanel from '@/components/SidePanel';
 import DashboardContent from '@/components/dashboard/DashboardContent';
 import DepartmentsList from '@/components/departments/DepartmentsList';
 import SettingsContent from '@/components/settings/SettingsContent';
 
 const Index = () => {
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState('dashboard');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location.state?.activeTab) {
+      setActiveTab(location.state.activeTab);
+    }
+  }, [location.state]);
 
   const handleDepartmentClick = (deptId: string) => {
     navigate(`/department/${deptId}`);

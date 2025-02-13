@@ -9,6 +9,10 @@ const Department = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const handleBack = () => {
+    navigate('/', { state: { activeTab: 'departments' } });
+  };
+
   const getDepartmentInfo = (deptId: string | undefined) => {
     switch (deptId) {
       case 'financeiro':
@@ -65,7 +69,7 @@ const Department = () => {
           <Button 
             variant="outline" 
             className="mb-6 flex items-center gap-2" 
-            onClick={() => navigate(-1)}
+            onClick={handleBack}
           >
             <ArrowLeft className="w-4 h-4" />
             Voltar

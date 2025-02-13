@@ -38,7 +38,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen w-full">
       <SidePanel onTabChange={handleTabChange} />
       <div className="p-8">
         {renderContent()}

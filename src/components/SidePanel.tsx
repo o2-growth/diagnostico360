@@ -23,7 +23,7 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
               className="w-full justify-start gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white"
             >
               <LayoutDashboard className="w-4 h-4" />
-              Dashboard
+              Resultado
             </TabsTrigger>
             <TabsTrigger 
               value="evolution" 
@@ -54,4 +54,3 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
 };
 
 export default SidePanel;
-

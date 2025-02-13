@@ -40,7 +40,13 @@ const Department = () => {
           questions: [
             'Como está o fluxo de caixa da empresa?',
             'Qual é a margem de lucro atual?',
-            'Como está o controle de despesas?'
+            'Como está o controle de despesas?',
+            'A empresa possui sistema de análise de custos implementado?',
+            'Existe controle e acompanhamento da rentabilidade por produto/serviço?',
+            'Como está o processo de formação de preços?',
+            'Existe orçamento anual definido e aprovado?',
+            'Como está o acompanhamento periódico da execução orçamentária?',
+            'São realizadas previsões financeiras regularmente?'
           ]
         };
       case 'tecnologia':
@@ -65,7 +71,6 @@ const Department = () => {
             'As estratégias estão alinhadas com o mercado?'
           ]
         };
-      // ... outros departamentos seguem o mesmo padrão
       default:
         return {
           name: 'Departamento não encontrado',

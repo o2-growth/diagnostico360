@@ -1,5 +1,6 @@
 
 import { LucideIcon } from 'lucide-react';
+import { Progress } from "@/components/ui/progress";
 
 interface DepartmentItemProps {
   icon: LucideIcon;
@@ -7,9 +8,17 @@ interface DepartmentItemProps {
   description: string;
   onClick: () => void;
   iconColor: string;
+  progress?: number;
 }
 
-const DepartmentItem = ({ icon: Icon, title, description, onClick, iconColor }: DepartmentItemProps) => {
+const DepartmentItem = ({ 
+  icon: Icon, 
+  title, 
+  description, 
+  onClick, 
+  iconColor,
+  progress = 0 
+}: DepartmentItemProps) => {
   return (
     <div 
       className="flex items-center justify-between p-3 glass-card cursor-pointer hover:bg-white/5 transition-colors"
@@ -21,6 +30,9 @@ const DepartmentItem = ({ icon: Icon, title, description, onClick, iconColor }: 
           <p className="font-medium">{title}</p>
           <p className="text-sm text-gray-400">{description}</p>
         </div>
+      </div>
+      <div className="w-24">
+        <Progress value={progress} className="h-2" />
       </div>
     </div>
   );

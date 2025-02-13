@@ -1,11 +1,13 @@
 
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import SidePanel from '@/components/SidePanel';
-import { ChartBar, Server, Calendar, Calculator, DollarSign, Scale, ShoppingCart, Megaphone, Building2, User } from 'lucide-react';
+import { ChartBar, Server, Calendar, Calculator, DollarSign, Scale, ShoppingCart, Megaphone, Building2, User, ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const Department = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const getDepartmentInfo = (deptId: string | undefined) => {
     switch (deptId) {
@@ -60,6 +62,15 @@ const Department = () => {
       <SidePanel onTabChange={() => {}} />
       <div className="pl-64">
         <div className="p-8">
+          <Button 
+            variant="outline" 
+            className="mb-6 flex items-center gap-2" 
+            onClick={() => navigate(-1)}
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Voltar
+          </Button>
+
           <header className="mb-8">
             <div className="flex items-center gap-3 mb-2">
               {departmentInfo.icon}

@@ -12,27 +12,27 @@ const DashboardContent = () => {
         <p className="text-dashboard-muted">Below is an example dashboard created using charts from this plugin</p>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-        <MetricCard
-          title="Shop"
-          value={68}
-          color="#7EBF8E"
-        />
-        <MetricCard
-          title="Mobile"
-          value={52}
-          color="#8989DE"
-        />
-        <MetricCard
-          title="Other"
-          value={85}
-          color="#61AAF2"
-        />
-      </div>
-
       <div className="flex flex-col gap-6">
-        <CustomerRequests />
         <MonthlyChart />
+        <CustomerRequests />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <MetricCard
+            title="Shop"
+            value={68}
+            color="#7EBF8E"
+          />
+          <MetricCard
+            title="Mobile"
+            value={52}
+            color="#8989DE"
+          />
+          <MetricCard
+            title="Other"
+            value={85}
+            color="#61AAF2"
+          />
+        </div>
       </div>
     </>
   );

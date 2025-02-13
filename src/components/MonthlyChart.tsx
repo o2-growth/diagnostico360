@@ -1,30 +1,41 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, BarChart, Bar } from 'recharts';
+
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 
 const data = [
-  { month: 'J', value: 30, revenue: 40 },
-  { month: 'F', value: 35, revenue: 45 },
-  { month: 'M', value: 40, revenue: 35 },
-  { month: 'A', value: 38, revenue: 30 },
-  { month: 'M', value: 42, revenue: 25 },
-  { month: 'J', value: 48, revenue: 40 },
-  { month: 'J', value: 45, revenue: 45 },
-  { month: 'A', value: 43, revenue: 50 },
-  { month: 'S', value: 44, revenue: 45 },
-  { month: 'O', value: 45, revenue: 55 },
-  { month: 'N', value: 47, revenue: 50 },
-  { month: 'D', value: 49, revenue: 60 },
+  { month: 'Jan/24', value: 30 },
+  { month: 'Fev/24', value: 35 },
+  { month: 'Mar/24', value: 40 },
+  { month: 'Abr/24', value: 38 },
+  { month: 'Mai/24', value: 42 },
+  { month: 'Jun/24', value: 48 },
+  { month: 'Jul/24', value: 45 },
+  { month: 'Ago/24', value: 43 },
+  { month: 'Set/24', value: 44 },
+  { month: 'Out/24', value: 45 },
+  { month: 'Nov/24', value: 47 },
+  { month: 'Dez/24', value: 49 },
 ];
 
 const MonthlyChart = () => {
   return (
     <div className="dashboard-card h-[400px]">
-      <h2 className="text-xl font-medium mb-6">Monthly Income</h2>
+      <h2 className="text-xl font-medium mb-6">Nível de Excelência</h2>
       <div className="h-[calc(100%-4rem)]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-            <XAxis dataKey="month" stroke="#828179" />
-            <YAxis stroke="#828179" />
+            <XAxis 
+              dataKey="month" 
+              stroke="#828179"
+              fontSize={12}
+              tickMargin={10}
+            />
+            <YAxis 
+              stroke="#828179"
+              domain={[0, 100]}
+              ticks={[0, 20, 40, 60, 80, 100]}
+              fontSize={12}
+            />
             <Line
               type="monotone"
               dataKey="value"
@@ -32,7 +43,6 @@ const MonthlyChart = () => {
               strokeWidth={2}
               dot={{ fill: '#8989DE' }}
             />
-            <Bar dataKey="revenue" fill="#61AAF2" opacity={0.3} />
           </LineChart>
         </ResponsiveContainer>
       </div>

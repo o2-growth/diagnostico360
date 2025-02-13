@@ -10,7 +10,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
 
 const Department = () => {
   const { id } = useParams();
@@ -100,12 +100,30 @@ const Department = () => {
   });
 
   const evolutionData = [
-    { month: 'Jan', value: 65 },
-    { month: 'Fev', value: 70 },
-    { month: 'Mar', value: 75 },
-    { month: 'Abr', value: 78 },
-    { month: 'Mai', value: 82 },
-    { month: 'Jun', value: 85 }
+    { period: 'Jan/23', value: 30 },
+    { period: 'Fev/23', value: 32 },
+    { period: 'Mar/23', value: 35 },
+    { period: 'Abr/23', value: 38 },
+    { period: 'Mai/23', value: 40 },
+    { period: 'Jun/23', value: 42 },
+    { period: 'Jul/23', value: 45 },
+    { period: 'Ago/23', value: 47 },
+    { period: 'Set/23', value: 48 },
+    { period: 'Out/23', value: 50 },
+    { period: 'Nov/23', value: 52 },
+    { period: 'Dez/23', value: 55 },
+    { period: 'Jan/24', value: 57 },
+    { period: 'Fev/24', value: 58 },
+    { period: 'Mar/24', value: 60 },
+    { period: 'Abr/24', value: 62 },
+    { period: 'Mai/24', value: 65 },
+    { period: 'Jun/24', value: 67 },
+    { period: 'Jul/24', value: 70 },
+    { period: 'Ago/24', value: 72 },
+    { period: 'Set/24', value: 75 },
+    { period: 'Out/24', value: 77 },
+    { period: 'Nov/24', value: 80 },
+    { period: 'Dez/24', value: 82 },
   ];
 
   const handleTabChange = (value: string) => {
@@ -143,19 +161,23 @@ const Department = () => {
           </div>
 
           <div className="dashboard-card">
-            <div className="h-[250px] mb-6">
+            <h2 className="text-xl font-medium mb-6">Nível de Excelência</h2>
+            <div className="h-[400px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={evolutionData}>
+                <LineChart data={evolutionData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                   <XAxis 
-                    dataKey="month"
+                    dataKey="period"
                     stroke="#828179"
                     fontSize={12}
+                    tickMargin={10}
+                    interval={2}
                   />
-                  <YAxis
+                  <YAxis 
                     stroke="#828179"
-                    fontSize={12}
                     domain={[0, 100]}
+                    ticks={[0, 20, 40, 60, 80, 100]}
+                    fontSize={12}
                   />
                   <Tooltip 
                     contentStyle={{ 
@@ -165,8 +187,14 @@ const Department = () => {
                     }}
                     labelStyle={{ color: '#C4C3BB' }}
                   />
-                  <Bar dataKey="value" fill="#8989DE" />
-                </BarChart>
+                  <Line
+                    type="monotone"
+                    dataKey="value"
+                    stroke="#8989DE"
+                    strokeWidth={2}
+                    dot={{ fill: '#8989DE' }}
+                  />
+                </LineChart>
               </ResponsiveContainer>
             </div>
 
@@ -225,3 +253,4 @@ const Department = () => {
 };
 
 export default Department;
+

@@ -14,20 +14,17 @@ const SidePanel = ({ onTabChange }: SidePanelProps) => {
   const handleTabChange = (value: string) => {
     onTabChange(value);
     
-    // Se estiver na página de departamento e clicar em áreas,
-    // volta para a listagem principal
+    // Se clicar em áreas e estiver em uma página de departamento específico,
+    // navega para a página principal (/)
     if (value === 'areas' && location.pathname.includes('/department/')) {
-      navigate('/');
+      navigate('/', { state: { activeTab: 'areas' } });
     }
   };
 
   // Determina o valor inicial com base na localização atual
   const getCurrentTab = () => {
-    if (location.state?.activeTab) {
-      return location.state.activeTab;
-    }
     if (location.pathname === '/') {
-      return 'dashboard';
+      return location.state?.activeTab || 'dashboard';
     }
     if (location.pathname.includes('/department/')) {
       return 'areas';

@@ -31,19 +31,16 @@ const DepartmentOverview = ({
 
   return (
     <div className="grid grid-cols-1 gap-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="dashboard-card">
-          <h2 className="text-xl font-medium mb-6">Nota final</h2>
-          <div className="flex justify-center">
-            <MetricCard
-              title={departmentInfo.name}
-              value={score}
-              color={departmentInfo.color || "#61AAF2"}
-            />
-          </div>
+      <div className="flex gap-6">
+        <div className="w-1/3">
+          <MetricCard
+            value={score}
+            color={departmentInfo.color || "#61AAF2"}
+          />
         </div>
-        
-        <DepartmentRadar questions={questions} />
+        <div className="w-2/3">
+          <DepartmentRadar questions={questions} />
+        </div>
       </div>
 
       <div className="dashboard-card">
@@ -86,4 +83,3 @@ const DepartmentOverview = ({
 };
 
 export default DepartmentOverview;
-

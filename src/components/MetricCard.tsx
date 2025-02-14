@@ -1,29 +1,29 @@
+
 import React from 'react';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
 interface MetricCardProps {
-  title: string;
   value: number;
   color: string;
+  title?: string;
 }
 
-const MetricCard = ({ title, value, color }: MetricCardProps) => {
+const MetricCard = ({ value, color }: MetricCardProps) => {
   return (
     <div className="metric-card">
-      <div className="relative w-32 h-32 mb-6">
+      <div className="relative w-48 h-48">
         <CircularProgressbar
           value={value}
           text={`${value}%`}
           styles={buildStyles({
-            textSize: '1.25rem',
+            textSize: '1.5rem',
             pathColor: color,
             textColor: color,
             trailColor: 'rgba(255,255,255,0.1)',
           })}
         />
       </div>
-      <h3 className="text-lg font-medium text-dashboard-text">{title}</h3>
     </div>
   );
 };

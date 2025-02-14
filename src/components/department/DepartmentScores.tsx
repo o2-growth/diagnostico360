@@ -20,15 +20,21 @@ const DepartmentScores = ({ questions }: DepartmentScoresProps) => {
         <BarChart
           data={data}
           layout="vertical"
-          margin={{ top: 20, right: 30, bottom: 20, left: 120 }}
+          margin={{ top: 20, right: 30, bottom: 20, left: 200 }}
         >
           <CartesianGrid horizontal={false} stroke="rgba(255,255,255,0.1)" />
           <XAxis type="number" domain={[0, 100]} />
           <YAxis 
             dataKey="name" 
             type="category" 
-            width={100}
-            tick={{ fill: '#828179', fontSize: 12 }}
+            width={180}
+            tick={{ 
+              fill: '#828179', 
+              fontSize: 12,
+              width: 170,
+              wordWrap: 'break-word'
+            }}
+            interval={0}
           />
           <Bar 
             dataKey="score" 

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, Edit2 } from 'lucide-react';
@@ -235,11 +234,6 @@ const Department = () => {
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <DepartmentEvolution data={evolutionData} />
-            <CustomerRequests />
-          </div>
-
           <div className="mt-6">
             <Tabs defaultValue="overview" className="w-full">
               <TabsList className="w-full justify-start mb-6">
@@ -250,6 +244,7 @@ const Department = () => {
                 <DepartmentOverview 
                   departmentInfo={departmentInfo}
                   calculateTotalCost={calculateTotalCost}
+                  evolutionData={evolutionData}
                 />
               </TabsContent>
               <TabsContent value="questions">

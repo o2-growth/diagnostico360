@@ -1,15 +1,23 @@
 
 import { Users } from 'lucide-react';
 import { DepartmentData } from '@/types/department';
+import DepartmentEvolution from './DepartmentEvolution';
+import CustomerRequests from '@/components/CustomerRequests';
 
 interface DepartmentOverviewProps {
   departmentInfo: DepartmentData;
   calculateTotalCost: () => number;
+  evolutionData: Array<{ period: string; value: number }>;
 }
 
-const DepartmentOverview = ({ departmentInfo, calculateTotalCost }: DepartmentOverviewProps) => {
+const DepartmentOverview = ({ departmentInfo, calculateTotalCost, evolutionData }: DepartmentOverviewProps) => {
   return (
     <div className="space-y-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <DepartmentEvolution data={evolutionData} />
+        <CustomerRequests />
+      </div>
+
       <div>
         <h3 className="text-xl font-medium mb-4">Sobre a área</h3>
         <p className="text-dashboard-muted">

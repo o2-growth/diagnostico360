@@ -1,7 +1,7 @@
 
 import { DepartmentData } from "@/types/department";
 import DepartmentRadar from './DepartmentRadar';
-import MetricCard from '../MetricCard';
+import DepartmentScores from './DepartmentScores';
 
 interface DepartmentOverviewProps {
   departmentInfo: DepartmentData;
@@ -31,19 +31,14 @@ const DepartmentOverview = ({
 
   return (
     <div className="flex flex-col gap-6">
+      <div className="flex items-center gap-2 text-xl font-medium">
+        <span>Score:</span>
+        <span className="text-dashboard-primary">{score}</span>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="dashboard-card">
-          <h2 className="text-xl font-medium mb-6">Score da Área</h2>
-          <div className="flex justify-center">
-            <MetricCard
-              title={departmentInfo.name}
-              value={score}
-              color={departmentInfo.color || "#61AAF2"}
-            />
-          </div>
-        </div>
-        
         <DepartmentRadar questions={questions} />
+        <DepartmentScores questions={questions} />
       </div>
 
       <div className="dashboard-card">
@@ -86,4 +81,3 @@ const DepartmentOverview = ({
 };
 
 export default DepartmentOverview;
-

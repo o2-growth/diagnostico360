@@ -5,7 +5,7 @@
  
 @layer base {
   :root {
-    --background: 0 0% 98%;
+    --background: 0 0% 96%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -57,11 +57,11 @@
 }
 
 .glass-card {
-  @apply bg-card/90 backdrop-blur-lg border border-border/20 rounded-xl shadow-sm;
+  @apply bg-white shadow-lg border border-gray-200/50 rounded-xl;
 }
 
 .dashboard-card {
-  @apply p-6 glass-card transition-all duration-300 hover:border-border/40;
+  @apply p-6 glass-card transition-all duration-300 hover:shadow-xl;
 }
 
 .metric-card {

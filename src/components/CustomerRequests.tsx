@@ -2,16 +2,15 @@
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from 'recharts';
 
 const data = [
-  { subject: 'Financeiro', value: 44, target: 100 },
-  { subject: 'Tecnologia', value: 33, target: 100 },
-  { subject: 'Planejamento', value: 67, target: 100 },
-  { subject: 'Contábil', value: 46, target: 100 },
-  { subject: 'Controladoria', value: 70, target: 100 },
-  { subject: 'Fiscal', value: 54, target: 100 },
-  { subject: 'Comercial', value: 63, target: 100 },
-  { subject: 'Marketing', value: 58, target: 100 },
-  { subject: 'Societário', value: 85, target: 100 },
-  { subject: 'Capital Humano', value: 58, target: 100 }
+  { subject: 'Plano de Contas', value: 100, target: 100 },
+  { subject: 'Contas a Pagar', value: 100, target: 100 },
+  { subject: 'Contas a Receber', value: 100, target: 100 },
+  { subject: 'Conciliação Bancária', value: 100, target: 100 },
+  { subject: 'Fluxo de Caixa', value: 100, target: 100 },
+  { subject: 'Crédito e Cobrança', value: 100, target: 100 },
+  { subject: 'Rentabilidade e Análise de Custo', value: 100, target: 100 },
+  { subject: 'Controle Orçamentário e Previsão Financeira', value: 100, target: 100 },
+  { subject: 'Relatórios', value: 100, target: 100 }
 ];
 
 const CustomerRequests = () => {

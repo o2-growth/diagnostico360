@@ -10,6 +10,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
+import CustomerRequests from '@/components/CustomerRequests';
 
 interface Employee {
   name: string;
@@ -171,60 +172,66 @@ const Department = () => {
             </Button>
           </div>
 
-          <div className="dashboard-card">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-medium">Evolução da {departmentInfo.title}</h2>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={toggleChart}
-              >
-                {isChartVisible ? (
-                  <ChevronUp className="h-4 w-4" />
-                ) : (
-                  <ChevronDown className="h-4 w-4" />
-                )}
-              </Button>
-            </div>
-            
-            {isChartVisible && (
-              <div className="h-[400px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={evolutionData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                    <XAxis 
-                      dataKey="period"
-                      stroke="#828179"
-                      fontSize={12}
-                      tickMargin={10}
-                      interval={2}
-                    />
-                    <YAxis 
-                      stroke="#828179"
-                      domain={[0, 100]}
-                      ticks={[0, 20, 40, 60, 80, 100]}
-                      fontSize={12}
-                    />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: '#1A1A19',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: '8px'
-                      }}
-                      labelStyle={{ color: '#C4C3BB' }}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="value"
-                      stroke="#8989DE"
-                      strokeWidth={2}
-                      dot={{ fill: '#8989DE' }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="dashboard-card">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-medium">Evolução da {departmentInfo.title}</h2>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={toggleChart}
+                >
+                  {isChartVisible ? (
+                    <ChevronUp className="h-4 w-4" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4" />
+                  )}
+                </Button>
               </div>
-            )}
+              
+              {isChartVisible && (
+                <div className="h-[400px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={evolutionData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                      <XAxis 
+                        dataKey="period"
+                        stroke="#828179"
+                        fontSize={12}
+                        tickMargin={10}
+                        interval={2}
+                      />
+                      <YAxis 
+                        stroke="#828179"
+                        domain={[0, 100]}
+                        ticks={[0, 20, 40, 60, 80, 100]}
+                        fontSize={12}
+                      />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: '#1A1A19',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          borderRadius: '8px'
+                        }}
+                        labelStyle={{ color: '#C4C3BB' }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="value"
+                        stroke="#8989DE"
+                        strokeWidth={2}
+                        dot={{ fill: '#8989DE' }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+            </div>
 
+            <CustomerRequests />
+          </div>
+
+          <div className="mt-6">
             <Tabs defaultValue="overview" className="w-full">
               <TabsList className="w-full justify-start mb-6">
                 <TabsTrigger value="overview">Visão Geral</TabsTrigger>

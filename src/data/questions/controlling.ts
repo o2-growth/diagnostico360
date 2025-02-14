@@ -12,8 +12,7 @@ export const controllingQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Relatório de Fluxo de Caixa Projetado",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "6.2",
@@ -25,8 +24,7 @@ export const controllingQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Planejamento Orçamentário para os próximos 12 meses",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "6.3",
@@ -38,8 +36,7 @@ export const controllingQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Planejamento Orçamentário para os próximos 12 meses",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "6.4",
@@ -51,8 +48,7 @@ export const controllingQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "6.5",
@@ -64,8 +60,7 @@ export const controllingQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Relatório de Fluxo de Caixa Orçado x Fluxo de Caixa Realizado",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "6.6",
@@ -77,46 +72,4 @@ export const controllingQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Relatório de Fluxo de Caixa Realizado",
-    hasEvidence: "SIM",
-    maxScore: 10
-  },
-  {
-    item: "6.7",
-    title: "Análise Vertical / Horizontal",
-    question: "Existe análise dos grupos de contas (recebimentos e pagamentos) relativos ao mês anterior?",
-    applicable: "SIM",
-    application: [
-      "1) Entrevistas com gestão e Financeiro;",
-      "2) Solicitar Evidências"
-    ],
-    evidence: "Relatório de Fluxo de Caixa Realizado",
-    hasEvidence: "SIM",
-    maxScore: 10
-  },
-  {
-    item: "6.8",
-    title: "Indicadores",
-    question: "Existem indicadores econômicos e financeiros (como margem de contribuição, margem líquida, geração de caixa, outro)?",
-    applicable: "SIM",
-    application: [
-      "1) Entrevistas com gestão e Financeiro;",
-      "2) Solicitar Evidências"
-    ],
-    evidence: "Relatório do sistema de gestão financeiro",
-    hasEvidence: "SIM",
-    maxScore: 10
-  },
-  {
-    item: "6.9",
-    title: "Relatórios",
-    question: "Existem relatórios que deem suporte ao acompanhamento dos resultados mensais?",
-    applicable: "SIM",
-    application: [
-      "1) Entrevistas com gestão e manutenção;",
-      "2) Solicitar Evidências"
-    ],
-    evidence: "Relatório do sistema de gestão financeiro",
-    hasEvidence: "SIM",
-    maxScore: 10
-  }
-];
+    hasEvidence: "SIM

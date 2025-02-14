@@ -13,8 +13,7 @@ export const corporateQuestions: Question[] = [
     ],
     evidence: "Contrato social e/ou atos de alterações",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)",
-    maxScore: 10
+    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   },
   {
     item: "1.2",
@@ -27,8 +26,7 @@ export const corporateQuestions: Question[] = [
     ],
     evidence: "Contrato social e/ou atos de alterações",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)",
-    maxScore: 10
+    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   },
   {
     item: "1.3",
@@ -41,8 +39,7 @@ export const corporateQuestions: Question[] = [
     ],
     evidence: "Atas de Reuniões, Diretrizes Internas, Memorandos, e-mails e comunicados",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)",
-    maxScore: 10
+    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   },
   {
     item: "1.4",
@@ -55,8 +52,7 @@ export const corporateQuestions: Question[] = [
     ],
     evidence: "Atas de Reuniões, Diretrizes Internas, Memorandos, e-mails e comunicados",
     hasEvidence: "SIM",
-    evaluation: "EXISTE E FUNCIONA PERFEITAMENTE",
-    maxScore: 10
+    evaluation: "EXISTE E FUNCIONA PERFEITAMENTE"
   },
   {
     item: "1.5",
@@ -69,8 +65,7 @@ export const corporateQuestions: Question[] = [
     ],
     evidence: "Atas de Reuniões, Diretrizes Internas, Memorandos, e-mails e comunicados",
     hasEvidence: "SIM",
-    evaluation: "EXISTE E FUNCIONA PERFEITAMENTE",
-    maxScore: 10
+    evaluation: "EXISTE E FUNCIONA PERFEITAMENTE"
   },
   {
     item: "1.6",
@@ -83,7 +78,6 @@ export const corporateQuestions: Question[] = [
     ],
     evidence: "Atas de Reuniões, Diretrizes Internas, Memorandos, e-mails e comunicados",
     hasEvidence: "SIM",
-    evaluation: "EXISTE E FUNCIONA PERFEITAMENTE",
-    maxScore: 10
+    evaluation: "EXISTE E FUNCIONA PERFEITAMENTE"
   }
 ];

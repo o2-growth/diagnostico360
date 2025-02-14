@@ -12,8 +12,7 @@ export const commercialQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Acompanhamento de Metas diárias, semanais, mensais de venda, ranking por vendedor, gestão à vista, registro de treinamentos",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "3.2",
@@ -22,8 +21,7 @@ export const commercialQuestions: Question[] = [
     applicable: "SIM",
     application: [],
     evidence: "",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "3.3",
@@ -35,8 +33,7 @@ export const commercialQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Acompanhamento de Metas diárias, semanais, mensais de venda, ranking por vendedor, gestão à vista, registro de treinamentos",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "3.4",
@@ -48,8 +45,7 @@ export const commercialQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Metodologia de precificação, planilha de precificação",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "3.5",
@@ -58,8 +54,7 @@ export const commercialQuestions: Question[] = [
     applicable: "SIM",
     application: [],
     evidence: "",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "3.6",
@@ -71,8 +66,7 @@ export const commercialQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Relatório emitido através do sistema, preferencialmente com o nome do relatório",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "3.7",
@@ -84,8 +78,7 @@ export const commercialQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Atas de Reuniões, Diretrizes Internas, Memorandos, e-mails e comunicados",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "3.8",
@@ -94,8 +87,7 @@ export const commercialQuestions: Question[] = [
     applicable: "SIM",
     application: [],
     evidence: "",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "3.9",
@@ -104,8 +96,7 @@ export const commercialQuestions: Question[] = [
     applicable: "SIM",
     application: [],
     evidence: "",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "3.1",
@@ -117,7 +108,6 @@ export const commercialQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Acompanhamento de Metas diárias, semanais, mensais de venda, ranking por vendedor, gestão à vista, registro de treinamentos",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   }
 ];

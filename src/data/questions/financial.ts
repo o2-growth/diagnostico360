@@ -12,8 +12,7 @@ export const financialQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Relatório do sistema de gestão financeiro",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "5.2",
@@ -25,8 +24,7 @@ export const financialQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Processos documentados de CAP, relatórios diários / mensais, Checklist de Lançamentos e Processamentos Diários (com quantidade de NF de entrada e Saída processadas), Registro de Treinamento",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "5.3",
@@ -38,8 +36,7 @@ export const financialQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Processos documentados de CAR, relatórios diários / mensais, Checklist de Lançamentos e Processamentos Diários (com quantidade de NF de entrada e Saída processadas), Registro de Treinamento",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "5.4",
@@ -51,8 +48,7 @@ export const financialQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Relatório do sistema de gestão financeiro",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "5.5",
@@ -64,8 +60,7 @@ export const financialQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Relatório do sistema de gestão financeiro",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "5.6",
@@ -77,8 +72,7 @@ export const financialQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Processos e Políticas Documentadas de Crédito, Cobrança, Limite de Crédito, Régua de Cobrança, Relatórios diários / Mensais",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "5.7",
@@ -90,8 +84,7 @@ export const financialQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Relatórios de análise de rentabilidade e custos",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "5.8",
@@ -103,8 +96,7 @@ export const financialQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Relatórios de controle orçamentário e previsões financeiras",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "5.9",
@@ -116,7 +108,6 @@ export const financialQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Relatório do sistema de gestão financeiro",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   }
 ];

@@ -42,5 +42,4 @@ export interface Question {
   hasEvidence: string;
   evaluation?: EvaluationStatus;
   score?: number;
-  maxScore: number;
 }

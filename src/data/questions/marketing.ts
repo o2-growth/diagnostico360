@@ -12,8 +12,7 @@ export const marketingQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Plano de Marketing, Atas de Reuniões, Orçamento de Marketing",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "4.2",
@@ -22,8 +21,7 @@ export const marketingQuestions: Question[] = [
     applicable: "SIM",
     application: [],
     evidence: "",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "4.3",
@@ -32,8 +30,7 @@ export const marketingQuestions: Question[] = [
     applicable: "SIM",
     application: [],
     evidence: "",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "4.4",
@@ -42,8 +39,7 @@ export const marketingQuestions: Question[] = [
     applicable: "SIM",
     application: [],
     evidence: "",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "4.5",
@@ -52,8 +48,7 @@ export const marketingQuestions: Question[] = [
     applicable: "SIM",
     application: [],
     evidence: "",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "4.6",
@@ -62,8 +57,7 @@ export const marketingQuestions: Question[] = [
     applicable: "SIM",
     application: [],
     evidence: "",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "4.7",
@@ -72,8 +66,7 @@ export const marketingQuestions: Question[] = [
     applicable: "SIM",
     application: [],
     evidence: "",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "4.8",
@@ -85,8 +78,7 @@ export const marketingQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Calendário de Reuniões, Atas de Reuniões, Orçamento de Marketing",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   },
   {
     item: "4.9",
@@ -98,7 +90,6 @@ export const marketingQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Gestão à vista, boletins internos, comunicados internos, revista interna",
-    hasEvidence: "SIM",
-    maxScore: 10
+    hasEvidence: "SIM"
   }
 ];

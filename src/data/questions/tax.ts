@@ -13,8 +13,7 @@ export const taxQuestions: Question[] = [
     ],
     evidence: "Regime fiscal de apuração dos tributos através da Contabilidade, Estudos de Impacto de Carga Tributária, Relatório de Acompanhamento mensal de Tributos, Relatório de Recolhimentos.",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)",
-    maxScore: 10
+    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   },
   {
     item: "7.2",
@@ -27,8 +26,7 @@ export const taxQuestions: Question[] = [
     ],
     evidence: "Comprovante de regularidade fiscal: Federal, Estadual e Municipal",
     hasEvidence: "SIM",
-    evaluation: "NÃO EXISTE",
-    maxScore: 10
+    evaluation: "NÃO EXISTE"
   },
   {
     item: "7.3",
@@ -41,8 +39,7 @@ export const taxQuestions: Question[] = [
     ],
     evidence: "Extrato de apuração dos tributos",
     hasEvidence: "SIM",
-    evaluation: "EXISTE E FUNCIONA PERFEITAMENTE",
-    maxScore: 10
+    evaluation: "EXISTE E FUNCIONA PERFEITAMENTE"
   },
   {
     item: "7.4",
@@ -52,8 +49,7 @@ export const taxQuestions: Question[] = [
     application: [],
     evidence: "",
     hasEvidence: "SIM",
-    evaluation: "EXISTE E FUNCIONA PERFEITAMENTE",
-    maxScore: 10
+    evaluation: "EXISTE E FUNCIONA PERFEITAMENTE"
   },
   {
     item: "7.5",
@@ -66,7 +62,6 @@ export const taxQuestions: Question[] = [
     ],
     evidence: "",
     hasEvidence: "NÃO",
-    evaluation: "NÃO EXISTE",
-    maxScore: 10
+    evaluation: "NÃO EXISTE"
   }
 ];

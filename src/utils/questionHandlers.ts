@@ -1,4 +1,5 @@
 
+import { useState } from 'react';
 import { Question, EvaluationStatus } from '@/types/department';
 import { useToast } from "@/components/ui/use-toast";
 

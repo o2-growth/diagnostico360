@@ -12,6 +12,7 @@ interface MetricCardProps {
 const MetricCard = ({ value, color }: MetricCardProps) => {
   return (
     <div className="metric-card">
+      <h3 className="text-xl font-medium mb-4 text-dashboard-text">Nota Final</h3>
       <div className="relative w-48 h-48">
         <CircularProgressbar
           value={value}

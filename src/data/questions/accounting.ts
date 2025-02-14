@@ -27,7 +27,7 @@ export const accountingQuestions: Question[] = [
     ],
     evidence: "1) Visita com demonstração e relato",
     hasEvidence: "SIM",
-    evaluation: "EXISTE (MAS INFORMALMENTE)",
+    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)",
     maxScore: 10
   },
   {
@@ -41,7 +41,7 @@ export const accountingQuestions: Question[] = [
     ],
     evidence: "Extratos bancários, comprovantes de pagamentos (notas fiscais e/ou cupons fiscais)",
     hasEvidence: "SIM",
-    evaluation: "EXISTE (MAS INFORMALMENTE)",
+    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)",
     maxScore: 10
   },
   {
@@ -52,7 +52,7 @@ export const accountingQuestions: Question[] = [
     application: [],
     evidence: "",
     hasEvidence: "SIM",
-    evaluation: "EXISTE (MAS INFORMALMENTE)",
+    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)",
     maxScore: 10
   },
   {
@@ -63,7 +63,7 @@ export const accountingQuestions: Question[] = [
     application: [],
     evidence: "",
     hasEvidence: "SIM",
-    evaluation: "EXISTE (MAS INFORMALMENTE)",
+    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)",
     maxScore: 10
   },
   {
@@ -74,7 +74,7 @@ export const accountingQuestions: Question[] = [
     application: [],
     evidence: "",
     hasEvidence: "SIM",
-    evaluation: "EXISTE (MAS INFORMALMENTE)",
+    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)",
     maxScore: 10
   },
   {
@@ -92,3 +92,4 @@ export const accountingQuestions: Question[] = [
     maxScore: 10
   }
 ];
+

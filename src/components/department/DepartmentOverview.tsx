@@ -2,6 +2,7 @@
 import { DepartmentData } from "@/types/department";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 import DepartmentRadar from './DepartmentRadar';
+import MetricCard from '../MetricCard';
 
 interface DepartmentOverviewProps {
   departmentInfo: DepartmentData;
@@ -21,8 +22,32 @@ const DepartmentOverview = ({
     value: item.value
   }));
 
+  const calculateScore = () => {
+    if (!questions || questions.length === 0) return 0;
+    
+    const totalAnswered = questions.filter(q => 
+      q.evaluation === "EXISTE E FUNCIONA PERFEITAMENTE" || 
+      q.evaluation === "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
+    ).length;
+    
+    return Math.round((totalAnswered / questions.length) * 100);
+  };
+
+  const score = calculateScore();
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="dashboard-card">
+        <h2 className="text-xl font-medium mb-6">Score da Área</h2>
+        <div className="flex justify-center">
+          <MetricCard
+            title={departmentInfo.name}
+            value={score}
+            color={departmentInfo.color || "#61AAF2"}
+          />
+        </div>
+      </div>
+
       <div className="dashboard-card">
         <h2 className="text-xl font-medium mb-6">Evolução Mensal</h2>
         <div className="h-[300px]">
@@ -87,3 +112,4 @@ const DepartmentOverview = ({
 };
 
 export default DepartmentOverview;
+

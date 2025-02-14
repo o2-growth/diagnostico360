@@ -10,7 +10,7 @@ const DepartmentRadar = ({ questions }: DepartmentRadarProps) => {
   const data = questions.map(question => ({
     subject: question.title,
     value: 0, // Valor inicial, deve ser atualizado conforme a avaliação
-    target: question.maxScore
+    target: 10 // Default maxScore is 10 if not specified
   }));
 
   return (

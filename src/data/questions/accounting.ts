@@ -13,8 +13,7 @@ export const accountingQuestions: Question[] = [
     ],
     evidence: "Balancete mensal, preferencialmente dos últimos 3 meses realizados",
     hasEvidence: "SIM",
-    evaluation: "EXISTE E FUNCIONA PERFEITAMENTE",
-    maxScore: 10
+    evaluation: "EXISTE E FUNCIONA PERFEITAMENTE"
   },
   {
     item: "8.2",
@@ -27,8 +26,7 @@ export const accountingQuestions: Question[] = [
     ],
     evidence: "1) Visita com demonstração e relato",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)",
-    maxScore: 10
+    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   },
   {
     item: "8.3",
@@ -41,8 +39,7 @@ export const accountingQuestions: Question[] = [
     ],
     evidence: "Extratos bancários, comprovantes de pagamentos (notas fiscais e/ou cupons fiscais)",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)",
-    maxScore: 10
+    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   },
   {
     item: "8.4",
@@ -52,8 +49,7 @@ export const accountingQuestions: Question[] = [
     application: [],
     evidence: "",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)",
-    maxScore: 10
+    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   },
   {
     item: "8.5",
@@ -63,8 +59,7 @@ export const accountingQuestions: Question[] = [
     application: [],
     evidence: "",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)",
-    maxScore: 10
+    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   },
   {
     item: "8.6",
@@ -74,8 +69,7 @@ export const accountingQuestions: Question[] = [
     application: [],
     evidence: "",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)",
-    maxScore: 10
+    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   },
   {
     item: "8.7",
@@ -88,8 +82,6 @@ export const accountingQuestions: Question[] = [
     ],
     evidence: "Cronograma de Reuniões, Atas",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)",
-    maxScore: 10
+    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   }
 ];
-

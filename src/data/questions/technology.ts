@@ -13,8 +13,7 @@ export const technologyQuestions: Question[] = [
     ],
     evidence: "Nome das ferramentas atualmente utilizadas",
     hasEvidence: "SIM",
-    evaluation: "EXISTE E FUNCIONA PERFEITAMENTE",
-    maxScore: 10
+    evaluation: "EXISTE E FUNCIONA PERFEITAMENTE"
   },
   {
     item: "2.2",
@@ -26,8 +25,7 @@ export const technologyQuestions: Question[] = [
     ],
     evidence: "Relatório de atendimento, chamados abertos e atendidos, contratos de suporte e SLA's com as Software Houses",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)",
-    maxScore: 10
+    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   },
   {
     item: "2.3",
@@ -40,8 +38,7 @@ export const technologyQuestions: Question[] = [
     ],
     evidence: "Local onde é realizado o backup e periodicidade",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)",
-    maxScore: 10
+    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   },
   {
     item: "2.4",
@@ -54,8 +51,7 @@ export const technologyQuestions: Question[] = [
     ],
     evidence: "Inventário dos equipamentos ou lista dos principais itens da infraestrutura",
     hasEvidence: "SIM",
-    evaluation: "NÃO EXISTE",
-    maxScore: 10
+    evaluation: "NÃO EXISTE"
   },
   {
     item: "2.5",
@@ -65,8 +61,7 @@ export const technologyQuestions: Question[] = [
     application: [],
     evidence: "",
     hasEvidence: "SIM",
-    evaluation: "NÃO EXISTE",
-    maxScore: 10
+    evaluation: "NÃO EXISTE"
   },
   {
     item: "2.6",
@@ -76,8 +71,7 @@ export const technologyQuestions: Question[] = [
     application: [],
     evidence: "",
     hasEvidence: "SIM",
-    evaluation: "NÃO EXISTE",
-    maxScore: 10
+    evaluation: "NÃO EXISTE"
   },
   {
     item: "2.7",
@@ -89,7 +83,6 @@ export const technologyQuestions: Question[] = [
     ],
     evidence: "",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)",
-    maxScore: 10
+    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   }
 ];

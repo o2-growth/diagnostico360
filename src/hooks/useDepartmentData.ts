@@ -34,6 +34,87 @@ export const useDepartmentData = (id: string | undefined) => {
             annualCost: 6000
           }
         ]
+      },
+      'tecnologia': {
+        title: 'Tecnologia',
+        description: 'Gestão de tecnologia e infraestrutura',
+        image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b',
+        leader: 'Pedro Santos',
+        employees: 15,
+        team: [],
+        tools: []
+      },
+      'planejamento': {
+        title: 'Planejamento',
+        description: 'Planejamento estratégico',
+        image: 'https://images.unsplash.com/photo-1506784983877-45594efa4cbe',
+        leader: 'Ana Costa',
+        employees: 8,
+        team: [],
+        tools: []
+      },
+      'contabil': {
+        title: 'Contábil',
+        description: 'Gestão contábil',
+        image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c',
+        leader: 'Carlos Ferreira',
+        employees: 10,
+        team: [],
+        tools: []
+      },
+      'controladoria': {
+        title: 'Controladoria',
+        description: 'Controle e auditoria',
+        image: 'https://images.unsplash.com/photo-1516321165247-4aa89a48be28',
+        leader: 'Roberto Lima',
+        employees: 6,
+        team: [],
+        tools: []
+      },
+      'fiscal': {
+        title: 'Fiscal',
+        description: 'Gestão fiscal e tributária',
+        image: 'https://images.unsplash.com/photo-1554224154-26032ffc0d07',
+        leader: 'Fernanda Silva',
+        employees: 7,
+        team: [],
+        tools: []
+      },
+      'comercial': {
+        title: 'Comercial',
+        description: 'Gestão comercial e vendas',
+        image: 'https://images.unsplash.com/photo-1557804506-669a67965ba0',
+        leader: 'Ricardo Santos',
+        employees: 20,
+        team: [],
+        tools: []
+      },
+      'marketing': {
+        title: 'Marketing',
+        description: 'Marketing e comunicação',
+        image: 'https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07',
+        leader: 'Juliana Costa',
+        employees: 12,
+        team: [],
+        tools: []
+      },
+      'societario': {
+        title: 'Societário',
+        description: 'Gestão societária',
+        image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf',
+        leader: 'Marcos Oliveira',
+        employees: 5,
+        team: [],
+        tools: []
+      },
+      'capital-humano': {
+        title: 'Capital Humano',
+        description: 'Gestão de pessoas',
+        image: 'https://images.unsplash.com/photo-1521791136064-7986c2920216',
+        leader: 'Patricia Lima',
+        employees: 8,
+        team: [],
+        tools: []
       }
     };
     return departments[id as keyof typeof departments] || {
@@ -49,4 +130,3 @@ export const useDepartmentData = (id: string | undefined) => {
 
   return { departmentInfo, setDepartmentInfo };
 };
-

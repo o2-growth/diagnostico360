@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import SidePanel from '@/components/SidePanel';
@@ -17,7 +16,7 @@ const Department = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
   const [isMenuExpanded, setIsMenuExpanded] = useState(true);
-  const [isChartVisible, setIsChartVisible] = useState(true);
+  const [isChartVisible, setIsChartVisible] = useState(false);
   const [departmentInfo, setDepartmentInfo] = useState(() => {
     const departments = {
       'financeiro': {
@@ -222,7 +221,6 @@ const Department = () => {
             <Tabs defaultValue="overview" className="w-full">
               <TabsList className="w-full justify-start mb-6">
                 <TabsTrigger value="overview">Visão Geral</TabsTrigger>
-                <TabsTrigger value="processes">Processos</TabsTrigger>
                 <TabsTrigger value="questions">Perguntas</TabsTrigger>
               </TabsList>
               <TabsContent value="overview">
@@ -230,7 +228,9 @@ const Department = () => {
                   <div>
                     <h3 className="text-xl font-medium mb-4">Sobre a área</h3>
                     <p className="text-dashboard-muted">
-                      Esta seção conterá uma visão geral detalhada da área, incluindo suas principais responsabilidades e objetivos.
+                      {departmentInfo.title} é uma área estratégica que desempenha um papel fundamental 
+                      na estrutura organizacional da empresa. Com foco em excelência e inovação, a área 
+                      busca constantemente aprimorar seus processos e entregar resultados de alta qualidade.
                     </p>
                   </div>
                   
@@ -247,22 +247,54 @@ const Department = () => {
                       </div>
                     </div>
                   </div>
-                </div>
-              </TabsContent>
-              <TabsContent value="processes">
-                <div className="space-y-4">
-                  <h3 className="text-xl font-medium">Processos</h3>
-                  <p className="text-dashboard-muted">
-                    Aqui serão listados os principais processos e fluxos de trabalho da área.
-                  </p>
+
+                  <div className="space-y-4">
+                    <h4 className="font-medium">Principais responsabilidades</h4>
+                    <ul className="list-disc pl-6 space-y-2 text-dashboard-muted">
+                      <li>Desenvolvimento e implementação de estratégias</li>
+                      <li>Gestão e otimização de recursos</li>
+                      <li>Análise e monitoramento de indicadores</li>
+                      <li>Coordenação de projetos estratégicos</li>
+                      <li>Implementação de melhorias contínuas</li>
+                    </ul>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h4 className="font-medium">Objetivos e metas</h4>
+                    <ul className="list-disc pl-6 space-y-2 text-dashboard-muted">
+                      <li>Aumentar a eficiência operacional</li>
+                      <li>Desenvolver e capacitar a equipe</li>
+                      <li>Otimizar processos internos</li>
+                      <li>Garantir conformidade com normas e regulamentos</li>
+                      <li>Promover inovação e melhoria contínua</li>
+                    </ul>
+                  </div>
                 </div>
               </TabsContent>
               <TabsContent value="questions">
                 <div className="space-y-4">
-                  <h3 className="text-xl font-medium">Perguntas Frequentes</h3>
-                  <p className="text-dashboard-muted">
-                    Esta seção será expandida com perguntas e respostas específicas sobre diversos aspectos da área.
-                  </p>
+                  <h3 className="text-xl font-medium mb-6">Lista de Verificação</h3>
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="bg-dashboard-card-hover border-b border-dashboard-border">
+                          <th className="py-3 px-4 text-left font-medium">Item</th>
+                          <th className="py-3 px-4 text-left font-medium">Perguntas</th>
+                          <th className="py-3 px-4 text-left font-medium">É aplicável nessa unidade? SIM/NÃO</th>
+                          <th className="py-3 px-4 text-left font-medium">Forma de Aplicação</th>
+                          <th className="py-3 px-4 text-left font-medium">Evidências</th>
+                          <th className="py-3 px-4 text-left font-medium">Existe evidência? S/N</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b border-dashboard-border">
+                          <td className="py-4 px-4 text-dashboard-muted" colSpan={6}>
+                            Nenhuma pergunta cadastrada
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </TabsContent>
             </Tabs>
@@ -274,4 +306,3 @@ const Department = () => {
 };
 
 export default Department;
-

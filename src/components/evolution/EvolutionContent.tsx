@@ -1,5 +1,6 @@
 
 import MonthlyChart from '@/components/MonthlyChart';
+import MetricCard from '@/components/MetricCard';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
 
 const EvolutionContent = () => {
@@ -136,6 +137,9 @@ const EvolutionContent = () => {
     </div>
   );
 
+  // Pegando o último valor do gráfico mensal para mostrar no MetricCard
+  const currentExcellenceValue = 82; // O último valor do array de dados do MonthlyChart
+
   return (
     <>
       <header className="mb-8">
@@ -144,7 +148,14 @@ const EvolutionContent = () => {
       </header>
 
       <div className="flex flex-col gap-6">
-        <MonthlyChart />
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
+          <MonthlyChart />
+          <MetricCard
+            title="Nível de Excelência Atual"
+            value={currentExcellenceValue}
+            color="#8989DE"
+          />
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {areasData.map((area) => (
@@ -162,3 +173,4 @@ const EvolutionContent = () => {
 };
 
 export default EvolutionContent;
+

@@ -17,13 +17,13 @@ const DepartmentScores = ({ questions }: DepartmentScoresProps) => {
   const CustomTick = (props: any) => {
     const { x, y, payload } = props;
     
-    // Split text into multiple lines if longer than 25 characters
+    // Split text into multiple lines if longer than 30 characters
     const words = payload.value.split(' ');
     const lines: string[] = [];
     let currentLine = '';
     
     words.forEach((word: string) => {
-      if (currentLine.length + word.length < 25) {
+      if (currentLine.length + word.length < 30) {
         currentLine += (currentLine.length === 0 ? '' : ' ') + word;
       } else {
         lines.push(currentLine);
@@ -39,12 +39,12 @@ const DepartmentScores = ({ questions }: DepartmentScoresProps) => {
         {lines.map((line, i) => (
           <text
             key={i}
-            x={-6}
-            y={i * 12}
+            x={-10}
+            y={i * 14}
             dy={4}
             textAnchor="end"
             fill="#828179"
-            fontSize={12}
+            fontSize={13}
           >
             {line}
           </text>
@@ -54,20 +54,24 @@ const DepartmentScores = ({ questions }: DepartmentScoresProps) => {
   };
 
   return (
-    <div className="dashboard-card h-[400px]">
+    <div className="dashboard-card h-[600px]">
       <h2 className="text-xl font-medium mb-6">Scores por Item</h2>
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer width="100%" height="90%">
         <BarChart
           data={data}
           layout="vertical"
-          margin={{ top: 20, right: 30, bottom: 20, left: 200 }}
+          margin={{ top: 20, right: 30, bottom: 20, left: 250 }}
         >
           <CartesianGrid horizontal={false} stroke="rgba(255,255,255,0.1)" />
-          <XAxis type="number" domain={[0, 100]} />
+          <XAxis 
+            type="number" 
+            domain={[0, 100]}
+            tick={{ fill: '#828179' }}
+          />
           <YAxis 
             dataKey="name" 
             type="category" 
-            width={180}
+            width={240}
             tick={<CustomTick />}
             interval={0}
           />

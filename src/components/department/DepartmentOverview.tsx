@@ -1,10 +1,10 @@
 
-import { DepartmentInfo } from "@/types/department";
+import { DepartmentData } from "@/types/department";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 import DepartmentRadar from './DepartmentRadar';
 
 interface DepartmentOverviewProps {
-  departmentInfo: DepartmentInfo;
+  departmentInfo: DepartmentData;
   calculateTotalCost: () => number;
   evolutionData: any[];
   questions: any[];

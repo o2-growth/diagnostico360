@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, Edit2 } from 'lucide-react';
@@ -181,6 +182,17 @@ const Department = () => {
     setIsMenuExpanded(isOpen);
   };
 
+  const handleTabChange = (value: string) => {
+    switch (value) {
+      case 'dashboard':
+      case 'evolution':
+      case 'areas':
+      case 'settings':
+        navigate('/', { state: { activeTab: value } });
+        break;
+    }
+  };
+
   const calculateTotalCost = () => {
     const employeeCost = departmentInfo.team.reduce((acc, emp) => 
       acc + (emp.salary + emp.benefits), 0);
@@ -191,7 +203,10 @@ const Department = () => {
 
   return (
     <div className="min-h-screen">
-      <SidePanel onMenuToggle={handleMenuToggle} />
+      <SidePanel 
+        onMenuToggle={handleMenuToggle} 
+        onTabChange={handleTabChange}
+      />
       <div 
         className={`transition-all duration-300 ${
           isMenuExpanded ? 'pl-64' : 'pl-16'

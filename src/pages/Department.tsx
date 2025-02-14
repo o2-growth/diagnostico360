@@ -8,8 +8,18 @@ import DepartmentQuestions from '@/components/department/DepartmentQuestions';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDepartmentData } from '@/hooks/useDepartmentData';
 import { evolutionData } from '@/data/evolutionData';
-import { questions } from '@/data/questionsData';
 import { useToast } from "@/components/ui/use-toast";
+import { Question } from '@/types/department';
+import { marketingQuestions } from '@/data/questions/marketing';
+import { financialQuestions } from '@/data/questions/financial';
+import { technologyQuestions } from '@/data/questions/technology';
+import { planningQuestions } from '@/data/questions/planning';
+import { accountingQuestions } from '@/data/questions/accounting';
+import { controllingQuestions } from '@/data/questions/controlling';
+import { taxQuestions } from '@/data/questions/tax';
+import { commercialQuestions } from '@/data/questions/commercial';
+import { corporateQuestions } from '@/data/questions/corporate';
+import { humanCapitalQuestions } from '@/data/questions/human-capital';
 
 const Department = () => {
   const { id } = useParams();
@@ -44,6 +54,33 @@ const Department = () => {
     return employeeCost + toolsCost;
   };
 
+  const getDepartmentQuestions = (): Question[] => {
+    switch (id) {
+      case 'marketing':
+        return marketingQuestions;
+      case 'financeiro':
+        return financialQuestions;
+      case 'tecnologia':
+        return technologyQuestions;
+      case 'planejamento':
+        return planningQuestions;
+      case 'contabil':
+        return accountingQuestions;
+      case 'controladoria':
+        return controllingQuestions;
+      case 'fiscal':
+        return taxQuestions;
+      case 'comercial':
+        return commercialQuestions;
+      case 'societario':
+        return corporateQuestions;
+      case 'capital-humano':
+        return humanCapitalQuestions;
+      default:
+        return [];
+    }
+  };
+
   return (
     <div className="min-h-screen">
       <SidePanel onTabChange={handleTabChange} onMenuToggle={handleMenuToggle} />
@@ -72,7 +109,7 @@ const Department = () => {
               />
             </TabsContent>
             <TabsContent value="questions">
-              <DepartmentQuestions questions={questions} />
+              <DepartmentQuestions questions={getDepartmentQuestions()} />
             </TabsContent>
           </Tabs>
         </div>
@@ -82,3 +119,4 @@ const Department = () => {
 };
 
 export default Department;
+

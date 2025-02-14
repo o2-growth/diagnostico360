@@ -1,9 +1,9 @@
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LayoutDashboard, Settings, Building2, TrendingUp, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { LayoutDashboard, Settings, Building2, TrendingUp, PanelLeftClose, PanelLeftOpen, Download } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { exportToPdf } from "@/utils/exportToPdf";
 
 interface SidePanelProps {
   onTabChange: (value: string) => void;
@@ -48,6 +48,10 @@ const SidePanel = ({ onTabChange, onMenuToggle }: SidePanelProps) => {
       return 'areas';
     }
     return 'dashboard';
+  };
+
+  const handleExport = async () => {
+    await exportToPdf();
   };
 
   return (
@@ -102,6 +106,14 @@ const SidePanel = ({ onTabChange, onMenuToggle }: SidePanelProps) => {
           </TabsList>
           <div className="flex-1" />
           <TabsList className="flex flex-col h-auto bg-transparent text-white mt-auto">
+            <Button 
+              variant="ghost"
+              className={`w-full justify-${isOpen ? 'start' : 'center'} gap-2 text-white p-3`}
+              onClick={handleExport}
+            >
+              <Download className="w-5 h-5 shrink-0" />
+              {isOpen && "Exportar"}
+            </Button>
             <TabsTrigger 
               value="settings" 
               className={`w-full justify-${isOpen ? 'start' : 'center'} gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white p-3`}

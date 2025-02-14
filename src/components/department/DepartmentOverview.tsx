@@ -1,4 +1,3 @@
-
 import { DepartmentData } from "@/types/department";
 import DepartmentRadar from './DepartmentRadar';
 import DepartmentScores from './DepartmentScores';
@@ -30,15 +29,19 @@ const DepartmentOverview = ({
   const score = calculateScore();
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6" data-department={departmentInfo.name}>
       <div className="flex items-center gap-2 text-xl font-medium">
         <span>Score:</span>
         <span className="text-dashboard-primary">{score}</span>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <DepartmentRadar questions={questions} />
-        <DepartmentScores questions={questions} />
+        <div data-chart="Radar">
+          <DepartmentRadar questions={questions} />
+        </div>
+        <div data-chart="Scores">
+          <DepartmentScores questions={questions} />
+        </div>
       </div>
 
       <div className="dashboard-card">

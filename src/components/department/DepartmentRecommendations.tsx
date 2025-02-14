@@ -1,4 +1,3 @@
-
 import { Question } from '@/types/department';
 import { useState } from 'react';
 import { Button } from '../ui/button';
@@ -41,7 +40,7 @@ const DepartmentRecommendations = ({ questions }: DepartmentRecommendationsProps
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-recommendations>
       {criticalItems.map((item) => (
         <div key={item.item} className="dashboard-card">
           <div className="space-y-4">

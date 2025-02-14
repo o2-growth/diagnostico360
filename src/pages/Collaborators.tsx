@@ -13,6 +13,7 @@ import { useDepartmentData } from '@/hooks/useDepartmentData';
 import { Check, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import type { Employee } from '@/types/department';
 
 type EmployeeSegment = 'Quitters' | 'Disruptors' | 'Mildly disengaged' | 'Reliable and committed' | 'Thriving stars';
 
@@ -174,3 +175,4 @@ const Collaborators = () => {
 };
 
 export default Collaborators;
+

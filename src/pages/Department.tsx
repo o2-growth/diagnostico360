@@ -5,7 +5,6 @@ import SidePanel from '@/components/SidePanel';
 import DepartmentHeader from '@/components/department/DepartmentHeader';
 import DepartmentOverview from '@/components/department/DepartmentOverview';
 import DepartmentQuestions from '@/components/department/DepartmentQuestions';
-import DepartmentEvolution from '@/components/department/DepartmentEvolution';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDepartmentData } from '@/hooks/useDepartmentData';
 import { evolutionData } from '@/data/evolutionData';
@@ -54,7 +53,6 @@ const Department = () => {
             <TabsList>
               <TabsTrigger value="overview">Visão Geral</TabsTrigger>
               <TabsTrigger value="questions">Questões</TabsTrigger>
-              <TabsTrigger value="evolution">Evolução</TabsTrigger>
             </TabsList>
             <TabsContent value="overview">
               <DepartmentOverview
@@ -66,9 +64,6 @@ const Department = () => {
             <TabsContent value="questions">
               <DepartmentQuestions questions={questions} />
             </TabsContent>
-            <TabsContent value="evolution">
-              <DepartmentEvolution data={evolutionData} />
-            </TabsContent>
           </Tabs>
         </div>
       </div>
@@ -77,3 +72,4 @@ const Department = () => {
 };
 
 export default Department;
+

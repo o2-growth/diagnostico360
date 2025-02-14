@@ -1,6 +1,6 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LayoutDashboard, Settings, Building2, TrendingUp, PanelLeftClose, PanelLeftOpen, Users } from "lucide-react";
+import { LayoutDashboard, Settings, Building2, TrendingUp, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -28,9 +28,6 @@ const SidePanel = ({ onTabChange, onMenuToggle }: SidePanelProps) => {
       case 'areas':
         navigate('/', { state: { activeTab: 'areas' } });
         break;
-      case 'collaborators':
-        navigate('/collaborators');
-        break;
       case 'settings':
         navigate('/', { state: { activeTab: 'settings' } });
         break;
@@ -49,9 +46,6 @@ const SidePanel = ({ onTabChange, onMenuToggle }: SidePanelProps) => {
     }
     if (location.pathname.includes('/department/')) {
       return 'areas';
-    }
-    if (location.pathname === '/collaborators') {
-      return 'collaborators';
     }
     return 'dashboard';
   };
@@ -104,13 +98,6 @@ const SidePanel = ({ onTabChange, onMenuToggle }: SidePanelProps) => {
             >
               <Building2 className="w-5 h-5 shrink-0" />
               {isOpen && "Áreas"}
-            </TabsTrigger>
-            <TabsTrigger 
-              value="collaborators" 
-              className={`w-full justify-${isOpen ? 'start' : 'center'} gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white p-3`}
-            >
-              <Users className="w-5 h-5 shrink-0" />
-              {isOpen && "Colaboradores"}
             </TabsTrigger>
           </TabsList>
           <div className="flex-1" />

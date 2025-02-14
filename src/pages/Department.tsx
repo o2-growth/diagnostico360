@@ -10,8 +10,6 @@ import { useDepartmentData } from '@/hooks/useDepartmentData';
 import { evolutionData } from '@/data/evolutionData';
 import { questions } from '@/data/questionsData';
 import { useToast } from "@/components/ui/use-toast";
-import { Button } from '@/components/ui/button';
-import { Users } from 'lucide-react';
 
 const Department = () => {
   const { id } = useParams();
@@ -55,22 +53,12 @@ const Department = () => {
         }`}
       >
         <div className="p-8">
-          <div className="flex items-center justify-between mb-6">
-            <DepartmentHeader
-              departmentInfo={departmentInfo}
-              isEditing={isEditing}
-              onEditToggle={() => setIsEditing(!isEditing)}
-              onBack={() => navigate('/', { state: { activeTab: 'areas' } })}
-            />
-            <Button
-              variant="outline"
-              onClick={() => navigate('/collaborators')}
-              className="flex items-center gap-2"
-            >
-              <Users className="h-4 w-4" />
-              Ver Colaboradores
-            </Button>
-          </div>
+          <DepartmentHeader
+            departmentInfo={departmentInfo}
+            isEditing={isEditing}
+            onEditToggle={() => setIsEditing(!isEditing)}
+            onBack={() => navigate('/', { state: { activeTab: 'areas' } })}
+          />
           <Tabs defaultValue="overview" className="mt-6">
             <TabsList>
               <TabsTrigger value="overview">Visão Geral</TabsTrigger>

@@ -1,10 +1,10 @@
-
 import { useState } from 'react';
 import { ChevronDown, ChevronRight, Upload } from 'lucide-react';
 import { Question, EvaluationStatus } from '@/types/department';
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -28,6 +28,9 @@ const DepartmentQuestions = ({ questions }: DepartmentQuestionsProps) => {
   );
   const [evaluations, setEvaluations] = useState<Record<string, EvaluationStatus>>(
     questions.reduce((acc, q) => ({ ...acc, [q.item]: q.evaluation || "NÃO EXISTE" }), {})
+  );
+  const [scores, setScores] = useState<Record<string, number>>(
+    questions.reduce((acc, q) => ({ ...acc, [q.item]: 0 }), {})
   );
   const [editingQuestion, setEditingQuestion] = useState<string | null>(null);
   const [questionText, setQuestionText] = useState("");
@@ -53,15 +56,10 @@ const DepartmentQuestions = ({ questions }: DepartmentQuestionsProps) => {
     setEvaluations(prev => ({ ...prev, [item]: value }));
   };
 
-  const getScoreForEvaluation = (evaluation: EvaluationStatus): number => {
-    switch (evaluation) {
-      case "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)":
-        return 7;
-      case "EXISTE E FUNCIONA PERFEITAMENTE":
-        return 10;
-      case "NÃO EXISTE":
-      default:
-        return 0;
+  const handleScoreChange = (item: string, value: string) => {
+    const numValue = parseInt(value);
+    if (!isNaN(numValue) && numValue >= 0 && numValue <= 10) {
+      setScores(prev => ({ ...prev, [item]: numValue }));
     }
   };
 
@@ -245,9 +243,14 @@ const DepartmentQuestions = ({ questions }: DepartmentQuestionsProps) => {
                   </div>
                   <div>
                     <div className="text-sm font-medium text-dashboard-muted mb-2">Nota Avaliação</div>
-                    <div className="h-10 px-3 flex items-center border rounded-md bg-background">
-                      {getScoreForEvaluation(evaluations[item.item])}
-                    </div>
+                    <Input
+                      type="number"
+                      min="0"
+                      max="10"
+                      value={scores[item.item]}
+                      onChange={(e) => handleScoreChange(item.item, e.target.value)}
+                      className="h-10"
+                    />
                   </div>
                 </div>
               </div>
@@ -260,4 +263,3 @@ const DepartmentQuestions = ({ questions }: DepartmentQuestionsProps) => {
 };
 
 export default DepartmentQuestions;
-

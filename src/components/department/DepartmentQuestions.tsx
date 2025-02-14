@@ -220,7 +220,7 @@ const DepartmentQuestions = ({ questions }: DepartmentQuestionsProps) => {
                   </ToggleGroup>
                 </div>
 
-                <div className="grid grid-cols-3 gap-4 bg-secondary/20 p-4 rounded-lg">
+                <div className="grid grid-cols-2 gap-4 bg-secondary/20 p-4 rounded-lg">
                   <div>
                     <div className="text-sm font-medium text-dashboard-muted mb-2">Avaliação</div>
                     <Select
@@ -247,12 +247,6 @@ const DepartmentQuestions = ({ questions }: DepartmentQuestionsProps) => {
                     <div className="text-sm font-medium text-dashboard-muted mb-2">Nota Avaliação</div>
                     <div className="h-10 px-3 flex items-center border rounded-md bg-background">
                       {getScoreForEvaluation(evaluations[item.item])}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium text-dashboard-muted mb-2">Nota Máxima</div>
-                    <div className="h-10 px-3 flex items-center border rounded-md bg-background">
-                      10
                     </div>
                   </div>
                 </div>

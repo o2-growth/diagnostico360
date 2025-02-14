@@ -12,7 +12,8 @@ export const questions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Regime fiscal de apuração dos tributos através da Contabilidade, Estudos de Impacto de Carga Tributária, Relatório de Acompanhamento mensal de Tributos, Relatório de Recolhimentos",
-    hasEvidence: "SIM"
+    hasEvidence: "SIM",
+    maxScore: 10
   },
   {
     item: "7.2",
@@ -24,7 +25,8 @@ export const questions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Comprovante de regularidade fiscal: Federal, Estadual e Municipal",
-    hasEvidence: "SIM"
+    hasEvidence: "SIM",
+    maxScore: 10
   },
   {
     item: "7.3",
@@ -36,7 +38,8 @@ export const questions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Extrato da apuração dos tributos",
-    hasEvidence: "SIM"
+    hasEvidence: "SIM",
+    maxScore: 10
   },
   {
     item: "7.4",
@@ -48,7 +51,8 @@ export const questions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Documentação fiscal organizada e atualizada",
-    hasEvidence: "SIM"
+    hasEvidence: "SIM",
+    maxScore: 10
   },
   {
     item: "7.5",
@@ -60,6 +64,7 @@ export const questions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Sistema integrado de gestão fiscal e financeira",
-    hasEvidence: "NÃO"
+    hasEvidence: "NÃO",
+    maxScore: 10
   }
 ];

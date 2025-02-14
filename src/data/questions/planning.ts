@@ -13,7 +13,7 @@ export const planningQuestions: Question[] = [
     ],
     evidence: "Projetos, Cronograma de Reuniões, Atas, Comitê de Inovação",
     hasEvidence: "SIM",
-    evaluation: "EXISTE (MAS INFORMALMENTE)",
+    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)",
     maxScore: 10
   },
   {
@@ -45,3 +45,4 @@ export const planningQuestions: Question[] = [
     maxScore: 10
   }
 ];
+

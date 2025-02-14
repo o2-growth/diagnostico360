@@ -1,17 +1,23 @@
 
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import SidePanel from '@/components/SidePanel';
 import DepartmentHeader from '@/components/department/DepartmentHeader';
 import DepartmentOverview from '@/components/department/DepartmentOverview';
 import DepartmentQuestions from '@/components/department/DepartmentQuestions';
 import DepartmentEvolution from '@/components/department/DepartmentEvolution';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useDepartmentData } from '@/hooks/useDepartmentData';
+import { evolutionData } from '@/data/evolutionData';
+import { questions } from '@/data/questionsData';
 
 const Department = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
   const [isMenuExpanded, setIsMenuExpanded] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const { departmentInfo } = useDepartmentData(id);
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
@@ -19,6 +25,14 @@ const Department = () => {
 
   const handleMenuToggle = (isOpen: boolean) => {
     setIsMenuExpanded(isOpen);
+  };
+
+  const calculateTotalCost = () => {
+    const employeeCost = departmentInfo.team.reduce((acc, emp) => 
+      acc + (emp.salary + emp.benefits), 0);
+    const toolsCost = departmentInfo.tools.reduce((acc, tool) => 
+      acc + tool.monthlyCost, 0);
+    return employeeCost + toolsCost;
   };
 
   return (
@@ -30,7 +44,12 @@ const Department = () => {
         }`}
       >
         <div className="p-8">
-          <DepartmentHeader departmentId={id || ''} />
+          <DepartmentHeader
+            departmentInfo={departmentInfo}
+            isEditing={isEditing}
+            onEditToggle={() => setIsEditing(!isEditing)}
+            onBack={() => navigate('/', { state: { activeTab: 'areas' } })}
+          />
           <Tabs defaultValue="overview" className="mt-6">
             <TabsList>
               <TabsTrigger value="overview">Visão Geral</TabsTrigger>
@@ -38,13 +57,17 @@ const Department = () => {
               <TabsTrigger value="evolution">Evolução</TabsTrigger>
             </TabsList>
             <TabsContent value="overview">
-              <DepartmentOverview departmentId={id || ''} />
+              <DepartmentOverview
+                departmentInfo={departmentInfo}
+                calculateTotalCost={calculateTotalCost}
+                evolutionData={evolutionData}
+              />
             </TabsContent>
             <TabsContent value="questions">
-              <DepartmentQuestions departmentId={id || ''} />
+              <DepartmentQuestions questions={questions} />
             </TabsContent>
             <TabsContent value="evolution">
-              <DepartmentEvolution departmentId={id || ''} />
+              <DepartmentEvolution data={evolutionData} />
             </TabsContent>
           </Tabs>
         </div>

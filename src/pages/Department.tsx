@@ -1,7 +1,8 @@
+
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import SidePanel from '@/components/SidePanel';
-import { ChevronLeft, Users, ChevronDown, ChevronUp, Edit2 } from 'lucide-react';
+import { ChevronLeft, Users, Edit2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Tabs,
@@ -43,7 +44,6 @@ const Department = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
   const [isMenuExpanded, setIsMenuExpanded] = useState(true);
-  const [isChartVisible, setIsChartVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
   const [departmentInfo, setDepartmentInfo] = useState<DepartmentData>(() => {
@@ -126,10 +126,6 @@ const Department = () => {
     setIsMenuExpanded(isOpen);
   };
 
-  const toggleChart = () => {
-    setIsChartVisible(!isChartVisible);
-  };
-
   const calculateTotalCost = () => {
     const employeeCost = departmentInfo.team.reduce((acc, emp) => 
       acc + (emp.salary + emp.benefits), 0);
@@ -137,6 +133,90 @@ const Department = () => {
       acc + tool.monthlyCost, 0);
     return employeeCost + toolsCost;
   };
+
+  const questions = [
+    {
+      item: "5.1",
+      title: "Plano de Contas",
+      question: "Existe um plano de contas gerencial financeiro, separando-os os grupos de recebimentos (entradas) e pagamentos (saídas) aderente à operação da empresa?",
+      applicable: "SIM",
+      application: ["1) Entrevistas com gestão e Financeiro;", "2) Solicitar Evidências"],
+      evidence: "Relatório do sistema de gestão financeiro",
+      hasEvidence: "SIM"
+    },
+    {
+      item: "5.2",
+      title: "Contas a Pagar",
+      question: "Todas as movimentações relativas às obrigações com fornecedores estão devidamente registradas e controladas no sistema de gestão financeira?",
+      applicable: "SIM",
+      application: ["1) Entrevistas com gestão e Financeiro;", "2) Solicitar Evidências"],
+      evidence: "Processos documentados de CAP, relatórios diários / mensais, Checklist de Lançamentos e Processamentos Diários (com quantidade de NF de entrada e Saída processadas), Registro de Treinamento",
+      hasEvidence: "SIM"
+    },
+    {
+      item: "5.3",
+      title: "Contas a Receber",
+      question: "Todas as movimentações relativas aos direitos das vendas aos clientes estão devidamente registradas e controladas no sistema de gestão financeira?",
+      applicable: "SIM",
+      application: ["1) Entrevistas com gestão e Financeiro;", "2) Solicitar Evidências"],
+      evidence: "Processos documentados de CAR, relatórios diários / mensais, Checklist de Lançamentos e Processamentos Diários (com quantidade de NF de entrada e Saída processadas), Registro de Treinamento",
+      hasEvidence: "SIM"
+    },
+    {
+      item: "5.4",
+      title: "Conciliação Bancária",
+      question: "A conciliação bancária está em dia? Os saldos dos bancos (e caixa/fundo fixo) são devidamente atualizados no sistema diariamente?",
+      applicable: "SIM",
+      application: ["1) Entrevistas com gestão e Financeiro;", "2) Solicitar Evidências"],
+      evidence: "Relatório do sistema de gestão financeiro",
+      hasEvidence: "SIM"
+    },
+    {
+      item: "5.5",
+      title: "Fluxo de Caixa",
+      question: "A empresa possui um demonstrativo mensal dos recebimentos x pagamentos, permitindo analisar, projetar e tomar decisões baseadas em informação real e confiável?",
+      applicable: "SIM",
+      application: ["1) Entrevistas com gestão e Financeiro;", "2) Solicitar Evidências"],
+      evidence: "Relatório do sistema de gestão financeiro",
+      hasEvidence: "SIM"
+    },
+    {
+      item: "5.6",
+      title: "Crédito e Cobrança",
+      question: "Há uma política clara de fornecimento de crédito, forma de pagamento e acompanhamento da cobrança dos clientes?",
+      applicable: "SIM",
+      application: ["1) Entrevistas com gestão e Financeiro;", "2) Solicitar Evidências"],
+      evidence: "Processos e Políticas Documentadas de Crédito, Cobrança, Limite de Crédito, Régua de Cobrança, Relatórios diários / Mensais",
+      hasEvidence: "SIM"
+    },
+    {
+      item: "5.7",
+      title: "Rentabilidade e Análise de Custo",
+      question: "",
+      applicable: "SIM",
+      application: [],
+      evidence: "",
+      hasEvidence: "SIM"
+    },
+    {
+      item: "5.8",
+      title: "Controle Orçamentário e Previsão Financeira",
+      question: "",
+      applicable: "SIM",
+      application: [],
+      evidence: "",
+      hasEvidence: "SIM"
+    },
+    {
+      item: "5.9",
+      title: "Relatórios",
+      question: "Existem relatórios que deem suporte ao acompanhamento das movimentações financeiras periodicamente (diário, semanal e mensal)?",
+      applicable: "SIM",
+      application: ["1) Entrevistas com gestão e Financeiro;", "2) Solicitar Evidências"],
+      evidence: "Relatório do sistema de gestão financeiro",
+      hasEvidence: "SIM"
+    }
+  ];
 
   return (
     <div className="min-h-screen">
@@ -174,58 +254,42 @@ const Department = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="dashboard-card">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-medium">Evolução da {departmentInfo.title}</h2>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={toggleChart}
-                >
-                  {isChartVisible ? (
-                    <ChevronUp className="h-4 w-4" />
-                  ) : (
-                    <ChevronDown className="h-4 w-4" />
-                  )}
-                </Button>
+              <h2 className="text-xl font-medium mb-6">Evolução da {departmentInfo.title}</h2>
+              <div className="h-[400px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={evolutionData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                    <XAxis 
+                      dataKey="period"
+                      stroke="#828179"
+                      fontSize={12}
+                      tickMargin={10}
+                      interval={2}
+                    />
+                    <YAxis 
+                      stroke="#828179"
+                      domain={[0, 100]}
+                      ticks={[0, 20, 40, 60, 80, 100]}
+                      fontSize={12}
+                    />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#1A1A19',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '8px'
+                      }}
+                      labelStyle={{ color: '#C4C3BB' }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="value"
+                      stroke="#8989DE"
+                      strokeWidth={2}
+                      dot={{ fill: '#8989DE' }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
               </div>
-              
-              {isChartVisible && (
-                <div className="h-[400px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={evolutionData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                      <XAxis 
-                        dataKey="period"
-                        stroke="#828179"
-                        fontSize={12}
-                        tickMargin={10}
-                        interval={2}
-                      />
-                      <YAxis 
-                        stroke="#828179"
-                        domain={[0, 100]}
-                        ticks={[0, 20, 40, 60, 80, 100]}
-                        fontSize={12}
-                      />
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: '#1A1A19',
-                          border: '1px solid rgba(255,255,255,0.1)',
-                          borderRadius: '8px'
-                        }}
-                        labelStyle={{ color: '#C4C3BB' }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="value"
-                        stroke="#8989DE"
-                        strokeWidth={2}
-                        dot={{ fill: '#8989DE' }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              )}
             </div>
 
             <CustomerRequests />
@@ -364,11 +428,25 @@ const Department = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr className="border-b border-dashboard-border">
-                          <td className="py-4 px-4 text-dashboard-muted" colSpan={6}>
-                            Nenhuma pergunta cadastrada
-                          </td>
-                        </tr>
+                        {questions.map((item) => (
+                          <tr key={item.item} className="border-b border-dashboard-border">
+                            <td className="py-4 px-4">{item.item}</td>
+                            <td className="py-4 px-4 max-w-md">
+                              <div className="font-medium">{item.title}</div>
+                              {item.question && <div className="text-dashboard-muted mt-1">{item.question}</div>}
+                            </td>
+                            <td className="py-4 px-4">{item.applicable}</td>
+                            <td className="py-4 px-4">
+                              <ul className="list-disc pl-4">
+                                {item.application.map((app, index) => (
+                                  <li key={index}>{app}</li>
+                                ))}
+                              </ul>
+                            </td>
+                            <td className="py-4 px-4">{item.evidence}</td>
+                            <td className="py-4 px-4">{item.hasEvidence}</td>
+                          </tr>
+                        ))}
                       </tbody>
                     </table>
                   </div>
@@ -383,3 +461,4 @@ const Department = () => {
 };
 
 export default Department;
+

@@ -13,6 +13,46 @@ const DepartmentScores = ({ questions }: DepartmentScoresProps) => {
            question.evaluation === "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)" ? 70 : 0)
   }));
 
+  // Custom tick component to handle text wrapping
+  const CustomTick = (props: any) => {
+    const { x, y, payload } = props;
+    
+    // Split text into multiple lines if longer than 25 characters
+    const words = payload.value.split(' ');
+    const lines: string[] = [];
+    let currentLine = '';
+    
+    words.forEach((word: string) => {
+      if (currentLine.length + word.length < 25) {
+        currentLine += (currentLine.length === 0 ? '' : ' ') + word;
+      } else {
+        lines.push(currentLine);
+        currentLine = word;
+      }
+    });
+    if (currentLine.length > 0) {
+      lines.push(currentLine);
+    }
+
+    return (
+      <g transform={`translate(${x},${y})`}>
+        {lines.map((line, i) => (
+          <text
+            key={i}
+            x={-6}
+            y={i * 12}
+            dy={4}
+            textAnchor="end"
+            fill="#828179"
+            fontSize={12}
+          >
+            {line}
+          </text>
+        ))}
+      </g>
+    );
+  };
+
   return (
     <div className="dashboard-card h-[400px]">
       <h2 className="text-xl font-medium mb-6">Scores por Item</h2>
@@ -28,12 +68,7 @@ const DepartmentScores = ({ questions }: DepartmentScoresProps) => {
             dataKey="name" 
             type="category" 
             width={180}
-            tick={{ 
-              fill: '#828179', 
-              fontSize: 12,
-              width: 170,
-              wordWrap: 'break-word'
-            }}
+            tick={<CustomTick />}
             interval={0}
           />
           <Bar 
@@ -48,3 +83,4 @@ const DepartmentScores = ({ questions }: DepartmentScoresProps) => {
 };
 
 export default DepartmentScores;
+

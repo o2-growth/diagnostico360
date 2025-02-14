@@ -14,14 +14,8 @@ interface DepartmentOverviewProps {
 const DepartmentOverview = ({ 
   departmentInfo, 
   calculateTotalCost, 
-  evolutionData,
   questions
 }: DepartmentOverviewProps) => {
-  const monthlyData = evolutionData.map(item => ({
-    name: item.month,
-    value: item.value
-  }));
-
   const calculateScore = () => {
     if (!questions || questions.length === 0) return 0;
     
@@ -36,43 +30,23 @@ const DepartmentOverview = ({
   const score = calculateScore();
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div className="dashboard-card">
-        <h2 className="text-xl font-medium mb-6">Score da Área</h2>
-        <div className="flex justify-center">
-          <MetricCard
-            title={departmentInfo.name}
-            value={score}
-            color={departmentInfo.color || "#61AAF2"}
-          />
+    <div className="grid grid-cols-1 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="dashboard-card">
+          <h2 className="text-xl font-medium mb-6">Nota final</h2>
+          <div className="flex justify-center">
+            <MetricCard
+              title={departmentInfo.name}
+              value={score}
+              color={departmentInfo.color || "#61AAF2"}
+            />
+          </div>
         </div>
+        
+        <DepartmentRadar questions={questions} />
       </div>
 
       <div className="dashboard-card">
-        <h2 className="text-xl font-medium mb-6">Evolução Mensal</h2>
-        <div className="h-[300px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={monthlyData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-              <XAxis 
-                dataKey="name" 
-                stroke="#828179"
-                fontSize={12}
-              />
-              <YAxis
-                stroke="#828179"
-                fontSize={12}
-                domain={[0, 100]}
-              />
-              <Bar dataKey="value" fill="#61AAF2" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-      
-      <DepartmentRadar questions={questions} />
-
-      <div className="dashboard-card col-span-2">
         <h2 className="text-xl font-medium mb-6">Custos</h2>
         <div className="space-y-4">
           <div>

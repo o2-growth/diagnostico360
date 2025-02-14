@@ -1,20 +1,18 @@
 
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from 'recharts';
+import { Question } from '@/types/department';
 
-const data = [
-  { subject: 'Financeiro', value: 65, target: 100 },
-  { subject: 'Tecnologia', value: 45, target: 100 },
-  { subject: 'Planejamento', value: 35, target: 100 },
-  { subject: 'Contábil', value: 55, target: 100 },
-  { subject: 'Controladoria', value: 40, target: 100 },
-  { subject: 'Fiscal', value: 60, target: 100 },
-  { subject: 'Comercial', value: 70, target: 100 },
-  { subject: 'Marketing', value: 50, target: 100 },
-  { subject: 'Societário', value: 45, target: 100 },
-  { subject: 'Capital Humano', value: 55, target: 100 }
-];
+interface DepartmentRadarProps {
+  questions: Question[];
+}
 
-const CustomerRequests = () => {
+const DepartmentRadar = ({ questions }: DepartmentRadarProps) => {
+  const data = questions.map(question => ({
+    subject: question.title,
+    value: 0, // Valor inicial, deve ser atualizado conforme a avaliação
+    target: question.maxScore
+  }));
+
   return (
     <div className="dashboard-card h-[400px]">
       <h2 className="text-xl font-medium mb-6">Resultado</h2>
@@ -47,4 +45,4 @@ const CustomerRequests = () => {
   );
 };
 
-export default CustomerRequests;
+export default DepartmentRadar;

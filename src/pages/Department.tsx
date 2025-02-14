@@ -81,6 +81,8 @@ const Department = () => {
     }
   };
 
+  const questions = getDepartmentQuestions();
+
   return (
     <div className="min-h-screen">
       <SidePanel onTabChange={handleTabChange} onMenuToggle={handleMenuToggle} />
@@ -106,10 +108,11 @@ const Department = () => {
                 departmentInfo={departmentInfo}
                 calculateTotalCost={calculateTotalCost}
                 evolutionData={evolutionData}
+                questions={questions}
               />
             </TabsContent>
             <TabsContent value="questions">
-              <DepartmentQuestions questions={getDepartmentQuestions()} />
+              <DepartmentQuestions questions={questions} />
             </TabsContent>
           </Tabs>
         </div>
@@ -119,4 +122,3 @@ const Department = () => {
 };
 
 export default Department;
-

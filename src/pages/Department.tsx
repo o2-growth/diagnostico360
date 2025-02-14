@@ -8,7 +8,7 @@ import DepartmentQuestions from '@/components/department/DepartmentQuestions';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDepartmentData } from '@/hooks/useDepartmentData';
 import { evolutionData } from '@/data/evolutionData';
-import { questions } from '@/data/questionsData';
+import { getQuestionsByDepartment } from '@/data/questionsData';
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from '@/components/ui/button';
 import { Users } from 'lucide-react';
@@ -21,6 +21,7 @@ const Department = () => {
   const [isEditing, setIsEditing] = useState(false);
   const { departmentInfo } = useDepartmentData(id);
   const { toast } = useToast();
+  const questions = getQuestionsByDepartment(id || '');
 
   if (!departmentInfo) {
     return (

@@ -72,4 +72,6 @@ export const controllingQuestions: Question[] = [
       "2) Solicitar Evidências"
     ],
     evidence: "Relatório de Fluxo de Caixa Realizado",
-    hasEvidence: "SIM
+    hasEvidence: "SIM"
+  }
+];

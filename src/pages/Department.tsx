@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDepartmentData } from '@/hooks/useDepartmentData';
 import { evolutionData } from '@/data/evolutionData';
 import { questions } from '@/data/questionsData';
+import { useToast } from "@/components/ui/use-toast";
 
 const Department = () => {
   const { id } = useParams();
@@ -17,6 +18,15 @@ const Department = () => {
   const [isMenuExpanded, setIsMenuExpanded] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const { departmentInfo } = useDepartmentData(id);
+  const { toast } = useToast();
+
+  if (!departmentInfo) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-lg text-dashboard-muted">Área não encontrada</p>
+      </div>
+    );
+  }
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
@@ -72,4 +82,3 @@ const Department = () => {
 };
 
 export default Department;
-

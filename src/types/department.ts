@@ -25,6 +25,11 @@ export interface DepartmentData {
   tools: Tool[];
 }
 
+export type EvaluationStatus = 
+  | "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
+  | "NÃO EXISTE"
+  | "EXISTE E FUNCIONA PERFEITAMENTE";
+
 export interface Question {
   item: string;
   title: string;
@@ -33,4 +38,8 @@ export interface Question {
   application: string[];
   evidence: string;
   hasEvidence: string;
+  evaluation?: EvaluationStatus;
+  score?: number;
+  maxScore: number;
 }
+

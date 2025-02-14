@@ -1,10 +1,17 @@
 
 import { useState } from 'react';
 import { ChevronDown, ChevronRight, Upload } from 'lucide-react';
-import { Question } from '@/types/department';
+import { Question, EvaluationStatus } from '@/types/department';
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 
 interface DepartmentQuestionsProps {
@@ -18,6 +25,9 @@ const DepartmentQuestions = ({ questions }: DepartmentQuestionsProps) => {
   );
   const [evidenceAnswers, setEvidenceAnswers] = useState<Record<string, string>>(
     questions.reduce((acc, q) => ({ ...acc, [q.item]: q.hasEvidence }), {})
+  );
+  const [evaluations, setEvaluations] = useState<Record<string, EvaluationStatus>>(
+    questions.reduce((acc, q) => ({ ...acc, [q.item]: q.evaluation || "NÃO EXISTE" }), {})
   );
   const [editingQuestion, setEditingQuestion] = useState<string | null>(null);
   const [questionText, setQuestionText] = useState("");
@@ -39,13 +49,28 @@ const DepartmentQuestions = ({ questions }: DepartmentQuestionsProps) => {
     setEvidenceAnswers(prev => ({ ...prev, [item]: value }));
   };
 
+  const handleEvaluationChange = (item: string, value: EvaluationStatus) => {
+    setEvaluations(prev => ({ ...prev, [item]: value }));
+  };
+
+  const getScoreForEvaluation = (evaluation: EvaluationStatus): number => {
+    switch (evaluation) {
+      case "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)":
+        return 7;
+      case "EXISTE E FUNCIONA PERFEITAMENTE":
+        return 10;
+      case "NÃO EXISTE":
+      default:
+        return 0;
+    }
+  };
+
   const handleEditClick = (item: string, currentQuestion: string) => {
     setEditingQuestion(item);
     setQuestionText(currentQuestion);
   };
 
   const handleSaveEdit = (item: string) => {
-    // Here you would typically save to your backend
     setEditingQuestion(null);
     toast({
       title: "Sucesso",
@@ -56,7 +81,6 @@ const DepartmentQuestions = ({ questions }: DepartmentQuestionsProps) => {
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      // Here you would typically handle the image upload to your backend
       toast({
         title: "Sucesso",
         description: "Imagem carregada com sucesso",
@@ -195,6 +219,43 @@ const DepartmentQuestions = ({ questions }: DepartmentQuestionsProps) => {
                     <ToggleGroupItem value="NÃO">NÃO</ToggleGroupItem>
                   </ToggleGroup>
                 </div>
+
+                <div className="grid grid-cols-3 gap-4 bg-secondary/20 p-4 rounded-lg">
+                  <div>
+                    <div className="text-sm font-medium text-dashboard-muted mb-2">Avaliação</div>
+                    <Select
+                      value={evaluations[item.item]}
+                      onValueChange={(value: EvaluationStatus) => handleEvaluationChange(item.item, value)}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)">
+                          EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)
+                        </SelectItem>
+                        <SelectItem value="NÃO EXISTE">
+                          NÃO EXISTE
+                        </SelectItem>
+                        <SelectItem value="EXISTE E FUNCIONA PERFEITAMENTE">
+                          EXISTE E FUNCIONA PERFEITAMENTE
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium text-dashboard-muted mb-2">Nota Avaliação</div>
+                    <div className="h-10 px-3 flex items-center border rounded-md bg-background">
+                      {getScoreForEvaluation(evaluations[item.item])}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium text-dashboard-muted mb-2">Nota Máxima</div>
+                    <div className="h-10 px-3 flex items-center border rounded-md bg-background">
+                      10
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
           </div>
@@ -205,3 +266,4 @@ const DepartmentQuestions = ({ questions }: DepartmentQuestionsProps) => {
 };
 
 export default DepartmentQuestions;
+

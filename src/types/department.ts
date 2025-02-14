@@ -17,6 +17,8 @@ export interface Tool {
 
 export interface DepartmentData {
   title: string;
+  name: string;
+  color: string;
   description: string;
   image: string;
   leader: string;
@@ -42,4 +44,3 @@ export interface Question {
   score?: number;
   maxScore: number;
 }
-

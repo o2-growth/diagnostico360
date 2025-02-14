@@ -13,7 +13,8 @@ export const planningQuestions: Question[] = [
     ],
     evidence: "Projetos, Cronograma de Reuniões, Atas, Comitê de Inovação",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
+    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)",
+    maxScore: 10
   },
   {
     item: "10.2",
@@ -26,7 +27,8 @@ export const planningQuestions: Question[] = [
     ],
     evidence: "Planejamento Estratégico de Crescimento e Expansão, Plano de Execução",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
+    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)",
+    maxScore: 10
   },
   {
     item: "10.3",
@@ -39,7 +41,7 @@ export const planningQuestions: Question[] = [
     ],
     evidence: "Planejamento Estratégico, Mapa estratégico, BSC, Métrica e Indicadores",
     hasEvidence: "SIM",
-    evaluation: "EXISTE E FUNCIONA PERFEITAMENTE"
+    evaluation: "EXISTE E FUNCIONA PERFEITAMENTE",
+    maxScore: 10
   }
 ];
-

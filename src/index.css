@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -24,6 +25,57 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
     --radius: 0.75rem;
+
+    --dashboard-dark: 60 1% 8%;
+    --dashboard-light: 60 6% 98%;
+    --dashboard-accent1: 240 53% 71%;
+    --dashboard-accent2: 211 85% 66%;
+    --dashboard-accent3: 126 29% 62%;
+    --dashboard-text: 40 4% 76%;
+    --dashboard-muted: 50 3% 51%;
+    --dashboard-card: 60 3% 10%;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+
+    --dashboard-dark: 60 1% 8%;
+    --dashboard-light: 60 6% 98%;
+    --dashboard-accent1: 240 53% 71%;
+    --dashboard-accent2: 211 85% 66%;
+    --dashboard-accent3: 126 29% 62%;
+    --dashboard-text: 40 4% 76%;
+    --dashboard-muted: 50 3% 51%;
+    --dashboard-card: 60 3% 10%;
+  }
+
+  :root.light {
+    --dashboard-dark: 60 6% 98%;
+    --dashboard-light: 60 1% 8%;
+    --dashboard-accent1: 240 53% 51%;
+    --dashboard-accent2: 211 85% 46%;
+    --dashboard-accent3: 126 29% 42%;
+    --dashboard-text: 40 4% 26%;
+    --dashboard-muted: 50 3% 41%;
+    --dashboard-card: 60 3% 95%;
   }
 }
 

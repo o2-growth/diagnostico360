@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -25,14 +26,14 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         dashboard: {
-          dark: "#141413",
-          light: "#FAFAF8",
-          accent1: "#8989DE",
-          accent2: "#61AAF2",
-          accent3: "#7EBF8E",
-          text: "#C4C3BB",
-          muted: "#828179",
-          card: "#1A1A19",
+          dark: "hsl(var(--dashboard-dark))",
+          light: "hsl(var(--dashboard-light))",
+          accent1: "hsl(var(--dashboard-accent1))",
+          accent2: "hsl(var(--dashboard-accent2))",
+          accent3: "hsl(var(--dashboard-accent3))",
+          text: "hsl(var(--dashboard-text))",
+          muted: "hsl(var(--dashboard-muted))",
+          card: "hsl(var(--dashboard-card))",
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",

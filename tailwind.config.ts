@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -32,7 +33,10 @@ export default {
           accent3: "#7EBF8E",
           text: "#C4C3BB",
           muted: "#828179",
-          card: "#1A1A19",
+          card: {
+            light: "#FFFFFF",
+            dark: "#1A1A19"
+          }
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",

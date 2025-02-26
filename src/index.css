@@ -60,22 +60,24 @@
   }
 }
 
-.glass-card {
-  @apply bg-dashboard-card bg-opacity-50 backdrop-blur-lg border border-white/10 rounded-xl;
-}
+@layer components {
+  .glass-card {
+    @apply bg-dashboard-card-dark bg-opacity-50 backdrop-blur-lg border border-white/10 rounded-xl dark:bg-dashboard-card-dark light:bg-dashboard-card-light;
+  }
 
-.dashboard-card {
-  @apply p-6 glass-card transition-all duration-300 hover:border-white/20;
-}
+  .dashboard-card {
+    @apply p-6 glass-card transition-all duration-300 hover:border-white/20;
+  }
 
-.metric-card {
-  @apply relative flex flex-col items-center justify-center p-8 dashboard-card;
-}
+  .metric-card {
+    @apply relative flex flex-col items-center justify-center p-8 dashboard-card;
+  }
 
-.light .glass-card {
-  @apply bg-white bg-opacity-80 border-gray-200;
-}
+  .light .glass-card {
+    @apply bg-white bg-opacity-80 border-gray-200;
+  }
 
-.light .dashboard-card {
-  @apply hover:border-gray-300;
+  .light .dashboard-card {
+    @apply hover:border-gray-300;
+  }
 }

@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -73,7 +72,7 @@
     --dashboard-accent1: 240 53% 51%;
     --dashboard-accent2: 211 85% 46%;
     --dashboard-accent3: 126 29% 42%;
-    --dashboard-text: 40 4% 26%;
+    --dashboard-text: 0 0% 0%;
     --dashboard-muted: 50 3% 41%;
     --dashboard-card: 60 3% 95%;
   }

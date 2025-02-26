@@ -62,7 +62,7 @@
 
 @layer components {
   .glass-card {
-    @apply bg-dashboard-card-dark bg-opacity-50 backdrop-blur-lg border border-white/10 rounded-xl dark:bg-dashboard-card-dark light:bg-dashboard-card-light;
+    @apply bg-dashboard-card-dark bg-opacity-50 backdrop-blur-lg border border-white/10 rounded-xl;
   }
 
   .dashboard-card {
@@ -73,11 +73,11 @@
     @apply relative flex flex-col items-center justify-center p-8 dashboard-card;
   }
 
-  .light .glass-card {
-    @apply bg-white bg-opacity-80 border-gray-200;
+  body.light .glass-card {
+    @apply bg-dashboard-card-light bg-opacity-80 border-gray-200;
   }
 
-  .light .dashboard-card {
+  body.light .dashboard-card {
     @apply hover:border-gray-300;
   }
 }

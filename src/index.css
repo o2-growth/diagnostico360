@@ -73,9 +73,9 @@
     --dashboard-accent1: 240 53% 51%;
     --dashboard-accent2: 211 85% 46%;
     --dashboard-accent3: 126 29% 42%;
-    --dashboard-text: 240 10% 13%;
-    --dashboard-muted: 240 4% 34%;
-    --dashboard-card: 0 0% 96%;
+    --dashboard-text: 222 14% 16%;
+    --dashboard-muted: 220 9% 46%;
+    --dashboard-card: 220 13% 95%;
   }
 }
 
@@ -102,15 +102,15 @@
   }
 
   :root.light .glass-card {
-    @apply border-black/10;
+    @apply border-black/20 shadow-sm;
   }
 
   :root.light .dashboard-card {
-    @apply border-black/10 hover:border-black/20;
+    @apply border-black/20 hover:border-black/30 shadow-sm;
   }
 
   :root.light .metric-card {
-    @apply border-black/10 hover:border-black/20;
+    @apply border-black/20 hover:border-black/30 shadow-sm;
   }
 
   :root.light [data-state="active"] {

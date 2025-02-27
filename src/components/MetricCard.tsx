@@ -2,6 +2,7 @@
 import React from 'react';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { useTheme } from '@/components/theme/theme-provider';
 
 interface MetricCardProps {
   title: string;
@@ -10,6 +11,9 @@ interface MetricCardProps {
 }
 
 const MetricCard = ({ title, value, color }: MetricCardProps) => {
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
+
   return (
     <div className="metric-card">
       <div className="relative w-32 h-32 mb-6">
@@ -20,7 +24,7 @@ const MetricCard = ({ title, value, color }: MetricCardProps) => {
             textSize: '1.25rem',
             pathColor: color,
             textColor: color,
-            trailColor: 'rgba(255,255,255,0.1)',
+            trailColor: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)',
           })}
         />
       </div>

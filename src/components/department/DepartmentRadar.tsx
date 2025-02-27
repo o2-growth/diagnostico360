@@ -1,12 +1,16 @@
 
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from 'recharts';
 import { Question } from '@/types/department';
+import { useTheme } from '@/components/theme/theme-provider';
 
 interface DepartmentRadarProps {
   questions: Question[];
 }
 
 const DepartmentRadar = ({ questions }: DepartmentRadarProps) => {
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
+
   const data = questions.map(question => ({
     subject: question.title,
     value: 0,
@@ -18,10 +22,10 @@ const DepartmentRadar = ({ questions }: DepartmentRadarProps) => {
       <h2 className="text-xl font-medium mb-6">Resultado</h2>
       <ResponsiveContainer width="100%" height="100%">
         <RadarChart data={data} margin={{ top: 20, right: 30, bottom: 20, left: 30 }}>
-          <PolarGrid stroke="rgba(255,255,255,0.1)" />
+          <PolarGrid stroke={isLight ? "rgba(0,0,0,0.2)" : "rgba(255,255,255,0.1)"} />
           <PolarAngleAxis 
             dataKey="subject" 
-            stroke="#828179" 
+            stroke={isLight ? "#333333" : "#828179"}
             tickLine={false}
             fontSize={12}
           />

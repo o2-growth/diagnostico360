@@ -1,5 +1,6 @@
 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
+import { useTheme } from '@/components/theme/theme-provider';
 
 const data = [
   { period: 'Jan/23', value: 30 },
@@ -29,22 +30,25 @@ const data = [
 ];
 
 const MonthlyChart = () => {
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
+
   return (
     <div className="dashboard-card h-[400px]">
       <h2 className="text-xl font-medium mb-6">Nível de Excelência</h2>
       <div className="h-[calc(100%-4rem)]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+            <CartesianGrid strokeDasharray="3 3" stroke={isLight ? "rgba(0,0,0,0.2)" : "rgba(255,255,255,0.1)"} />
             <XAxis 
               dataKey="period" 
-              stroke="#828179"
+              stroke={isLight ? "#333333" : "#828179"}
               fontSize={12}
               tickMargin={10}
               interval={2}
             />
             <YAxis 
-              stroke="#828179"
+              stroke={isLight ? "#333333" : "#828179"}
               domain={[0, 100]}
               ticks={[0, 20, 40, 60, 80, 100]}
               fontSize={12}

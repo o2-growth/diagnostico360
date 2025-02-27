@@ -73,7 +73,7 @@
     --dashboard-accent1: 240 53% 51%;
     --dashboard-accent2: 211 85% 46%;
     --dashboard-accent3: 126 29% 42%;
-    --dashboard-text: 240 10% 3.9%;
+    --dashboard-text: 60 1% 8%;
     --dashboard-muted: 215.4 16.3% 46.9%;
     --dashboard-card: 60 3% 95%;
   }
@@ -96,3 +96,4 @@
 .metric-card {
   @apply relative flex flex-col items-center justify-center p-8 dashboard-card;
 }
+

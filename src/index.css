@@ -105,6 +105,14 @@
     @apply border-black/10;
   }
 
+  :root.light .dashboard-card {
+    @apply border-black/10;
+  }
+
+  :root.light .metric-card {
+    @apply border-black/10;
+  }
+
   :root.light [data-state="active"] {
     @apply text-dashboard-light;
   }

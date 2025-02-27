@@ -97,3 +97,7 @@
   @apply relative flex flex-col items-center justify-center p-8 dashboard-card;
 }
 
+:root.light .glass-card {
+  @apply border-black/10;
+}
+

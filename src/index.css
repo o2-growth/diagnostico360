@@ -73,15 +73,15 @@
     --dashboard-accent1: 240 53% 51%;
     --dashboard-accent2: 211 85% 46%;
     --dashboard-accent3: 126 29% 42%;
-    --dashboard-text: 40 4% 26%;
-    --dashboard-muted: 50 3% 41%;
+    --dashboard-text: 240 10% 3.9%;
+    --dashboard-muted: 215.4 16.3% 46.9%;
     --dashboard-card: 60 3% 95%;
   }
 }
 
 @layer base {
   body {
-    @apply bg-dashboard-dark text-dashboard-text;
+    @apply bg-dashboard-dark text-dashboard-light;
   }
 }
 

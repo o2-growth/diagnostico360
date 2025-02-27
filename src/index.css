@@ -97,7 +97,17 @@
   @apply relative flex flex-col items-center justify-center p-8 dashboard-card;
 }
 
-:root.light .glass-card {
-  @apply border-black/10;
+:root.light {
+  .glass-card {
+    @apply border-black/10;
+  }
+  
+  [data-state="active"] {
+    @apply text-dashboard-light;
+  }
+  
+  [role="tablist"] button {
+    @apply text-dashboard-light;
+  }
 }
 

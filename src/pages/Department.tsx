@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import SidePanel from '@/components/SidePanel';
 import DepartmentHeader from '@/components/department/DepartmentHeader';
@@ -30,6 +30,34 @@ const Department = () => {
   const [isEditing, setIsEditing] = useState(false);
   const { departmentInfo } = useDepartmentData(id);
   const { toast } = useToast();
+  const [questions, setQuestions] = useState<Question[]>([]);
+
+  useEffect(() => {
+    const baseQuestions = getDepartmentQuestions();
+    
+    // Load stored answers from localStorage if available
+    const storedAnswers = localStorage.getItem('departmentAnswers');
+    if (storedAnswers) {
+      const parsedAnswers = JSON.parse(storedAnswers);
+      
+      // Merge department questions with saved answers
+      const updatedQuestions = baseQuestions.map(question => {
+        const savedQuestion = parsedAnswers[question.item];
+        if (savedQuestion) {
+          return {
+            ...question,
+            evaluation: savedQuestion.evaluation,
+            // Merge any other properties that might have been updated
+          };
+        }
+        return question;
+      });
+      
+      setQuestions(updatedQuestions);
+    } else {
+      setQuestions(baseQuestions);
+    }
+  }, [id]);
 
   if (!departmentInfo) {
     return (
@@ -81,8 +109,6 @@ const Department = () => {
         return [];
     }
   };
-
-  const questions = getDepartmentQuestions();
 
   return (
     <div className="min-h-screen">

@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { questions } from '@/data/questions';
-import { Radio } from '@/components/ui/radio-group';
+import { Radio, RadioGroup, RadioItem } from '@/components/ui/radio-group';
 import SidePanel from '@/components/SidePanel';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -50,6 +50,18 @@ const Assessment = () => {
       ...prev,
       [currentQuestion.item]: currentAnswer
     }));
+    
+    // Save to localStorage to make answers available in department pages
+    const questionToUpdate = {
+      ...currentQuestion,
+      evaluation: currentAnswer
+    };
+    
+    const storedAnswers = localStorage.getItem('departmentAnswers');
+    const parsedAnswers = storedAnswers ? JSON.parse(storedAnswers) : {};
+    
+    parsedAnswers[currentQuestion.item] = questionToUpdate;
+    localStorage.setItem('departmentAnswers', JSON.stringify(parsedAnswers));
     
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(prevIndex => prevIndex + 1);
@@ -111,26 +123,29 @@ const Assessment = () => {
                 </h2>
                 
                 <div className="mt-8 space-y-4">
-                  {evaluationOptions.map((option) => (
-                    <div 
-                      key={option} 
-                      className={`p-4 border rounded-md cursor-pointer transition-all ${
-                        currentAnswer === option 
-                          ? 'border-green-500 bg-green-500/10' 
-                          : 'border-dashboard-border hover:border-dashboard-accent3'
-                      }`}
-                      onClick={() => handleAnswerChange(option)}
-                    >
-                      <div className="flex items-center">
-                        <div className={`w-4 h-4 rounded-full mr-3 ${
+                  <RadioGroup
+                    value={currentAnswer}
+                    onValueChange={handleAnswerChange}
+                    className="space-y-4"
+                  >
+                    {evaluationOptions.map((option) => (
+                      <div 
+                        key={option} 
+                        className={`p-4 border rounded-md cursor-pointer transition-all ${
                           currentAnswer === option 
-                            ? 'bg-green-500' 
-                            : 'border border-dashboard-border'
-                        }`} />
-                        <span>{option}</span>
+                            ? 'border-green-500 bg-green-500/10' 
+                            : 'border-dashboard-border hover:border-dashboard-accent3'
+                        }`}
+                      >
+                        <div className="flex items-center">
+                          <RadioItem value={option} id={`option-${option}`} className="mr-3" />
+                          <label htmlFor={`option-${option}`} className="cursor-pointer w-full">
+                            {option}
+                          </label>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </RadioGroup>
                 </div>
                 
                 {currentQuestion.evidence && (

@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import Home from "./pages/Home";
 import Index from "./pages/Index";
 import Department from "./pages/Department";
 
@@ -31,7 +32,8 @@ function App() {
             <Sonner />
             <BrowserRouter>
               <Routes>
-                <Route path="/" element={<Index />} />
+                <Route path="/" element={<Home />} />
+                <Route path="/dashboard" element={<Index />} />
                 <Route path="/department/:id" element={<Department />} />
               </Routes>
             </BrowserRouter>

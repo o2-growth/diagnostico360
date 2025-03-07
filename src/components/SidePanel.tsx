@@ -1,5 +1,6 @@
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LayoutDashboard, Settings, Building2, TrendingUp, PanelLeftClose, PanelLeftOpen, Download } from "lucide-react";
+import { LayoutDashboard, Settings, Building2, TrendingUp, PanelLeftClose, PanelLeftOpen, Download, Home } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -19,17 +20,20 @@ const SidePanel = ({ onTabChange, onMenuToggle }: SidePanelProps) => {
     onTabChange(value);
     
     switch (value) {
+      case 'home':
+        navigate('/', { state: { activeTab: 'home' } });
+        break;
       case 'dashboard':
-        navigate('/', { state: { activeTab: 'dashboard' } });
+        navigate('/dashboard', { state: { activeTab: 'dashboard' } });
         break;
       case 'evolution':
-        navigate('/', { state: { activeTab: 'evolution' } });
+        navigate('/dashboard', { state: { activeTab: 'evolution' } });
         break;
       case 'areas':
-        navigate('/', { state: { activeTab: 'areas' } });
+        navigate('/dashboard', { state: { activeTab: 'areas' } });
         break;
       case 'settings':
-        navigate('/', { state: { activeTab: 'settings' } });
+        navigate('/dashboard', { state: { activeTab: 'settings' } });
         break;
     }
   };
@@ -42,6 +46,9 @@ const SidePanel = ({ onTabChange, onMenuToggle }: SidePanelProps) => {
 
   const getCurrentTab = () => {
     if (location.pathname === '/') {
+      return 'home';
+    }
+    if (location.pathname === '/dashboard') {
       return location.state?.activeTab || 'dashboard';
     }
     if (location.pathname.includes('/department/')) {
@@ -82,6 +89,13 @@ const SidePanel = ({ onTabChange, onMenuToggle }: SidePanelProps) => {
           onValueChange={handleTabChange}
         >
           <TabsList className="flex flex-col h-auto bg-transparent text-white">
+            <TabsTrigger 
+              value="home" 
+              className={`w-full justify-${isOpen ? 'start' : 'center'} gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white p-3`}
+            >
+              <Home className="w-5 h-5 shrink-0" />
+              {isOpen && "Início"}
+            </TabsTrigger>
             <TabsTrigger 
               value="dashboard" 
               className={`w-full justify-${isOpen ? 'start' : 'center'} gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white p-3`}

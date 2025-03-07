@@ -10,6 +10,7 @@ import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import Home from "./pages/Home";
 import Index from "./pages/Index";
 import Department from "./pages/Department";
+import Assessment from "./pages/Assessment";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -35,6 +36,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/dashboard" element={<Index />} />
                 <Route path="/department/:id" element={<Department />} />
+                <Route path="/assessment" element={<Assessment />} />
               </Routes>
             </BrowserRouter>
           </TooltipProvider>

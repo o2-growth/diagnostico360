@@ -11,7 +11,7 @@ const Home = () => {
   const [menuOpen, setMenuOpen] = useState(true);
 
   const handleStartDiagnosis = () => {
-    navigate('/dashboard');
+    navigate('/assessment');
   };
 
   const handleTabChange = (value: string) => {

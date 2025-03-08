@@ -9,6 +9,7 @@ export const useAssessment = (questions: Question[]) => {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [currentAnswer, setCurrentAnswer] = useState<string>('');
   const [answeredQuestions, setAnsweredQuestions] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const { toast } = useToast();
   
@@ -17,16 +18,23 @@ export const useAssessment = (questions: Question[]) => {
   
   // Load answered questions from localStorage
   useEffect(() => {
+    setIsLoading(true);
     try {
       const storedAnswers = localStorage.getItem('departmentAnswers');
+      console.log("Loaded stored answers:", storedAnswers);
+      
       if (storedAnswers) {
         const parsedAnswers = JSON.parse(storedAnswers);
         const answeredQuestionIds = Object.keys(parsedAnswers);
+        console.log("Answered question IDs:", answeredQuestionIds);
+        
         setAnsweredQuestions(answeredQuestionIds);
         
         // Find first unanswered question
         if (answeredQuestionIds.length > 0 && answeredQuestionIds.length < questions.length) {
           const unansweredIndex = questions.findIndex(q => !answeredQuestionIds.includes(q.item));
+          console.log("First unanswered question index:", unansweredIndex);
+          
           if (unansweredIndex !== -1) {
             setCurrentQuestionIndex(unansweredIndex);
           }
@@ -39,6 +47,8 @@ export const useAssessment = (questions: Question[]) => {
         description: "Não foi possível carregar suas respostas anteriores.",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   }, [toast, questions]);
 
@@ -64,6 +74,20 @@ export const useAssessment = (questions: Question[]) => {
     }
   }, [currentQuestionIndex, currentQuestion]);
 
+  // Check if there's an ongoing assessment (has saved answers)
+  const hasOngoingAssessment = (): boolean => {
+    try {
+      const storedAnswers = localStorage.getItem('departmentAnswers');
+      if (!storedAnswers) return false;
+      
+      const parsedAnswers = JSON.parse(storedAnswers);
+      return Object.keys(parsedAnswers).length > 0;
+    } catch (error) {
+      console.error("Error checking for ongoing assessment:", error);
+      return false;
+    }
+  };
+
   const saveAnswer = () => {
     if (!currentQuestion || !currentAnswer) return;
     
@@ -87,6 +111,7 @@ export const useAssessment = (questions: Question[]) => {
       };
       
       localStorage.setItem('departmentAnswers', JSON.stringify(parsedAnswers));
+      console.log("Saved answer to localStorage:", parsedAnswers);
       
       setAnswers(prev => ({
         ...prev,
@@ -179,10 +204,13 @@ export const useAssessment = (questions: Question[]) => {
     currentAnswer,
     answeredQuestions,
     progress,
+    isLoading,
     handleNext,
     handlePrevious,
     handleAnswerChange,
     handleSaveAndExit,
-    getDepartmentFromQuestion
+    getDepartmentFromQuestion,
+    hasOngoingAssessment
   };
 };
+

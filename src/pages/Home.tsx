@@ -4,28 +4,24 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import SidePanel from '@/components/SidePanel';
 import { useState, useEffect } from 'react';
+import { useAssessment } from '@/hooks/useAssessment';
+import { questions } from '@/data/questions';
 
 const Home = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('home');
   const [menuOpen, setMenuOpen] = useState(true);
   const [hasOngoingAssessment, setHasOngoingAssessment] = useState(false);
+  
+  // Use the useAssessment hook to check if there's an ongoing assessment
+  const { hasOngoingAssessment: checkOngoingAssessment } = useAssessment(questions);
 
   useEffect(() => {
-    // Check if there's an ongoing assessment
-    const storedAnswers = localStorage.getItem('departmentAnswers');
-    if (storedAnswers) {
-      try {
-        const parsedAnswers = JSON.parse(storedAnswers);
-        const answeredQuestions = Object.keys(parsedAnswers);
-        console.log("Ongoing assessment check:", answeredQuestions.length > 0, answeredQuestions);
-        setHasOngoingAssessment(answeredQuestions.length > 0);
-      } catch (error) {
-        console.error("Error parsing stored answers:", error);
-        localStorage.removeItem('departmentAnswers'); // Clear invalid data
-      }
-    }
-  }, []);
+    // Check if there's an ongoing assessment using the hook
+    const isOngoing = checkOngoingAssessment();
+    console.log("Ongoing assessment check result:", isOngoing);
+    setHasOngoingAssessment(isOngoing);
+  }, [checkOngoingAssessment]);
 
   const handleStartDiagnosis = () => {
     navigate('/assessment');
@@ -68,7 +64,7 @@ const Home = () => {
               {hasOngoingAssessment && (
                 <button 
                   onClick={handleContinueDiagnosis}
-                  className="mt-4 text-dashboard-accent3 hover:underline text-sm"
+                  className="mt-4 text-dashboard-accent3 hover:underline text-sm font-medium"
                 >
                   Continuar diagnóstico em andamento
                 </button>

@@ -3,15 +3,30 @@ import { Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import SidePanel from '@/components/SidePanel';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const Home = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('home');
   const [menuOpen, setMenuOpen] = useState(true);
+  const [hasOngoingAssessment, setHasOngoingAssessment] = useState(false);
+
+  useEffect(() => {
+    // Check if there's an ongoing assessment
+    const storedAnswers = localStorage.getItem('departmentAnswers');
+    if (storedAnswers) {
+      const parsedAnswers = JSON.parse(storedAnswers);
+      const answeredQuestions = Object.keys(parsedAnswers);
+      setHasOngoingAssessment(answeredQuestions.length > 0);
+    }
+  }, []);
 
   const handleStartDiagnosis = () => {
     navigate('/assessment');
+  };
+
+  const handleContinueDiagnosis = () => {
+    navigate('/ongoing-assessment');
   };
 
   const handleTabChange = (value: string) => {
@@ -34,14 +49,25 @@ const Home = () => {
               oportunidades de melhoria.
             </p>
             
-            <Button 
-              onClick={handleStartDiagnosis} 
-              size="lg" 
-              className="group bg-gradient-to-r from-dashboard-accent3 to-green-400 hover:opacity-90 transition-all duration-300"
-            >
-              <Play className="mr-2 h-5 w-5 group-hover:animate-pulse" />
-              Iniciar Diagnóstico
-            </Button>
+            <div className="flex flex-col items-center">
+              <Button 
+                onClick={handleStartDiagnosis} 
+                size="lg" 
+                className="group bg-gradient-to-r from-dashboard-accent3 to-green-400 hover:opacity-90 transition-all duration-300"
+              >
+                <Play className="mr-2 h-5 w-5 group-hover:animate-pulse" />
+                Iniciar Diagnóstico
+              </Button>
+              
+              {hasOngoingAssessment && (
+                <button 
+                  onClick={handleContinueDiagnosis}
+                  className="mt-4 text-dashboard-accent3 hover:underline text-sm"
+                >
+                  Continuar diagnóstico em andamento
+                </button>
+              )}
+            </div>
           </div>
           
           <div className="mt-16 glass-card p-6 max-w-2xl mx-auto">

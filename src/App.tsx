@@ -11,6 +11,7 @@ import Home from "./pages/Home";
 import Index from "./pages/Index";
 import Department from "./pages/Department";
 import Assessment from "./pages/Assessment";
+import OngoingAssessment from "./pages/OngoingAssessment";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -37,6 +38,7 @@ function App() {
                 <Route path="/dashboard" element={<Index />} />
                 <Route path="/department/:id" element={<Department />} />
                 <Route path="/assessment" element={<Assessment />} />
+                <Route path="/ongoing-assessment" element={<OngoingAssessment />} />
               </Routes>
             </BrowserRouter>
           </TooltipProvider>

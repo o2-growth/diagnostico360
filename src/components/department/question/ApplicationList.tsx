@@ -7,13 +7,16 @@ const ApplicationList = ({ applications }: ApplicationListProps) => {
   if (applications.length === 0) return null;
   
   return (
-    <div>
-      <div className="text-sm font-medium text-dashboard-muted mb-1">
+    <div className="mb-4">
+      <div className="text-sm font-medium text-dashboard-muted mb-2">
         Forma de Aplicação
       </div>
-      <ul className="list-disc pl-4 text-sm">
+      <ul className="space-y-2">
         {applications.map((app, index) => (
-          <li key={index}>{app}</li>
+          <li key={index} className="flex items-start">
+            <div className="mr-2 mt-1 h-2 w-2 rounded-full bg-dashboard-accent3 flex-shrink-0"></div>
+            <span className="text-sm">{app}</span>
+          </li>
         ))}
       </ul>
     </div>

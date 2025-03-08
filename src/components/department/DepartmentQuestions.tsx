@@ -3,12 +3,15 @@ import { Question } from '@/types/department';
 import ImageUploader from './question/ImageUploader';
 import QuestionItem from './question/QuestionItem';
 import { useQuestions } from './question/useQuestions';
+import ExportButton from './question/ExportButton';
+import { useParams } from 'react-router-dom';
 
 interface DepartmentQuestionsProps {
   questions: Question[];
 }
 
 const DepartmentQuestions = ({ questions }: DepartmentQuestionsProps) => {
+  const { id: departmentId } = useParams();
   const {
     expandedItems,
     applicableAnswers,
@@ -31,7 +34,10 @@ const DepartmentQuestions = ({ questions }: DepartmentQuestionsProps) => {
     <div className="space-y-4">
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-xl font-medium">Lista de Verificação</h3>
-        <ImageUploader />
+        <div className="flex gap-2">
+          <ExportButton questions={questions} departmentName={departmentId} />
+          <ImageUploader />
+        </div>
       </div>
       <div className="space-y-4">
         {questions.map((item) => (

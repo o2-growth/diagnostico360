@@ -15,9 +15,15 @@ const Home = () => {
     // Check if there's an ongoing assessment
     const storedAnswers = localStorage.getItem('departmentAnswers');
     if (storedAnswers) {
-      const parsedAnswers = JSON.parse(storedAnswers);
-      const answeredQuestions = Object.keys(parsedAnswers);
-      setHasOngoingAssessment(answeredQuestions.length > 0);
+      try {
+        const parsedAnswers = JSON.parse(storedAnswers);
+        const answeredQuestions = Object.keys(parsedAnswers);
+        console.log("Ongoing assessment check:", answeredQuestions.length > 0, answeredQuestions);
+        setHasOngoingAssessment(answeredQuestions.length > 0);
+      } catch (error) {
+        console.error("Error parsing stored answers:", error);
+        localStorage.removeItem('departmentAnswers'); // Clear invalid data
+      }
     }
   }, []);
 

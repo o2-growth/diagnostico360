@@ -4,7 +4,7 @@ interface ApplicationListProps {
 }
 
 const ApplicationList = ({ applications }: ApplicationListProps) => {
-  if (applications.length === 0) return null;
+  if (!applications || applications.length === 0) return null;
   
   return (
     <div className="mb-4">

@@ -24,38 +24,49 @@ const OngoingAssessment = () => {
   
   // Load answered questions from localStorage
   useEffect(() => {
-    const storedAnswers = localStorage.getItem('departmentAnswers');
-    if (storedAnswers) {
-      const parsedAnswers = JSON.parse(storedAnswers);
-      const answeredQuestionIds = Object.keys(parsedAnswers);
-      setAnsweredQuestions(answeredQuestionIds);
-      
-      // Find first unanswered question
-      if (answeredQuestionIds.length > 0 && answeredQuestionIds.length < questions.length) {
-        const unansweredIndex = questions.findIndex(q => !answeredQuestionIds.includes(q.item));
-        if (unansweredIndex !== -1) {
-          setCurrentQuestionIndex(unansweredIndex);
+    try {
+      const storedAnswers = localStorage.getItem('departmentAnswers');
+      if (storedAnswers) {
+        const parsedAnswers = JSON.parse(storedAnswers);
+        const answeredQuestionIds = Object.keys(parsedAnswers);
+        setAnsweredQuestions(answeredQuestionIds);
+        
+        // Find first unanswered question
+        if (answeredQuestionIds.length > 0 && answeredQuestionIds.length < questions.length) {
+          const unansweredIndex = questions.findIndex(q => !answeredQuestionIds.includes(q.item));
+          if (unansweredIndex !== -1) {
+            setCurrentQuestionIndex(unansweredIndex);
+          }
         }
       }
-
-      // Set current answer if available
-      if (parsedAnswers[currentQuestion?.item]) {
-        setCurrentAnswer(parsedAnswers[currentQuestion.item].evaluation || '');
-      }
+    } catch (error) {
+      console.error("Error loading stored answers:", error);
+      toast({
+        title: "Erro ao carregar respostas",
+        description: "Não foi possível carregar suas respostas anteriores.",
+        variant: "destructive",
+      });
     }
-  }, []);
+  }, [toast]);
 
   // Update current answer when question changes
   useEffect(() => {
-    const storedAnswers = localStorage.getItem('departmentAnswers');
-    if (storedAnswers && currentQuestion) {
-      const parsedAnswers = JSON.parse(storedAnswers);
-      if (parsedAnswers[currentQuestion.item]) {
-        setCurrentAnswer(parsedAnswers[currentQuestion.item].evaluation || '');
+    if (!currentQuestion) return;
+    
+    try {
+      const storedAnswers = localStorage.getItem('departmentAnswers');
+      if (storedAnswers) {
+        const parsedAnswers = JSON.parse(storedAnswers);
+        if (parsedAnswers[currentQuestion.item] && parsedAnswers[currentQuestion.item].evaluation) {
+          setCurrentAnswer(parsedAnswers[currentQuestion.item].evaluation || '');
+        } else {
+          setCurrentAnswer('');
+        }
       } else {
         setCurrentAnswer('');
       }
-    } else {
+    } catch (error) {
+      console.error("Error loading answer for current question:", error);
       setCurrentAnswer('');
     }
   }, [currentQuestionIndex, currentQuestion]);
@@ -104,30 +115,39 @@ const OngoingAssessment = () => {
   const saveAnswer = () => {
     if (!currentQuestion || !currentAnswer) return;
     
-    // Add to answered questions if not already there
-    if (!answeredQuestions.includes(currentQuestion.item)) {
-      setAnsweredQuestions(prev => [...prev, currentQuestion.item]);
+    try {
+      // Add to answered questions if not already there
+      if (!answeredQuestions.includes(currentQuestion.item)) {
+        setAnsweredQuestions(prev => [...prev, currentQuestion.item]);
+      }
+      
+      // Save to localStorage
+      const storedAnswers = localStorage.getItem('departmentAnswers') || '{}';
+      const parsedAnswers = JSON.parse(storedAnswers);
+      
+      parsedAnswers[currentQuestion.item] = {
+        ...parsedAnswers[currentQuestion.item],
+        evaluation: currentAnswer as EvaluationStatus,
+        // Add other default properties if needed
+        applicable: "SIM",
+        hasEvidence: "NÃO",
+        score: 0
+      };
+      
+      localStorage.setItem('departmentAnswers', JSON.stringify(parsedAnswers));
+      
+      setAnswers(prev => ({
+        ...prev,
+        [currentQuestion.item]: currentAnswer
+      }));
+    } catch (error) {
+      console.error("Error saving answer:", error);
+      toast({
+        title: "Erro ao salvar resposta",
+        description: "Não foi possível salvar sua resposta.",
+        variant: "destructive",
+      });
     }
-    
-    // Save to localStorage
-    const storedAnswers = localStorage.getItem('departmentAnswers') || '{}';
-    const parsedAnswers = JSON.parse(storedAnswers);
-    
-    parsedAnswers[currentQuestion.item] = {
-      ...parsedAnswers[currentQuestion.item],
-      evaluation: currentAnswer as EvaluationStatus,
-      // Add other default properties if needed
-      applicable: "SIM",
-      hasEvidence: "NÃO",
-      score: 0
-    };
-    
-    localStorage.setItem('departmentAnswers', JSON.stringify(parsedAnswers));
-    
-    setAnswers(prev => ({
-      ...prev,
-      [currentQuestion.item]: currentAnswer
-    }));
   };
 
   const handleAnswerChange = (value: string) => {

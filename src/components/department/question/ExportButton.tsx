@@ -1,9 +1,9 @@
 
-import { FilePdf } from "lucide-react";
+import { FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { exportQuestionsAsPdf } from "@/utils/exportToPdf";
 import { Question } from "@/types/department";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface ExportButtonProps {
   questions: Question[];
@@ -36,7 +36,7 @@ const ExportButton = ({ questions, departmentName }: ExportButtonProps) => {
       onClick={handleExport}
       className="gap-2"
     >
-      <FilePdf className="h-4 w-4" />
+      <FileText className="h-4 w-4" />
       Exportar PDF
     </Button>
   );

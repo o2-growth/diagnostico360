@@ -1,35 +1,28 @@
+
 import { Question } from '@/types/department';
-import { useState } from 'react';
-import { Button } from '../ui/button';
-import { Textarea } from '../ui/textarea';
-import { useToast } from '../ui/use-toast';
+import { useParams } from 'react-router-dom';
+import { useRecommendations } from './recommendation/useRecommendations';
+import RecommendationItem from './recommendation/RecommendationItem';
+import ExportRecommendationsButton from './recommendation/ExportRecommendationsButton';
 
 interface DepartmentRecommendationsProps {
   questions: Question[];
 }
 
 const DepartmentRecommendations = ({ questions }: DepartmentRecommendationsProps) => {
-  const { toast } = useToast();
-  const [recommendations, setRecommendations] = useState<Record<string, string>>({});
-
-  const criticalItems = questions.filter(question => 
-    question.evaluation === "NÃO EXISTE" || 
-    question.evaluation === "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
-  );
-
-  const handleRecommendationChange = (itemId: string, value: string) => {
-    setRecommendations(prev => ({
-      ...prev,
-      [itemId]: value
-    }));
-  };
-
-  const handleSaveRecommendation = (itemId: string) => {
-    toast({
-      title: "Recomendação salva",
-      description: "A recomendação foi salva com sucesso."
-    });
-  };
+  const { id: departmentId } = useParams();
+  const {
+    recommendations,
+    expandedItems,
+    isEditMode,
+    editedRecommendations,
+    criticalItems,
+    toggleItem,
+    toggleEditMode,
+    handleRecommendationChange,
+    saveRecommendation,
+    cancelRecommendation
+  } = useRecommendations(questions);
 
   if (criticalItems.length === 0) {
     return (
@@ -40,43 +33,32 @@ const DepartmentRecommendations = ({ questions }: DepartmentRecommendationsProps
   }
 
   return (
-    <div className="space-y-6" data-recommendations>
-      {criticalItems.map((item) => (
-        <div key={item.item} className="dashboard-card">
-          <div className="space-y-4">
-            <div>
-              <h3 className="text-lg font-medium">{item.title}</h3>
-              <p className="text-dashboard-muted text-sm mb-2">Item {item.item}</p>
-              <p className="text-dashboard-muted">{item.question}</p>
-            </div>
-            
-            <div className="p-4 bg-red-500/10 rounded-lg">
-              <p className="text-red-500 font-medium">
-                Status: {item.evaluation}
-              </p>
-            </div>
-
-            <div className="space-y-2">
-              <label htmlFor={`recommendation-${item.item}`} className="block text-sm font-medium">
-                Recomendações de Melhoria
-              </label>
-              <Textarea
-                id={`recommendation-${item.item}`}
-                placeholder="Digite suas recomendações para melhorar este item..."
-                value={recommendations[item.item] || ''}
-                onChange={(e) => handleRecommendationChange(item.item, e.target.value)}
-                className="min-h-[100px]"
-              />
-              <Button 
-                onClick={() => handleSaveRecommendation(item.item)}
-                disabled={!recommendations[item.item]}
-              >
-                Salvar Recomendação
-              </Button>
-            </div>
-          </div>
-        </div>
-      ))}
+    <div className="space-y-4">
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-xl font-medium">Recomendações de Melhoria</h3>
+        <ExportRecommendationsButton 
+          questions={questions} 
+          recommendations={recommendations}
+          departmentName={departmentId} 
+        />
+      </div>
+      <div className="space-y-4" data-recommendations>
+        {criticalItems.map((item) => (
+          <RecommendationItem
+            key={item.item}
+            item={item}
+            isEditMode={isEditMode[item.item] || false}
+            isExpanded={expandedItems.includes(item.item)}
+            isEdited={editedRecommendations[item.item] || false}
+            recommendation={recommendations[item.item] || ''}
+            onToggleExpand={toggleItem}
+            onToggleEditMode={toggleEditMode}
+            onSaveRecommendation={saveRecommendation}
+            onCancelRecommendation={cancelRecommendation}
+            onRecommendationChange={handleRecommendationChange}
+          />
+        ))}
+      </div>
     </div>
   );
 };

@@ -123,7 +123,7 @@ const Department = () => {
             departmentInfo={departmentInfo}
             isEditing={isEditing}
             onEditToggle={() => setIsEditing(!isEditing)}
-            onBack={() => navigate('/', { state: { activeTab: 'areas' } })}
+            onBack={() => navigate('/dashboard', { state: { activeTab: 'dashboard' } })}
           />
           <Tabs defaultValue="overview" className="mt-6">
             <TabsList>

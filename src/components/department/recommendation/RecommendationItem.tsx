@@ -49,6 +49,16 @@ const RecommendationItem = ({
           <span className="font-medium">
             {item.item} - {item.title}
           </span>
+          {item.evaluation === "NÃO EXISTE" && (
+            <Badge variant="destructive" className="text-xs">
+              Inexistente
+            </Badge>
+          )}
+          {item.evaluation === "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)" && (
+            <Badge className="text-xs bg-yellow-500/15 text-yellow-600 border-yellow-500/30 hover:bg-yellow-500/20">
+              Pode melhorar
+            </Badge>
+          )}
           {isAIGenerated && (
             <Badge variant="secondary" className="flex items-center gap-1 text-xs">
               <Sparkles className="h-3 w-3" />
@@ -94,17 +104,8 @@ const RecommendationItem = ({
       </div>
 
       {isExpanded && (
-        <div className="p-4 border-t border-dashboard-border space-y-4">
-          <div>
-            <div className="text-sm font-medium text-dashboard-muted mb-1">Item</div>
-            <p className="text-sm">{item.question}</p>
-          </div>
-          
-          <div className="p-4 bg-red-500/10 rounded-lg">
-            <p className="text-red-500 font-medium">
-              Status: {item.evaluation}
-            </p>
-          </div>
+        <div className="space-y-3">
+          <p className="text-sm text-dashboard-muted">{item.question}</p>
 
           <div className="space-y-2">
             <label htmlFor={`recommendation-${item.item}`} className="block text-sm font-medium text-dashboard-muted">

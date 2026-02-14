@@ -1,15 +1,16 @@
 
-import { useState } from 'react';
-import { ChevronDown, ChevronRight, Save, X, Check, Pen } from 'lucide-react';
+import { ChevronDown, ChevronRight, Save, X, Check, Pen, Sparkles } from 'lucide-react';
 import { Question } from '@/types/department';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
 
 interface RecommendationItemProps {
   item: Question;
   isEditMode: boolean;
   isExpanded: boolean;
   isEdited: boolean;
+  isAIGenerated: boolean;
   recommendation: string;
   onToggleExpand: (item: string) => void;
   onToggleEditMode: (item: string) => void;
@@ -23,6 +24,7 @@ const RecommendationItem = ({
   isEditMode,
   isExpanded,
   isEdited,
+  isAIGenerated,
   recommendation,
   onToggleExpand,
   onToggleEditMode,
@@ -47,6 +49,12 @@ const RecommendationItem = ({
           <span className="font-medium">
             {item.item} - {item.title}
           </span>
+          {isAIGenerated && (
+            <Badge variant="secondary" className="flex items-center gap-1 text-xs">
+              <Sparkles className="h-3 w-3" />
+              Gerado por IA
+            </Badge>
+          )}
         </div>
         <div className="flex gap-2">
           {isEditMode ? (

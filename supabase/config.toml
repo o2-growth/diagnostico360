@@ -1,0 +1,4 @@
+project_id = "fjhqkhatljbwyppfbcvt"
+
+[functions.generate-recommendations]
+verify_jwt = false

@@ -1,42 +1,40 @@
 
 
-## Recomendacoes com IA para cada area
+## Melhoria de UX nos itens de Recomendacao
 
-### O que muda
-Atualmente, a aba "Recomendacoes" mostra os itens criticos mas com o campo de recomendacao vazio, esperando preenchimento manual. A proposta e adicionar um botao "Gerar Recomendacoes com IA" que analisa os itens criticos da area e gera recomendacoes automaticas, breves e acionaveis.
+### Analise do problema (visao de especialista UX)
 
-### Experiencia do usuario
-1. O usuario abre a aba "Recomendacoes" de uma area
-2. Ve um botao "Gerar Recomendacoes com IA" no topo
-3. Ao clicar, a IA analisa todos os itens criticos (status "NAO EXISTE" ou "PODE SER MELHORADO") daquela area
-4. As recomendacoes aparecem automaticamente em cada item, com um indicador visual de que foram geradas por IA
-5. O usuario pode editar as recomendacoes geradas e salvar
-6. As recomendacoes ficam salvas no localStorage como ja funciona hoje
+A tarja vermelha com o status completo ("EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)") e redundante e causa ruido visual. O usuario ja sabe que o item e critico porque esta na aba de Recomendacoes -- repetir isso com uma barra vermelha agressiva nao agrega valor e polui a interface. Alem disso, o label "Item" antes da pergunta e desnecessario.
 
-### Requisitos tecnicos
+### O que sera feito
 
-**1. Habilitar Lovable Cloud**
-O projeto nao tem backend configurado. Precisamos habilitar o Lovable Cloud para criar uma edge function que chame a IA.
+**Remover a tarja vermelha do status** (linhas 103-107 do `RecommendationItem.tsx`)
+- Ela nao traz informacao nova ao usuario neste contexto
+- Reduz ruido visual e melhora a hierarquia de informacao
 
-**2. Criar edge function `generate-recommendations`**
-- Recebe: nome da area, lista de itens criticos (titulo, pergunta, status)
-- Envia para Lovable AI Gateway com prompt em portugues pedindo recomendacoes breves e praticas
-- Retorna: objeto com recomendacao para cada item
+**Substituir por um badge discreto no header do item**
+- Adicionar um pequeno badge colorido ao lado do titulo indicando a severidade:
+  - Vermelho/destrutivo para "NAO EXISTE"
+  - Amarelo/aviso para "PODE SER MELHORADO"
+- Isso mantem a informacao acessivel sem ser intrusiva
 
-**3. Atualizar `DepartmentRecommendations.tsx`**
-- Adicionar botao "Gerar Recomendacoes com IA" com icone de sparkles
-- Estado de loading enquanto a IA processa
-- Ao receber resposta, preencher as recomendacoes de cada item automaticamente
+**Remover o label "Item" acima da pergunta**
+- A pergunta ja e autoexplicativa, o label e redundante
+- Exibir a pergunta diretamente com estilo mais limpo
 
-**4. Atualizar `useRecommendations.tsx`**
-- Adicionar funcao `generateAIRecommendations` que chama a edge function
-- Receber as recomendacoes e atualizar o estado de cada item
-- Salvar no localStorage automaticamente
+**Melhorar espacamento e hierarquia visual**
+- Dar mais destaque a recomendacao (que e o conteudo principal)
+- Reduzir padding desnecessario
 
-**5. Atualizar `RecommendationItem.tsx`**
-- Adicionar badge "Gerado por IA" quando a recomendacao foi gerada automaticamente
-- Manter funcionalidade de edicao manual
+### Arquivo alterado
+- `src/components/department/recommendation/RecommendationItem.tsx`
 
-### Prompt da IA (backend)
-A IA recebera o contexto da area e dos itens criticos, e sera instruida a gerar recomendacoes curtas (2-3 frases), praticas e orientadas a acao, em portugues do Brasil.
+### Detalhe tecnico
+- Linhas 96-131: Reestruturar o conteudo expandido
+- Remover o bloco `div` com `bg-red-500/10` (linhas 103-107)
+- Remover o label "Item" (linha 99)
+- Adicionar um `Badge` no header com cor condicional baseada em `item.evaluation`:
+  - `"NAO EXISTE"` -> badge vermelho com texto "Inexistente"
+  - `"EXISTE DE FORMA PADRONIZADA..."` -> badge amarelo com texto "Pode melhorar"
+- Manter a pergunta como texto descritivo sutil acima da textarea de recomendacao
 

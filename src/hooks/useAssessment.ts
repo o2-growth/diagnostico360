@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Question, EvaluationStatus } from '@/types/department';
 import { questionGroups, QuestionGroup } from '@/data/questions';
 import { useToast } from '@/components/ui/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { calculateScores } from '@/utils/scoreCalculator';
 
 export type GateAnswer = 'sim' | 'parcialmente' | 'nao' | null;
 
@@ -207,6 +209,21 @@ export const useAssessment = (allQuestions: Question[]) => {
     }
   };
 
+  const saveSnapshotToDb = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { departmentScores, overallScore } = calculateScores();
+      await supabase.from('assessment_snapshots').insert({
+        user_id: user.id,
+        overall_score: overallScore,
+        department_scores: departmentScores,
+      } as any);
+    } catch (error) {
+      console.error('Error saving snapshot:', error);
+    }
+  };
+
   const handleNext = () => {
     if (!currentAnswer) {
       toast({ title: "Resposta necessária", description: "Por favor, selecione uma resposta antes de continuar.", variant: "destructive" });
@@ -245,6 +262,7 @@ export const useAssessment = (allQuestions: Question[]) => {
           }, 1500);
         } else {
           // All done
+          saveSnapshotToDb();
           setTimeout(() => {
             toast({ title: "Diagnóstico concluído!", description: "Todas as perguntas foram respondidas com sucesso." });
             navigate('/dashboard');
@@ -268,6 +286,7 @@ export const useAssessment = (allQuestions: Question[]) => {
     if (currentStepIndex < steps.length - 1) {
       setCurrentStepIndex(prev => prev + 1);
     } else {
+      saveSnapshotToDb();
       toast({ title: "Diagnóstico concluído!", description: "Todas as perguntas foram respondidas com sucesso." });
       navigate('/dashboard');
     }

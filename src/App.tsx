@@ -7,13 +7,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import Home from "./pages/Home";
 import Index from "./pages/Index";
 import Department from "./pages/Department";
 import Assessment from "./pages/Assessment";
 import OngoingAssessment from "./pages/OngoingAssessment";
+import Auth from "./pages/Auth";
 
-// Create a client
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -34,11 +35,12 @@ function App() {
             <Sonner />
             <BrowserRouter>
               <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/dashboard" element={<Index />} />
-                <Route path="/department/:id" element={<Department />} />
-                <Route path="/assessment" element={<Assessment />} />
-                <Route path="/ongoing-assessment" element={<OngoingAssessment />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+                <Route path="/dashboard" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+                <Route path="/department/:id" element={<ProtectedRoute><Department /></ProtectedRoute>} />
+                <Route path="/assessment" element={<ProtectedRoute><Assessment /></ProtectedRoute>} />
+                <Route path="/ongoing-assessment" element={<ProtectedRoute><OngoingAssessment /></ProtectedRoute>} />
               </Routes>
             </BrowserRouter>
           </TooltipProvider>

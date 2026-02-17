@@ -1,10 +1,11 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LayoutDashboard, Settings, Building2, TrendingUp, PanelLeftClose, PanelLeftOpen, Download, Home } from "lucide-react";
+import { LayoutDashboard, Settings, Building2, TrendingUp, PanelLeftClose, PanelLeftOpen, Download, Home, LogOut } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { exportToPdf } from "@/utils/exportToPdf";
+import { useAuth } from "@/hooks/useAuth";
 
 interface SidePanelProps {
   onTabChange: (value: string) => void;
@@ -15,6 +16,7 @@ const SidePanel = ({ onTabChange, onMenuToggle }: SidePanelProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(true);
+  const { signOut } = useAuth();
 
   const handleTabChange = (value: string) => {
     onTabChange(value);
@@ -135,6 +137,14 @@ const SidePanel = ({ onTabChange, onMenuToggle }: SidePanelProps) => {
               <Settings className="w-5 h-5 shrink-0" />
               {isOpen && "Configurações"}
             </TabsTrigger>
+            <Button 
+              variant="ghost"
+              className={`w-full justify-${isOpen ? 'start' : 'center'} gap-2 text-red-400 hover:text-red-300 p-3`}
+              onClick={signOut}
+            >
+              <LogOut className="w-5 h-5 shrink-0" />
+              {isOpen && "Sair"}
+            </Button>
           </TabsList>
         </Tabs>
       </div>

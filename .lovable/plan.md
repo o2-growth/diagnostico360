@@ -1,94 +1,74 @@
 
 
-## Pagina Evolucao funcional com dados reais
+## Botao de Teste Rapido + Perfil Admin
 
 ### Resumo
+Adicionar um botao "Preencher Teste Rapido" no dashboard, visivel apenas para o admin (growth@o2inc.com.br). Ao clicar, o sistema preenche automaticamente todas as respostas do diagnostico com dados simulados de uma empresa ficticia e salva um snapshot no banco. Isso permite testar toda a plataforma sem responder pergunta por pergunta.
 
-Implementar autenticacao (email/senha + Google), banco de dados para armazenar snapshots dos diagnosticos, e conectar a pagina Evolucao a dados reais do usuario.
+### O que sera feito
 
-### Fluxo do usuario
+**1. Coluna `role` na tabela `profiles`**
+- Adicionar coluna `role` (text, default 'user') na tabela profiles
+- Setar `role = 'admin'` para o email growth@o2inc.com.br via migration
 
-1. Usuario faz cadastro/login (email+senha ou Google)
-2. Responde o diagnostico normalmente
-3. Ao concluir, o sistema calcula os scores de cada area e salva automaticamente no banco como um "snapshot" com a data atual
-4. Na pagina Evolucao, os graficos mostram os snapshots reais ao longo do tempo
-5. Cada novo diagnostico concluido gera um novo ponto no grafico
+**2. Hook `useAuth` atualizado**
+- Buscar o perfil do usuario (incluindo role) apos login
+- Expor `isAdmin` como propriedade do hook
 
-### Mudancas necessarias
+**3. Dados de teste simulados**
+- Criar arquivo `src/utils/sampleAssessmentData.ts` com respostas realistas para todas as perguntas de todas as 10 areas
+- Cada area tera um mix de "EXISTE E FUNCIONA PERFEITAMENTE", "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)" e "NAO EXISTE" para simular uma empresa real
+- Gates serao definidos como "sim" ou "parcialmente" para cada area
 
-**1. Autenticacao**
-- Criar pagina `/auth` com formulario de login/cadastro (email+senha)
-- Adicionar botao "Login com Google" usando Lovable Cloud managed OAuth
-- Proteger rotas: redirecionar para `/auth` se nao estiver logado
-- Adicionar botao de logout no SidePanel
-
-**2. Banco de dados (2 tabelas)**
-
-Tabela `profiles`:
-- `id` (uuid, FK para auth.users)
-- `email` (text)
-- `created_at` (timestamp)
-- RLS: usuario so ve seu proprio perfil
-
-Tabela `assessment_snapshots`:
-- `id` (uuid, PK)
-- `user_id` (uuid, FK para profiles)
-- `completed_at` (timestamp, default now())
-- `overall_score` (integer) -- score geral
-- `department_scores` (jsonb) -- ex: `{"financeiro": 75, "tecnologia": 45, ...}`
-- RLS: usuario so ve seus proprios snapshots
-
-Trigger para criar profile automaticamente no signup.
-
-**3. Salvar snapshot ao concluir diagnostico**
-- No `useAssessment.ts`, quando o diagnostico e concluido (todas as perguntas respondidas):
-  - Calcular score de cada area baseado nas respostas do localStorage
-  - Inserir um registro na tabela `assessment_snapshots`
-  - Score por area: % de perguntas com "EXISTE E FUNCIONA PERFEITAMENTE" ou "EXISTE DE FORMA PADRONIZADA"
-
-**4. Atualizar pagina Evolucao**
-- `EvolutionContent.tsx`: buscar snapshots do banco via Supabase client
-- Grafico principal (MonthlyChart): cada ponto = `overall_score` de um snapshot, eixo X = data
-- Graficos por area: cada ponto = score daquela area no snapshot
-- MetricCard: mostrar o score do ultimo snapshot
-- Se nao houver dados, mostrar estado vazio com CTA para iniciar diagnostico
-
-### Arquivos novos
-- `src/pages/Auth.tsx` -- pagina de login/cadastro
-- `src/hooks/useAuth.ts` -- hook de autenticacao
-- `src/components/auth/AuthForm.tsx` -- formulario
-- `src/components/auth/ProtectedRoute.tsx` -- wrapper de rota protegida
-
-### Arquivos alterados
-- `src/App.tsx` -- adicionar rota `/auth` e proteger rotas
-- `src/hooks/useAssessment.ts` -- salvar snapshot no banco ao concluir
-- `src/components/evolution/EvolutionContent.tsx` -- buscar dados reais
-- `src/components/MonthlyChart.tsx` -- receber dados como prop em vez de hardcoded
-- `src/components/SidePanel.tsx` -- adicionar botao de logout
-- Migracao SQL para criar tabelas, trigger e RLS
+**4. Botao no Dashboard**
+- Adicionar botao "Preencher Teste Rapido" no `DashboardContent.tsx`
+- Visivel somente quando `isAdmin === true`
+- Ao clicar:
+  1. Preenche o localStorage com as respostas simuladas e gates
+  2. Calcula os scores usando `calculateScores()`
+  3. Salva um snapshot no banco (`assessment_snapshots`)
+  4. Recarrega a pagina para refletir os dados
+- Confirmar acao com dialog antes de executar (para evitar cliques acidentais)
 
 ### Detalhe tecnico
 
-Estrutura do `department_scores` (jsonb):
+**Migration SQL:**
 ```text
-{
-  "financeiro": 75,
-  "tecnologia": 45,
-  "planejamento": 35,
-  "contabil": 55,
-  "controladoria": 40,
-  "fiscal": 60,
-  "comercial": 70,
-  "marketing": 50,
-  "societario": 45,
-  "capital-humano": 55
-}
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS role text DEFAULT 'user';
+UPDATE profiles SET role = 'admin' WHERE email = 'growth@o2inc.com.br';
 ```
 
-Calculo do score por area:
-- Contar perguntas com evaluation = "EXISTE E FUNCIONA PERFEITAMENTE" (peso 100%) ou "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)" (peso 50%)
-- Dividir pelo total de perguntas da area
-- Multiplicar por 100
+**Estrutura do sampleAssessmentData.ts:**
+```text
+export function generateSampleAnswers(): Record<string, object>
+  - Itera sobre questionGroups
+  - Para cada pergunta, atribui aleatoriamente (com distribuicao realista):
+    - 40% "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
+    - 35% "EXISTE E FUNCIONA PERFEITAMENTE"  
+    - 25% "NAO EXISTE"
 
-Overall score = media dos scores de todas as areas
+export function generateSampleGates(): Record<string, string>
+  - Todas as areas com "sim" (para que as perguntas individuais aparecam no resultado)
+```
+
+**Fluxo do botao:**
+```text
+1. Usuario admin clica "Preencher Teste Rapido"
+2. Dialog de confirmacao aparece
+3. Ao confirmar:
+   - localStorage['departmentAnswers'] = sampleAnswers
+   - localStorage['departmentGates'] = sampleGates
+   - calculateScores() -> { departmentScores, overallScore }
+   - INSERT INTO assessment_snapshots (user_id, overall_score, department_scores)
+   - Toast "Dados de teste preenchidos com sucesso!"
+   - window.location.reload()
+```
+
+### Arquivos novos
+- `src/utils/sampleAssessmentData.ts`
+
+### Arquivos alterados
+- Migration SQL (adicionar coluna role)
+- `src/hooks/useAuth.ts` (buscar role do perfil, expor isAdmin)
+- `src/components/dashboard/DashboardContent.tsx` (botao de teste rapido, visivel so para admin)
 

@@ -1,144 +1,111 @@
 
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import MonthlyChart from '@/components/MonthlyChart';
 import MetricCard from '@/components/MetricCard';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
+import { supabase } from '@/integrations/supabase/client';
+import { Button } from '@/components/ui/button';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+
+interface Snapshot {
+  id: string;
+  completed_at: string;
+  overall_score: number;
+  department_scores: Record<string, number>;
+}
+
+const AREA_CONFIG: Record<string, { name: string; color: string }> = {
+  'financeiro': { name: 'Financeiro', color: '#7EBF8E' },
+  'tecnologia': { name: 'Tecnologia', color: '#8989DE' },
+  'planejamento': { name: 'Planejamento', color: '#61AAF2' },
+  'contabil': { name: 'Contábil', color: '#F97316' },
+  'controladoria': { name: 'Controladoria', color: '#9b87f5' },
+  'fiscal': { name: 'Fiscal', color: '#0EA5E9' },
+  'comercial': { name: 'Comercial', color: '#EC4899' },
+  'marketing': { name: 'Marketing', color: '#F59E0B' },
+  'societario': { name: 'Societário', color: '#10B981' },
+  'capital-humano': { name: 'Capital Humano', color: '#6366F1' },
+};
 
 const EvolutionContent = () => {
-  const areasData = [
-    {
-      id: 'financeiro',
-      name: 'Financeiro',
-      data: [
-        { month: 'Jan', value: 65 },
-        { month: 'Fev', value: 70 },
-        { month: 'Mar', value: 75 }
-      ],
-      color: '#7EBF8E'
-    },
-    {
-      id: 'tecnologia',
-      name: 'Tecnologia',
-      data: [
-        { month: 'Jan', value: 45 },
-        { month: 'Fev', value: 50 },
-        { month: 'Mar', value: 55 }
-      ],
-      color: '#8989DE'
-    },
-    {
-      id: 'planejamento',
-      name: 'Planejamento',
-      data: [
-        { month: 'Jan', value: 35 },
-        { month: 'Fev', value: 40 },
-        { month: 'Mar', value: 45 }
-      ],
-      color: '#61AAF2'
-    },
-    {
-      id: 'contabil',
-      name: 'Contábil',
-      data: [
-        { month: 'Jan', value: 55 },
-        { month: 'Fev', value: 60 },
-        { month: 'Mar', value: 65 }
-      ],
-      color: '#F97316'
-    },
-    {
-      id: 'controladoria',
-      name: 'Controladoria',
-      data: [
-        { month: 'Jan', value: 40 },
-        { month: 'Fev', value: 45 },
-        { month: 'Mar', value: 50 }
-      ],
-      color: '#9b87f5'
-    },
-    {
-      id: 'fiscal',
-      name: 'Fiscal',
-      data: [
-        { month: 'Jan', value: 60 },
-        { month: 'Fev', value: 65 },
-        { month: 'Mar', value: 70 }
-      ],
-      color: '#0EA5E9'
-    },
-    {
-      id: 'comercial',
-      name: 'Comercial',
-      data: [
-        { month: 'Jan', value: 70 },
-        { month: 'Fev', value: 75 },
-        { month: 'Mar', value: 80 }
-      ],
-      color: '#EC4899'
-    },
-    {
-      id: 'marketing',
-      name: 'Marketing',
-      data: [
-        { month: 'Jan', value: 50 },
-        { month: 'Fev', value: 55 },
-        { month: 'Mar', value: 60 }
-      ],
-      color: '#F59E0B'
-    },
-    {
-      id: 'societario',
-      name: 'Societário',
-      data: [
-        { month: 'Jan', value: 45 },
-        { month: 'Fev', value: 50 },
-        { month: 'Mar', value: 55 }
-      ],
-      color: '#10B981'
-    },
-    {
-      id: 'capital-humano',
-      name: 'Capital Humano',
-      data: [
-        { month: 'Jan', value: 55 },
-        { month: 'Fev', value: 60 },
-        { month: 'Mar', value: 65 }
-      ],
-      color: '#6366F1'
-    }
-  ];
+  const [snapshots, setSnapshots] = useState<Snapshot[]>([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
-  const AreaChart = ({ data, color, title }: { data: any[], color: string, title: string }) => (
+  useEffect(() => {
+    const fetchSnapshots = async () => {
+      const { data, error } = await supabase
+        .from('assessment_snapshots')
+        .select('*')
+        .order('completed_at', { ascending: true });
+
+      if (!error && data) {
+        setSnapshots(data as unknown as Snapshot[]);
+      }
+      setLoading(false);
+    };
+    fetchSnapshots();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      </div>
+    );
+  }
+
+  if (snapshots.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 gap-4">
+        <p className="text-muted-foreground text-lg text-center">
+          Nenhum diagnóstico concluído ainda.<br />
+          Complete um diagnóstico para acompanhar sua evolução.
+        </p>
+        <Button onClick={() => navigate('/assessment')}>Iniciar Diagnóstico</Button>
+      </div>
+    );
+  }
+
+  const chartData = snapshots.map((s) => ({
+    period: format(new Date(s.completed_at), "dd/MM/yy", { locale: ptBR }),
+    value: s.overall_score,
+  }));
+
+  const latestScore = snapshots[snapshots.length - 1].overall_score;
+
+  const areaChartData = Object.entries(AREA_CONFIG).map(([id, config]) => ({
+    id,
+    name: config.name,
+    color: config.color,
+    data: snapshots.map((s) => ({
+      period: format(new Date(s.completed_at), "dd/MM", { locale: ptBR }),
+      value: s.department_scores[id] ?? 0,
+    })),
+  }));
+
+  const AreaChart = ({ data, color, title }: { data: { period: string; value: number }[]; color: string; title: string }) => (
     <div className="dashboard-card h-[250px]">
       <h3 className="text-lg font-medium mb-4">{title}</h3>
       <ResponsiveContainer width="100%" height="85%">
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-          <XAxis 
-            dataKey="month"
-            stroke="#828179"
-            fontSize={12}
-          />
-          <YAxis
-            stroke="#828179"
-            fontSize={12}
-            domain={[0, 100]}
-          />
-          <Tooltip 
-            contentStyle={{ 
+          <XAxis dataKey="period" stroke="#828179" fontSize={12} />
+          <YAxis stroke="#828179" fontSize={12} domain={[0, 100]} />
+          <Tooltip
+            contentStyle={{
               backgroundColor: '#1A1A19',
               border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: '8px'
+              borderRadius: '8px',
             }}
-            labelStyle={{ color: '#C4C3BB' }}
           />
           <Bar dataKey="value" fill={color} />
         </BarChart>
       </ResponsiveContainer>
     </div>
   );
-
-  // Pegando o último valor do gráfico mensal para mostrar no MetricCard
-  const currentExcellenceValue = 82; // O último valor do array de dados do MonthlyChart
 
   return (
     <>
@@ -149,16 +116,16 @@ const EvolutionContent = () => {
 
       <div className="flex flex-col gap-6">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
-          <MonthlyChart />
+          <MonthlyChart data={chartData} />
           <MetricCard
             title="Nível de Excelência Atual"
-            value={currentExcellenceValue}
+            value={latestScore}
             color="#8989DE"
           />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {areasData.map((area) => (
+          {areaChartData.map((area) => (
             <AreaChart
               key={area.id}
               data={area.data}
@@ -173,4 +140,3 @@ const EvolutionContent = () => {
 };
 
 export default EvolutionContent;
-

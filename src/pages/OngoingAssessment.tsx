@@ -8,6 +8,7 @@ import QuestionContent from '@/components/assessment/QuestionContent';
 import NavigationButtons from '@/components/assessment/NavigationButtons';
 import { useAssessment } from '@/hooks/useAssessment';
 import { Skeleton } from '@/components/ui/skeleton';
+import { CheckCircle2 } from 'lucide-react';
 
 const OngoingAssessment = () => {
   const [isMenuExpanded, setIsMenuExpanded] = useState(true);
@@ -18,6 +19,12 @@ const OngoingAssessment = () => {
     "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)",
     "NÃO EXISTE"
   ];
+
+  const gateOptions = [
+    "Sim, possui estruturada",
+    "Possui parcialmente",
+    "Não possui"
+  ];
   
   const {
     currentQuestion,
@@ -26,40 +33,32 @@ const OngoingAssessment = () => {
     answeredQuestions,
     progress,
     isLoading,
+    isGateQuestion,
+    currentGroup,
+    skippedMessage,
     handleNext,
     handlePrevious,
     handleAnswerChange,
     handleSaveAndExit,
-    getDepartmentFromQuestion
+    getDepartmentFromQuestion,
+    answeredCount,
+    totalQuestions,
   } = useAssessment(questions);
 
-  const handleTabChange = (value: string) => {
-    // Tab change logic if needed
-  };
-
-  const handleMenuToggle = (isOpen: boolean) => {
-    setIsMenuExpanded(isOpen);
-  };
+  const handleTabChange = (value: string) => {};
+  const handleMenuToggle = (isOpen: boolean) => setIsMenuExpanded(isOpen);
 
   const goToDepartment = () => {
     if (!currentQuestion) return;
-    
-    // Determine department from question ID
     const departmentId = getDepartmentFromQuestion(currentQuestion.item);
-    if (departmentId) {
-      navigate(`/department/${departmentId}`);
-    }
+    if (departmentId) navigate(`/department/${departmentId}`);
   };
 
   if (isLoading) {
     return (
       <div className="min-h-screen">
         <SidePanel onTabChange={handleTabChange} onMenuToggle={handleMenuToggle} />
-        <div 
-          className={`transition-all duration-300 ${
-            isMenuExpanded ? 'pl-64' : 'pl-16'
-          }`}
-        >
+        <div className={`transition-all duration-300 ${isMenuExpanded ? 'pl-64' : 'pl-16'}`}>
           <div className="p-8 max-w-3xl mx-auto">
             <div className="mb-8">
               <Skeleton className="h-8 w-64 mb-4" />
@@ -95,40 +94,47 @@ const OngoingAssessment = () => {
   return (
     <div className="min-h-screen">
       <SidePanel onTabChange={handleTabChange} onMenuToggle={handleMenuToggle} />
-      <div 
-        className={`transition-all duration-300 ${
-          isMenuExpanded ? 'pl-64' : 'pl-16'
-        }`}
-      >
+      <div className={`transition-all duration-300 ${isMenuExpanded ? 'pl-64' : 'pl-16'}`}>
         <div className="p-8 max-w-3xl mx-auto">
           <ProgressHeader
-            currentQuestionIndex={answeredQuestions.length}
-            totalQuestions={questions.length}
+            currentQuestionIndex={answeredCount}
+            totalQuestions={totalQuestions}
             progress={progress}
             questionId={currentQuestion.item}
             questionTitle={currentQuestion.title}
             onViewDepartment={goToDepartment}
           />
 
-          <div className="dashboard-card p-8 flex flex-col min-h-[400px]">
-            <QuestionContent
-              questionId={currentQuestion.item}
-              questionTitle={currentQuestion.title}
-              question={currentQuestion.question}
-              evidence={currentQuestion.evidence}
-              currentAnswer={currentAnswer}
-              onAnswerChange={handleAnswerChange}
-              evaluationOptions={evaluationOptions}
-            />
+          {/* Skipped message overlay */}
+          {skippedMessage && (
+            <div className="dashboard-card p-8 flex flex-col items-center justify-center min-h-[400px] text-center animate-in fade-in">
+              <CheckCircle2 className="h-16 w-16 text-muted-foreground mb-4" />
+              <p className="text-lg text-muted-foreground">{skippedMessage}</p>
+            </div>
+          )}
 
-            <NavigationButtons
-              isFirstQuestion={currentQuestionIndex === 0}
-              isLastQuestion={currentQuestionIndex === questions.length - 1}
-              onPrevious={handlePrevious}
-              onNext={handleNext}
-              onSaveAndExit={handleSaveAndExit}
-            />
-          </div>
+          {!skippedMessage && (
+            <div className="dashboard-card p-8 flex flex-col min-h-[400px]">
+              <QuestionContent
+                questionId={currentQuestion.item}
+                questionTitle={currentQuestion.title}
+                question={currentQuestion.question}
+                evidence={currentQuestion.evidence}
+                currentAnswer={currentAnswer}
+                onAnswerChange={handleAnswerChange}
+                evaluationOptions={isGateQuestion ? gateOptions : evaluationOptions}
+                isGateQuestion={isGateQuestion}
+              />
+
+              <NavigationButtons
+                isFirstQuestion={currentQuestionIndex === 0}
+                isLastQuestion={false}
+                onPrevious={handlePrevious}
+                onNext={handleNext}
+                onSaveAndExit={handleSaveAndExit}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -136,4 +142,3 @@ const OngoingAssessment = () => {
 };
 
 export default OngoingAssessment;
-

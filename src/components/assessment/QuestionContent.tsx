@@ -91,6 +91,7 @@ const QuestionContent = ({
           {evaluationOptions.map((option) => (
             <div 
               key={option} 
+              onClick={() => onAnswerChange(option)}
               className={`p-4 border rounded-md cursor-pointer transition-all ${
                 currentAnswer === option 
                   ? 'border-green-500 bg-green-500/10' 

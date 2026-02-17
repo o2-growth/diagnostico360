@@ -1,40 +1,59 @@
 
+## Agrupamento inteligente de perguntas por area
 
-## Melhoria de UX nos itens de Recomendacao
+### O que muda na experiencia
 
-### Analise do problema (visao de especialista UX)
+Hoje o diagnostico apresenta todas as perguntas em sequencia, mesmo que o usuario nao tenha aquela area estruturada. Isso gera frustracao -- a pessoa precisa responder "NAO EXISTE" repetidamente para 8-10 perguntas de uma area que ela nem possui.
 
-A tarja vermelha com o status completo ("EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)") e redundante e causa ruido visual. O usuario ja sabe que o item e critico porque esta na aba de Recomendacoes -- repetir isso com uma barra vermelha agressiva nao agrega valor e polui a interface. Alem disso, o label "Item" antes da pergunta e desnecessario.
+Com a mudanca, antes de entrar nas perguntas detalhadas de cada area, o sistema fara uma **pergunta-filtro** (gate question):
 
-### O que sera feito
+> "A empresa possui a area de **Comercial** estruturada?"
+> - Sim, possui estruturada
+> - Possui parcialmente
+> - Nao possui
 
-**Remover a tarja vermelha do status** (linhas 103-107 do `RecommendationItem.tsx`)
-- Ela nao traz informacao nova ao usuario neste contexto
-- Reduz ruido visual e melhora a hierarquia de informacao
+Se responder **"Nao possui"**: todas as perguntas daquela area sao automaticamente marcadas como "NAO EXISTE" no localStorage, e o diagnostico pula direto para a proxima area. O usuario ve uma mensagem breve confirmando o pulo.
 
-**Substituir por um badge discreto no header do item**
-- Adicionar um pequeno badge colorido ao lado do titulo indicando a severidade:
-  - Vermelho/destrutivo para "NAO EXISTE"
-  - Amarelo/aviso para "PODE SER MELHORADO"
-- Isso mantem a informacao acessivel sem ser intrusiva
+Se responder **"Possui parcialmente"**: segue para as perguntas individuais normalmente (a pessoa precisa detalhar o que tem e o que nao tem).
 
-**Remover o label "Item" acima da pergunta**
-- A pergunta ja e autoexplicativa, o label e redundante
-- Exibir a pergunta diretamente com estilo mais limpo
+Se responder **"Sim, possui estruturada"**: segue para as perguntas individuais normalmente.
 
-**Melhorar espacamento e hierarquia visual**
-- Dar mais destaque a recomendacao (que e o conteudo principal)
-- Reduzir padding desnecessario
+### Areas que terao pergunta-filtro
 
-### Arquivo alterado
-- `src/components/department/recommendation/RecommendationItem.tsx`
+Cada grupo de perguntas tem um prefixo numerico que identifica a area:
+- 1.x = Societario
+- 2.x = Tecnologia
+- 3.x = Comercial
+- 4.x = Marketing
+- 5.x = Financeiro
+- 6.x = Controladoria
+- 7.x = Fiscal
+- 8.x = Contabil
+- 9.x = Capital Humano
+- 10.x = Planejamento
 
-### Detalhe tecnico
-- Linhas 96-131: Reestruturar o conteudo expandido
-- Remover o bloco `div` com `bg-red-500/10` (linhas 103-107)
-- Remover o label "Item" (linha 99)
-- Adicionar um `Badge` no header com cor condicional baseada em `item.evaluation`:
-  - `"NAO EXISTE"` -> badge vermelho com texto "Inexistente"
-  - `"EXISTE DE FORMA PADRONIZADA..."` -> badge amarelo com texto "Pode melhorar"
-- Manter a pergunta como texto descritivo sutil acima da textarea de recomendacao
+Todas as 10 areas receberao a pergunta-filtro.
 
+### Detalhes tecnicos
+
+**1. Criar estrutura de grupos de perguntas** (`src/data/questions/index.ts`)
+- Exportar um array `questionGroups` com metadados de cada area (nome, prefixo, perguntas)
+- Manter o export `questions` existente para compatibilidade
+
+**2. Atualizar o hook `useAssessment.ts`**
+- Adicionar estado `departmentGates` para armazenar as respostas das perguntas-filtro
+- Adicionar logica no `handleNext` para:
+  - Detectar quando esta numa pergunta-filtro
+  - Se resposta for "Nao possui", auto-preencher todas as perguntas da area com "NAO EXISTE" no localStorage e pular para proxima area
+  - Atualizar `answeredQuestions` com todos os itens pulados
+- Salvar gates no localStorage para persistir entre sessoes
+
+**3. Atualizar `OngoingAssessment.tsx`**
+- Renderizar a pergunta-filtro com UI diferenciada (card com icone da area, 3 opcoes grandes)
+- Mostrar feedback visual quando uma area e pulada ("Area Comercial marcada como inexistente. Pulando para a proxima area.")
+
+**4. Atualizar `QuestionContent.tsx`**
+- Adicionar suporte para renderizar perguntas-filtro com layout especial (opcoes maiores, icone da area)
+
+**5. Atualizar calculo de progresso**
+- O progresso deve considerar as perguntas puladas como respondidas para a barra progredir corretamente

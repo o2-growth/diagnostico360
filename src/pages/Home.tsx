@@ -1,17 +1,36 @@
 
-import { Play } from 'lucide-react';
+import { Play, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import SidePanel from '@/components/SidePanel';
 import { useState, useEffect } from 'react';
 import { useAssessment } from '@/hooks/useAssessment';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/components/ui/use-toast';
 import { questions } from '@/data/questions';
+import { generateSampleAnswers, generateSampleGates } from '@/utils/sampleAssessmentData';
+import { calculateScores } from '@/utils/scoreCalculator';
+import { supabase } from '@/integrations/supabase/client';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 const Home = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('home');
   const [menuOpen, setMenuOpen] = useState(true);
   const [hasOngoingAssessment, setHasOngoingAssessment] = useState(false);
+  const [filling, setFilling] = useState(false);
+  const { user, isAdmin } = useAuth();
+  const { toast } = useToast();
   
   // Use the useAssessment hook to check if there's an ongoing assessment
   const { hasOngoingAssessment: checkOngoingAssessment } = useAssessment(questions);
@@ -32,6 +51,31 @@ const Home = () => {
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
+  };
+
+  const handleQuickFill = async () => {
+    if (!user) return;
+    setFilling(true);
+    try {
+      const sampleAnswers = generateSampleAnswers();
+      const sampleGates = generateSampleGates();
+      localStorage.setItem('departmentAnswers', JSON.stringify(sampleAnswers));
+      localStorage.setItem('departmentGates', JSON.stringify(sampleGates));
+      const { overallScore, departmentScores } = calculateScores();
+      await supabase.from('assessment_snapshots').insert({
+        user_id: user.id,
+        overall_score: overallScore,
+        department_scores: departmentScores,
+        answers: sampleAnswers,
+        gates: sampleGates,
+      } as any);
+      toast({ title: 'Teste rápido preenchido!', description: 'Dados simulados inseridos. A página será recarregada.' });
+      setTimeout(() => window.location.reload(), 1000);
+    } catch {
+      toast({ title: 'Erro', description: 'Falha ao preencher dados de teste.', variant: 'destructive' });
+    } finally {
+      setFilling(false);
+    }
   };
 
   return (
@@ -67,6 +111,36 @@ const Home = () => {
                 >
                   Continuar diagnóstico em andamento
                 </button>
+              )}
+
+              {isAdmin && (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="mt-4 gap-2"
+                      disabled={filling}
+                    >
+                      <Zap className="h-4 w-4" />
+                      {filling ? 'Preenchendo...' : 'Preencher Teste Rápido'}
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Preencher dados de teste?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Isso irá substituir todas as respostas atuais por dados simulados e salvar um snapshot. Esta ação não pode ser desfeita.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleQuickFill} disabled={filling}>
+                        {filling ? 'Preenchendo...' : 'Confirmar'}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               )}
             </div>
           </div>

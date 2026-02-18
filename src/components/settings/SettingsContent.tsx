@@ -56,12 +56,14 @@ const SettingsContent = () => {
       const sampleGates = generateSampleGates();
       localStorage.setItem('departmentAnswers', JSON.stringify(sampleAnswers));
       localStorage.setItem('departmentGates', JSON.stringify(sampleGates));
-      const { overallScore } = calculateScores();
+      const { overallScore, departmentScores } = calculateScores();
       await supabase.from('assessment_snapshots').insert({
         user_id: user.id,
         overall_score: overallScore,
-        department_scores: calculateScores().departmentScores,
-      });
+        department_scores: departmentScores,
+        answers: sampleAnswers,
+        gates: sampleGates,
+      } as any);
       toast({ title: 'Teste rápido preenchido!', description: 'Dados simulados inseridos. A página será recarregada.' });
       setTimeout(() => window.location.reload(), 1000);
     } catch {

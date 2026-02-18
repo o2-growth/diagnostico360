@@ -212,19 +212,27 @@ export const useAssessment = (allQuestions: Question[]) => {
   const saveSnapshotToDb = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        toast({ title: "Erro ao salvar snapshot", description: "Usuário não autenticado.", variant: "destructive" });
+        return;
+      }
       const { departmentScores, overallScore } = calculateScores();
-      await supabase.from('assessment_snapshots').insert({
+      const { error } = await supabase.from('assessment_snapshots').insert({
         user_id: user.id,
         overall_score: overallScore,
         department_scores: departmentScores,
       } as any);
+      if (error) {
+        console.error('Snapshot insert error:', error);
+        toast({ title: "Erro ao salvar snapshot", description: error.message, variant: "destructive" });
+      }
     } catch (error) {
       console.error('Error saving snapshot:', error);
+      toast({ title: "Erro ao salvar snapshot", description: "Falha inesperada ao salvar o diagnóstico.", variant: "destructive" });
     }
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (!currentAnswer) {
       toast({ title: "Resposta necessária", description: "Por favor, selecione uma resposta antes de continuar.", variant: "destructive" });
       return;
@@ -262,7 +270,7 @@ export const useAssessment = (allQuestions: Question[]) => {
           }, 1500);
         } else {
           // All done
-          saveSnapshotToDb();
+          await saveSnapshotToDb();
           setTimeout(() => {
             toast({ title: "Diagnóstico concluído!", description: "Todas as perguntas foram respondidas com sucesso." });
             navigate('/dashboard');
@@ -286,7 +294,7 @@ export const useAssessment = (allQuestions: Question[]) => {
     if (currentStepIndex < steps.length - 1) {
       setCurrentStepIndex(prev => prev + 1);
     } else {
-      saveSnapshotToDb();
+      await saveSnapshotToDb();
       toast({ title: "Diagnóstico concluído!", description: "Todas as perguntas foram respondidas com sucesso." });
       navigate('/dashboard');
     }

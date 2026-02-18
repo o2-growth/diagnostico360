@@ -1,50 +1,50 @@
 
-## Corrigir bugs: scores do dashboard e snapshot nao salvando
 
-### Problema 1: Dashboard mostra scores incorretos (sempre 0)
-O `calculateDepartmentScore` no `DashboardContent.tsx` tenta ler `q.evaluation` diretamente dos objetos de perguntas estaticos. Esses objetos nunca tem `evaluation` definido -- as respostas ficam salvas apenas no localStorage. Por isso os scores sempre resultam em 0.
+## Tornar andrey.lopes@o2inc.com.br admin automaticamente
 
-**Solucao**: Substituir `calculateDepartmentScore` pelo `calculateScores()` que ja existe em `src/utils/scoreCalculator.ts` e le corretamente do localStorage.
+### Problema
+A migration atual insere o role admin buscando o usuario na tabela `auth.users`. Como `andrey.lopes@o2inc.com.br` ainda nao tem conta, o INSERT nao encontra nada. Precisamos de um mecanismo que atribua admin automaticamente quando esse email se cadastrar.
 
-### Problema 2: Snapshot nao salva no banco
-No `useAssessment.ts`, a funcao `saveSnapshotToDb()` e async, mas `handleNext` chama ela sem `await`. Logo em seguida, `navigate('/dashboard')` redireciona a pagina, o que pode cancelar a requisicao HTTP antes dela completar. Alem disso, erros sao silenciados.
+### Solucao
 
-**Solucao**: Fazer `handleNext` ser async e aguardar `saveSnapshotToDb()` antes de navegar. Adicionar tratamento de erro visivel.
+**1. Criar trigger que atribui admin ao cadastro**
+
+Uma nova migration SQL que:
+- Cria uma funcao `handle_admin_assignment()` que roda apos um novo usuario ser inserido em `auth.users`
+- Verifica se o email do novo usuario esta numa lista de emails admin (`growth@o2inc.com.br`, `andrey.lopes@o2inc.com.br`)
+- Se sim, insere automaticamente uma linha em `user_roles` com role `admin`
+- Anexa um trigger na tabela `auth.users` que dispara essa funcao
+
+**2. Migration SQL**
+
+```text
+CREATE OR REPLACE FUNCTION public.assign_admin_on_signup()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path TO 'public'
+AS $$
+BEGIN
+  IF NEW.email IN ('growth@o2inc.com.br', 'andrey.lopes@o2inc.com.br') THEN
+    INSERT INTO public.user_roles (user_id, role)
+    VALUES (NEW.id, 'admin'::app_role)
+    ON CONFLICT (user_id, role) DO NOTHING;
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+-- Trigger on auth.users for new signups
+CREATE OR REPLACE TRIGGER on_auth_user_created_assign_admin
+  AFTER INSERT ON auth.users
+  FOR EACH ROW
+  EXECUTE FUNCTION public.assign_admin_on_signup();
+```
+
+Assim, quando `andrey.lopes@o2inc.com.br` criar a conta (via Google ou email), o trigger automaticamente atribui o role admin. Funciona tambem para qualquer futuro admin — basta adicionar o email na lista dentro da funcao.
 
 ### Arquivos alterados
+- Nova migration SQL (trigger + funcao)
 
-**`src/components/dashboard/DashboardContent.tsx`**
-- Remover a funcao `calculateDepartmentScore` que le da array estatica
-- Usar `calculateScores()` para obter os scores reais do localStorage
-- Passar `departmentScores[area.id]` para cada `MetricCard`
-
-**`src/hooks/useAssessment.ts`**
-- Tornar `handleNext` async
-- Aguardar (`await`) `saveSnapshotToDb()` antes de navegar
-- Adicionar toast de erro caso o insert falhe
-- Verificar resultado do insert e logar erros
-
-### Detalhe tecnico
-
-No `handleNext`, as duas chamadas a `saveSnapshotToDb()` (linhas 265 e 289) precisam ser aguardadas:
-
-```text
-// Antes (bug):
-saveSnapshotToDb();
-navigate('/dashboard');
-
-// Depois (corrigido):
-await saveSnapshotToDb();
-navigate('/dashboard');
-```
-
-No `DashboardContent`, trocar:
-```text
-// Antes (bug): le q.evaluation do array estatico (sempre undefined)
-calculateDepartmentScore(area.id)
-
-// Depois: usa calculateScores() que le do localStorage
-const { departmentScores } = calculateScores();
-// ...
-value={departmentScores[area.id] ?? 0}
-```
+### Nenhuma alteracao de codigo frontend necessaria
+O hook `useAuth` ja busca o role de `user_roles` e expoe `isAdmin`. Vai funcionar automaticamente.

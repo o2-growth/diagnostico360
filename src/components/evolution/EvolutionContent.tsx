@@ -6,6 +6,7 @@ import MetricCard from '@/components/MetricCard';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
+import { BarChart3 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -61,12 +62,24 @@ const EvolutionContent = () => {
 
   if (snapshots.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 gap-4">
-        <p className="text-muted-foreground text-lg text-center">
-          Nenhum diagnóstico concluído ainda.<br />
-          Complete um diagnóstico para acompanhar sua evolução.
-        </p>
-        <Button onClick={() => navigate('/assessment')}>Iniciar Diagnóstico</Button>
+      <div className="flex flex-col items-center justify-center h-64 gap-6">
+        <div className="p-4 rounded-full bg-dashboard-card border border-white/10">
+          <BarChart3 className="w-10 h-10 text-dashboard-muted" />
+        </div>
+        <div className="text-center">
+          <p className="text-lg font-medium mb-1">
+            Nenhum diagnóstico concluído ainda
+          </p>
+          <p className="text-sm text-dashboard-muted">
+            Complete seu primeiro diagnóstico para ver o histórico aqui.
+          </p>
+        </div>
+        <Button
+          onClick={() => navigate('/assessment')}
+          className="bg-gradient-to-r from-dashboard-accent3 to-green-400 hover:opacity-90 transition-all duration-300 text-white"
+        >
+          Iniciar Diagnóstico
+        </Button>
       </div>
     );
   }

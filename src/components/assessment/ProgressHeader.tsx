@@ -2,8 +2,10 @@
 import { Progress } from '@/components/ui/progress';
 
 interface ProgressHeaderProps {
-  currentQuestionIndex: number;
+  answeredCount: number;
   totalQuestions: number;
+  currentStep: number;
+  totalSteps: number;
   progress: number;
   questionId: string;
   questionTitle: string;
@@ -11,8 +13,10 @@ interface ProgressHeaderProps {
 }
 
 const ProgressHeader = ({
-  currentQuestionIndex,
+  answeredCount,
   totalQuestions,
+  currentStep,
+  totalSteps,
   progress,
   questionId,
   questionTitle,
@@ -23,13 +27,13 @@ const ProgressHeader = ({
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-3xl font-medium">Diagnóstico em Andamento</h1>
         <div className="text-sm text-dashboard-muted font-medium">
-          <span className="text-dashboard-accent3">{currentQuestionIndex}</span> de {totalQuestions} respondidas
+          <span className="text-dashboard-accent3">{answeredCount}</span> de {totalQuestions} respondidas
         </div>
       </div>
       <Progress value={progress} className="h-2" />
       <div className="flex justify-between mt-3">
         <p className="text-sm text-dashboard-muted">
-          Questão atual: {currentQuestionIndex + 1} de {totalQuestions}
+          Questão atual: {currentStep} de {totalSteps}
         </p>
         <p className="text-sm text-dashboard-accent3 cursor-pointer hover:underline transition-colors duration-200" onClick={onViewDepartment}>
           Ver na área completa

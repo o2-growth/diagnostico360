@@ -1,10 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
-
-const ANSWERS_KEY = 'departmentAnswers';
-const GATES_KEY = 'departmentGates';
-const RECS_KEY = 'departmentRecommendations';
+import { STORAGE_KEYS } from '@/constants/storage';
 
 export const useAssessmentDB = () => {
   const { user } = useAuth();
@@ -26,17 +23,22 @@ export const useAssessmentDB = () => {
           .limit(1)
           .maybeSingle();
 
-        if (data && !error) {
+        if (error) {
+          console.error('Error loading assessment from DB:', error);
+          return;
+        }
+
+        if (data) {
           setAssessmentId(data.id);
           // Sync DB -> localStorage
           if (data.answers && Object.keys(data.answers as object).length > 0) {
-            localStorage.setItem(ANSWERS_KEY, JSON.stringify(data.answers));
+            localStorage.setItem(STORAGE_KEYS.ANSWERS, JSON.stringify(data.answers));
           }
           if (data.gates && Object.keys(data.gates as object).length > 0) {
-            localStorage.setItem(GATES_KEY, JSON.stringify(data.gates));
+            localStorage.setItem(STORAGE_KEYS.GATES, JSON.stringify(data.gates));
           }
           if (data.recommendations && Object.keys(data.recommendations as object).length > 0) {
-            localStorage.setItem(RECS_KEY, JSON.stringify(data.recommendations));
+            localStorage.setItem(STORAGE_KEYS.RECOMMENDATIONS, JSON.stringify(data.recommendations));
           }
         }
       } catch (err) {
@@ -60,7 +62,12 @@ export const useAssessmentDB = () => {
         .select('id')
         .single();
 
-      if (data && !error) {
+      if (error) {
+        console.error('Error creating assessment:', error);
+        return null;
+      }
+
+      if (data) {
         setAssessmentId(data.id);
         return data.id;
       }
@@ -76,11 +83,11 @@ export const useAssessmentDB = () => {
     if (!id) return;
 
     try {
-      const answers = JSON.parse(localStorage.getItem(ANSWERS_KEY) || '{}');
-      const gates = JSON.parse(localStorage.getItem(GATES_KEY) || '{}');
-      const recommendations = JSON.parse(localStorage.getItem(RECS_KEY) || '{}');
+      const answers = JSON.parse(localStorage.getItem(STORAGE_KEYS.ANSWERS) || '{}');
+      const gates = JSON.parse(localStorage.getItem(STORAGE_KEYS.GATES) || '{}');
+      const recommendations = JSON.parse(localStorage.getItem(STORAGE_KEYS.RECOMMENDATIONS) || '{}');
 
-      await supabase
+      const { error } = await supabase
         .from('user_assessments')
         .update({
           answers,
@@ -88,6 +95,10 @@ export const useAssessmentDB = () => {
           recommendations,
         } as any)
         .eq('id', id);
+
+      if (error) {
+        console.error('Error syncing to DB:', error);
+      }
     } catch (err) {
       console.error('Error syncing to DB:', err);
     }
@@ -99,11 +110,11 @@ export const useAssessmentDB = () => {
     if (!id) return;
 
     try {
-      const answers = JSON.parse(localStorage.getItem(ANSWERS_KEY) || '{}');
-      const gates = JSON.parse(localStorage.getItem(GATES_KEY) || '{}');
-      const recommendations = JSON.parse(localStorage.getItem(RECS_KEY) || '{}');
+      const answers = JSON.parse(localStorage.getItem(STORAGE_KEYS.ANSWERS) || '{}');
+      const gates = JSON.parse(localStorage.getItem(STORAGE_KEYS.GATES) || '{}');
+      const recommendations = JSON.parse(localStorage.getItem(STORAGE_KEYS.RECOMMENDATIONS) || '{}');
 
-      await supabase
+      const { error } = await supabase
         .from('user_assessments')
         .update({
           answers,
@@ -113,6 +124,11 @@ export const useAssessmentDB = () => {
           completed_at: new Date().toISOString(),
         } as any)
         .eq('id', id);
+
+      if (error) {
+        console.error('Error completing assessment:', error);
+        return;
+      }
 
       setAssessmentId(null);
     } catch (err) {

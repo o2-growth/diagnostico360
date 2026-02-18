@@ -72,7 +72,7 @@ const Report = () => {
     for (const q of group.questions) {
       const answer = answers[q.item];
       const evaluation = answer?.evaluation;
-      if (!evaluation || evaluation === 'NAO EXISTE' || evaluation.includes('NAO EXISTE') || !evaluation.includes('EXISTE')) {
+      if (!evaluation || evaluation === 'NÃO EXISTE' || evaluation.includes('NÃO EXISTE') || !evaluation.includes('EXISTE')) {
         recommendations.push({
           priority: 'Alta',
           item: q.item,

@@ -13,6 +13,7 @@ const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [emailTouched, setEmailTouched] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -20,6 +21,11 @@ const Auth = () => {
   useEffect(() => {
     if (user) navigate('/dashboard', { replace: true });
   }, [user, navigate]);
+
+  const isEmailValid = (value: string) => {
+    if (!value) return true; // don't show error for empty
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  };
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,6 +63,8 @@ const Auth = () => {
       toast({ title: 'Erro ao entrar com Google', description: String(error), variant: 'destructive' });
     }
   };
+
+  const showEmailError = emailTouched && email.length > 0 && !isEmailValid(email);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-dashboard-dark px-4">
@@ -100,9 +108,13 @@ const Auth = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                onBlur={() => setEmailTouched(true)}
                 placeholder="seu@email.com"
                 required
               />
+              {showEmailError && (
+                <p className="text-xs text-red-400">Formato de email inválido</p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Senha</Label>
@@ -115,6 +127,7 @@ const Auth = () => {
                 required
                 minLength={6}
               />
+              <p className="text-xs text-dashboard-muted">Mínimo de 6 caracteres</p>
             </div>
             <Button type="submit" className="w-full bg-gradient-to-r from-dashboard-accent3 to-green-400 hover:opacity-90 transition-all duration-300 text-white" disabled={loading}>
               {loading ? 'Carregando...' : isLogin ? 'Entrar' : 'Cadastrar'}

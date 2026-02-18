@@ -12,6 +12,12 @@ interface QuestionContentProps {
   isGateQuestion?: boolean;
 }
 
+const EVALUATION_LABEL_MAP: Record<string, { label: string; color: string }> = {
+  'EXISTE E FUNCIONA PERFEITAMENTE': { label: 'Funciona Perfeitamente', color: 'bg-green-500' },
+  'EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)': { label: 'Existe, mas Pode Melhorar', color: 'bg-yellow-500' },
+  'NÃO EXISTE': { label: 'Não Existe', color: 'bg-red-500' },
+};
+
 const QuestionContent = ({
   questionId,
   questionTitle,
@@ -22,6 +28,12 @@ const QuestionContent = ({
   evaluationOptions,
   isGateQuestion = false,
 }: QuestionContentProps) => {
+  const getDisplayInfo = (option: string) => {
+    if (isGateQuestion) return { label: option, color: '' };
+    const mapped = EVALUATION_LABEL_MAP[option];
+    return mapped ?? { label: option, color: '' };
+  };
+
   return (
     <div className="flex-1">
       <div className="mb-2 text-sm font-medium text-dashboard-accent3 tracking-wide">
@@ -37,24 +49,30 @@ const QuestionContent = ({
           onValueChange={onAnswerChange}
           className="space-y-3"
         >
-          {evaluationOptions.map((option) => (
-            <div
-              key={option}
-              onClick={() => onAnswerChange(option)}
-              className={`p-4 border rounded-xl cursor-pointer transition-all duration-200 ${
-                currentAnswer === option
-                  ? 'border-dashboard-accent3 bg-dashboard-accent3/10'
-                  : 'border-white/10 hover:border-white/20 hover:bg-white/5'
-              }`}
-            >
-              <div className="flex items-center">
-                <RadioGroupItem value={option} id={`option-${option}`} className="mr-3" />
-                <label htmlFor={`option-${option}`} className="cursor-pointer w-full">
-                  {option}
-                </label>
+          {evaluationOptions.map((option) => {
+            const { label, color } = getDisplayInfo(option);
+            return (
+              <div
+                key={option}
+                onClick={() => onAnswerChange(option)}
+                className={`p-4 border rounded-xl cursor-pointer transition-all duration-200 ${
+                  currentAnswer === option
+                    ? 'border-dashboard-accent3 bg-dashboard-accent3/10'
+                    : 'border-white/10 hover:border-white/20 hover:bg-white/5'
+                }`}
+              >
+                <div className="flex items-center">
+                  <RadioGroupItem value={option} id={`option-${option}`} className="mr-3" />
+                  {color && (
+                    <span className={`w-2.5 h-2.5 rounded-full ${color} mr-2.5 shrink-0`} />
+                  )}
+                  <label htmlFor={`option-${option}`} className="cursor-pointer w-full">
+                    {label}
+                  </label>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </RadioGroup>
       </div>
 

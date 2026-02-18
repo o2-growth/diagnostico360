@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Question, EvaluationStatus } from '@/types/department';
 import { questionGroups, QuestionGroup } from '@/data/questions';
@@ -15,18 +15,17 @@ interface AssessmentStep {
   question?: Question; // only for type 'question'
 }
 
-const GATE_STORAGE_KEY = 'departmentGates';
-const ANSWERS_STORAGE_KEY = 'departmentAnswers';
+const STORAGE_KEYS = { ANSWERS: 'departmentAnswers', GATES: 'departmentGates', RECOMMENDATIONS: 'departmentRecommendations' } as const;
 
 function loadGates(): Record<string, GateAnswer> {
   try {
-    const stored = localStorage.getItem(GATE_STORAGE_KEY);
+    const stored = localStorage.getItem(STORAGE_KEYS.GATES);
     return stored ? JSON.parse(stored) : {};
   } catch { return {}; }
 }
 
 function saveGates(gates: Record<string, GateAnswer>) {
-  localStorage.setItem(GATE_STORAGE_KEY, JSON.stringify(gates));
+  localStorage.setItem(STORAGE_KEYS.GATES, JSON.stringify(gates));
 }
 
 function buildSteps(gates: Record<string, GateAnswer>): AssessmentStep[] {
@@ -50,6 +49,7 @@ export const useAssessment = (allQuestions: Question[]) => {
   const [gates, setGates] = useState<Record<string, GateAnswer>>(loadGates);
   const [isLoading, setIsLoading] = useState(true);
   const [skippedMessage, setSkippedMessage] = useState<string | null>(null);
+  const skipTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { syncToDB, completeAssessment: completeInDB } = useAssessmentDB();
@@ -90,11 +90,18 @@ export const useAssessment = (allQuestions: Question[]) => {
   const isGateQuestion = currentStep?.type === 'gate';
   const currentGroup = currentStep?.group;
 
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (skipTimeoutRef.current) clearTimeout(skipTimeoutRef.current);
+    };
+  }, []);
+
   // Load initial state
   useEffect(() => {
     setIsLoading(true);
     try {
-      const storedAnswers = localStorage.getItem(ANSWERS_STORAGE_KEY);
+      const storedAnswers = localStorage.getItem(STORAGE_KEYS.ANSWERS);
       if (storedAnswers) {
         const parsed = JSON.parse(storedAnswers);
         setAnsweredQuestions(Object.keys(parsed));
@@ -146,7 +153,7 @@ export const useAssessment = (allQuestions: Question[]) => {
       else setCurrentAnswer('');
     } else {
       try {
-        const stored = localStorage.getItem(ANSWERS_STORAGE_KEY);
+        const stored = localStorage.getItem(STORAGE_KEYS.ANSWERS);
         if (stored) {
           const parsed = JSON.parse(stored);
           const answer = parsed[currentStep.question!.item];
@@ -164,7 +171,7 @@ export const useAssessment = (allQuestions: Question[]) => {
 
   const skipGroupQuestions = (group: QuestionGroup) => {
     try {
-      const stored = localStorage.getItem(ANSWERS_STORAGE_KEY) || '{}';
+      const stored = localStorage.getItem(STORAGE_KEYS.ANSWERS) || '{}';
       const parsed = JSON.parse(stored);
       
       const skippedItems: string[] = [];
@@ -179,7 +186,7 @@ export const useAssessment = (allQuestions: Question[]) => {
         skippedItems.push(q.item);
       }
       
-      localStorage.setItem(ANSWERS_STORAGE_KEY, JSON.stringify(parsed));
+      localStorage.setItem(STORAGE_KEYS.ANSWERS, JSON.stringify(parsed));
       setAnsweredQuestions(prev => [...new Set([...prev, ...skippedItems])]);
     } catch (error) {
       console.error("Error skipping group:", error);
@@ -195,7 +202,7 @@ export const useAssessment = (allQuestions: Question[]) => {
         setAnsweredQuestions(prev => [...prev, q.item]);
       }
       
-      const stored = localStorage.getItem(ANSWERS_STORAGE_KEY) || '{}';
+      const stored = localStorage.getItem(STORAGE_KEYS.ANSWERS) || '{}';
       const parsed = JSON.parse(stored);
       parsed[q.item] = {
         ...parsed[q.item],
@@ -204,7 +211,7 @@ export const useAssessment = (allQuestions: Question[]) => {
         hasEvidence: "NÃO",
         score: 0,
       };
-      localStorage.setItem(ANSWERS_STORAGE_KEY, JSON.stringify(parsed));
+      localStorage.setItem(STORAGE_KEYS.ANSWERS, JSON.stringify(parsed));
       syncToDB();
     } catch (error) {
       console.error("Error saving answer:", error);
@@ -220,8 +227,8 @@ export const useAssessment = (allQuestions: Question[]) => {
         return;
       }
       const { departmentScores, overallScore } = calculateScores();
-      const storedAnswers = localStorage.getItem(ANSWERS_STORAGE_KEY) || '{}';
-      const storedGates = localStorage.getItem(GATE_STORAGE_KEY) || '{}';
+      const storedAnswers = localStorage.getItem(STORAGE_KEYS.ANSWERS) || '{}';
+      const storedGates = localStorage.getItem(STORAGE_KEYS.GATES) || '{}';
       const { error } = await supabase.from('assessment_snapshots').insert({
         user_id: user.id,
         overall_score: overallScore,
@@ -274,14 +281,14 @@ export const useAssessment = (allQuestions: Question[]) => {
         const nextIdx = currentGateIdx + 1;
         if (nextIdx < newSteps.length) {
           // Use setTimeout to show the skip message briefly
-          setTimeout(() => {
+          skipTimeoutRef.current = setTimeout(() => {
             setCurrentStepIndex(nextIdx);
             setSkippedMessage(null);
           }, 1500);
         } else {
           // All done
           await saveSnapshotToDb();
-          setTimeout(() => {
+          skipTimeoutRef.current = setTimeout(() => {
             toast({ title: "Diagnóstico concluído!", description: "Todas as perguntas foram respondidas com sucesso." });
             navigate('/dashboard');
           }, 1500);
@@ -329,28 +336,16 @@ export const useAssessment = (allQuestions: Question[]) => {
 
   const getDepartmentFromQuestion = (questionId: string): string | null => {
     if (questionId.startsWith('gate-')) return questionId.replace('gate-', '');
-    const prefix = questionId.charAt(0);
-    switch (prefix) {
-      case '1': return 'societario';
-      case '2': return 'tecnologia';
-      case '3': return 'comercial';
-      case '4': return 'marketing';
-      case '5': return 'financeiro';
-      case '6': return 'controladoria';
-      case '7': return 'fiscal';
-      case '8': return 'contabil';
-      case '9': return 'capital-humano';
-      case '0': 
-        if (questionId.startsWith('10')) return 'planejamento';
-        return null;
-      default: return null;
+    for (const group of questionGroups) {
+      if (group.questions.some(q => q.item === questionId)) return group.id;
     }
+    return null;
   };
 
   const hasOngoingAssessment = (): boolean => {
     try {
-      const storedAnswers = localStorage.getItem(ANSWERS_STORAGE_KEY);
-      const storedGates = localStorage.getItem(GATE_STORAGE_KEY);
+      const storedAnswers = localStorage.getItem(STORAGE_KEYS.ANSWERS);
+      const storedGates = localStorage.getItem(STORAGE_KEYS.GATES);
       if (!storedAnswers && !storedGates) return false;
       
       const parsedAnswers = storedAnswers ? JSON.parse(storedAnswers) : {};
@@ -359,12 +354,9 @@ export const useAssessment = (allQuestions: Question[]) => {
     } catch { return false; }
   };
 
-  // Keep backward-compatible currentQuestionIndex
-  const currentQuestionIndex = currentStepIndex;
-
   return {
     currentQuestion,
-    currentQuestionIndex,
+    currentStepIndex,
     currentAnswer,
     answeredQuestions,
     progress,

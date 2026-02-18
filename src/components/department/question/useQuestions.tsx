@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { Question, EvaluationStatus } from '@/types/department';
 import { useToast } from "@/components/ui/use-toast";
 
+const STORAGE_KEYS = { ANSWERS: 'departmentAnswers', GATES: 'departmentGates', RECOMMENDATIONS: 'departmentRecommendations' } as const;
+
 export const useQuestions = (questions: Question[]) => {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [applicableAnswers, setApplicableAnswers] = useState<Record<string, string>>({});
@@ -17,7 +19,7 @@ export const useQuestions = (questions: Question[]) => {
   useEffect(() => {
     let savedAnswers: Record<string, any> = {};
     try {
-      const stored = localStorage.getItem('departmentAnswers');
+      const stored = localStorage.getItem(STORAGE_KEYS.ANSWERS);
       if (stored) savedAnswers = JSON.parse(stored);
     } catch {}
 
@@ -90,7 +92,7 @@ export const useQuestions = (questions: Question[]) => {
     setEditedQuestions(prev => ({ ...prev, [item]: false }));
     
     // Save to localStorage
-    const storedAnswers = localStorage.getItem('departmentAnswers') || '{}';
+    const storedAnswers = localStorage.getItem(STORAGE_KEYS.ANSWERS) || '{}';
     const parsedAnswers = JSON.parse(storedAnswers);
     
     const updatedAnswers = {
@@ -103,7 +105,7 @@ export const useQuestions = (questions: Question[]) => {
       }
     };
     
-    localStorage.setItem('departmentAnswers', JSON.stringify(updatedAnswers));
+    localStorage.setItem(STORAGE_KEYS.ANSWERS, JSON.stringify(updatedAnswers));
     
     toast({
       title: "Sucesso",

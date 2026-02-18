@@ -133,6 +133,25 @@
   }
 }
 
+/* Mobile sidebar backdrop */
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+}
+
+@media (max-width: 767px) {
+  /* Ensure main content doesn't shift for mobile overlay sidebar */
+  .ml-64 {
+    margin-left: 0 !important;
+  }
+  .ml-16 {
+    margin-left: 0 !important;
+  }
+}
+
 @media print {
   /* Reset all backgrounds and colors for print */
   * {

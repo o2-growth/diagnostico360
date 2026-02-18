@@ -16,6 +16,8 @@ import OngoingAssessment from "./pages/OngoingAssessment";
 import Auth from "./pages/Auth";
 import Report from "./pages/Report";
 import HistoryDetail from "./pages/HistoryDetail";
+import NotFound from "./pages/NotFound";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,18 +37,21 @@ function App() {
             <ThemeToggle />
             <Toaster />
             <Sonner />
-            <BrowserRouter>
-              <Routes>
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-                <Route path="/dashboard" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-                <Route path="/department/:id" element={<ProtectedRoute><Department /></ProtectedRoute>} />
-                <Route path="/assessment" element={<ProtectedRoute><Assessment /></ProtectedRoute>} />
-                <Route path="/ongoing-assessment" element={<ProtectedRoute><OngoingAssessment /></ProtectedRoute>} />
-                <Route path="/report" element={<ProtectedRoute><Report /></ProtectedRoute>} />
-                <Route path="/history/:snapshotId" element={<ProtectedRoute><HistoryDetail /></ProtectedRoute>} />
-              </Routes>
-            </BrowserRouter>
+            <ErrorBoundary>
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+                  <Route path="/dashboard" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+                  <Route path="/department/:id" element={<ProtectedRoute><Department /></ProtectedRoute>} />
+                  <Route path="/assessment" element={<ProtectedRoute><Assessment /></ProtectedRoute>} />
+                  <Route path="/ongoing-assessment" element={<ProtectedRoute><OngoingAssessment /></ProtectedRoute>} />
+                  <Route path="/report" element={<ProtectedRoute><Report /></ProtectedRoute>} />
+                  <Route path="/history/:snapshotId" element={<ProtectedRoute><HistoryDetail /></ProtectedRoute>} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </BrowserRouter>
+            </ErrorBoundary>
           </TooltipProvider>
         </QueryClientProvider>
       </ThemeProvider>

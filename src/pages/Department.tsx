@@ -13,16 +13,9 @@ import { useAuth } from '@/hooks/useAuth';
 import { useAssessmentDB } from '@/hooks/useAssessmentDB';
 import { Question } from '@/types/department';
 import { Skeleton } from '@/components/ui/skeleton';
-import { marketingQuestions } from '@/data/questions/marketing';
-import { financialQuestions } from '@/data/questions/financial';
-import { technologyQuestions } from '@/data/questions/technology';
-import { planningQuestions } from '@/data/questions/planning';
-import { accountingQuestions } from '@/data/questions/accounting';
-import { controllingQuestions } from '@/data/questions/controlling';
-import { taxQuestions } from '@/data/questions/tax';
-import { commercialQuestions } from '@/data/questions/commercial';
-import { corporateQuestions } from '@/data/questions/corporate';
-import { humanCapitalQuestions } from '@/data/questions/human-capital';
+import { questionGroups } from '@/data/questions';
+
+const STORAGE_KEYS = { ANSWERS: 'departmentAnswers', GATES: 'departmentGates', RECOMMENDATIONS: 'departmentRecommendations' } as const;
 
 const Department = () => {
   const { id } = useParams();
@@ -41,7 +34,7 @@ const Department = () => {
     const baseQuestions = getDepartmentQuestions();
 
     // Load stored answers from localStorage if available
-    const storedAnswers = localStorage.getItem('departmentAnswers');
+    const storedAnswers = localStorage.getItem(STORAGE_KEYS.ANSWERS);
     if (storedAnswers) {
       const parsedAnswers = JSON.parse(storedAnswers);
 
@@ -80,30 +73,8 @@ const Department = () => {
   };
 
   const getDepartmentQuestions = (): Question[] => {
-    switch (id) {
-      case 'marketing':
-        return marketingQuestions;
-      case 'financeiro':
-        return financialQuestions;
-      case 'tecnologia':
-        return technologyQuestions;
-      case 'planejamento':
-        return planningQuestions;
-      case 'contabil':
-        return accountingQuestions;
-      case 'controladoria':
-        return controllingQuestions;
-      case 'fiscal':
-        return taxQuestions;
-      case 'comercial':
-        return commercialQuestions;
-      case 'societario':
-        return corporateQuestions;
-      case 'capital-humano':
-        return humanCapitalQuestions;
-      default:
-        return [];
-    }
+    const group = questionGroups.find(g => g.id === id);
+    return group?.questions ?? [];
   };
 
   return (

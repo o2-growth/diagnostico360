@@ -2,6 +2,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
+import { STORAGE_KEYS } from '@/constants/storage';
 
 const Assessment = () => {
   const navigate = useNavigate();
@@ -9,9 +10,9 @@ const Assessment = () => {
 
   useEffect(() => {
     // Clear previous assessment data for a fresh start
-    localStorage.removeItem('departmentAnswers');
-    localStorage.removeItem('departmentGates');
-    localStorage.removeItem('departmentRecommendations');
+    localStorage.removeItem(STORAGE_KEYS.ANSWERS);
+    localStorage.removeItem(STORAGE_KEYS.GATES);
+    localStorage.removeItem(STORAGE_KEYS.RECOMMENDATIONS);
 
     toast({
       title: "Novo diagnóstico iniciado",

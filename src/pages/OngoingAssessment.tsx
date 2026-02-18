@@ -28,7 +28,7 @@ const OngoingAssessment = () => {
   
   const {
     currentQuestion,
-    currentQuestionIndex,
+    currentStepIndex,
     currentAnswer,
     answeredQuestions,
     progress,
@@ -46,7 +46,6 @@ const OngoingAssessment = () => {
     totalSteps,
   } = useAssessment(questions);
 
-  const handleTabChange = (value: string) => {};
   const handleMenuToggle = (isOpen: boolean) => setIsMenuExpanded(isOpen);
 
   const goToDepartment = () => {
@@ -58,7 +57,7 @@ const OngoingAssessment = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen">
-        <SidePanel onTabChange={handleTabChange} onMenuToggle={handleMenuToggle} />
+        <SidePanel onTabChange={() => {}} onMenuToggle={handleMenuToggle} />
         <div className={`transition-all duration-300 ${isMenuExpanded ? 'pl-64' : 'pl-16'}`}>
           <div className="p-8 max-w-3xl mx-auto">
             <div className="mb-8">
@@ -94,12 +93,14 @@ const OngoingAssessment = () => {
 
   return (
     <div className="min-h-screen">
-      <SidePanel onTabChange={handleTabChange} onMenuToggle={handleMenuToggle} />
+      <SidePanel onTabChange={() => {}} onMenuToggle={handleMenuToggle} />
       <div className={`transition-all duration-300 ${isMenuExpanded ? 'pl-64' : 'pl-16'}`}>
         <div className="p-8 max-w-3xl mx-auto">
           <ProgressHeader
-            currentQuestionIndex={answeredCount}
+            answeredCount={answeredCount}
             totalQuestions={totalQuestions}
+            currentStep={currentStepIndex + 1}
+            totalSteps={totalSteps}
             progress={progress}
             questionId={currentQuestion.item}
             questionTitle={currentQuestion.title}
@@ -128,8 +129,8 @@ const OngoingAssessment = () => {
               />
 
               <NavigationButtons
-                isFirstQuestion={currentQuestionIndex === 0}
-                isLastQuestion={currentQuestionIndex === totalSteps - 1}
+                isFirstQuestion={currentStepIndex === 0}
+                isLastQuestion={currentStepIndex === totalSteps - 1}
                 onPrevious={handlePrevious}
                 onNext={handleNext}
                 onSaveAndExit={handleSaveAndExit}

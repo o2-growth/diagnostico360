@@ -26,7 +26,7 @@ import {
 const Home = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('home');
-  const [menuOpen, setMenuOpen] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(() => window.innerWidth >= 768);
   const [hasOngoingAssessment, setHasOngoingAssessment] = useState(false);
   const [filling, setFilling] = useState(false);
   const { user, isAdmin } = useAuth();
@@ -82,8 +82,8 @@ const Home = () => {
     <div className="min-h-screen flex bg-dashboard-dark">
       <SidePanel onTabChange={handleTabChange} onMenuToggle={setMenuOpen} />
       
-      <div className={`flex-1 transition-all duration-300 ${menuOpen ? 'ml-64' : 'ml-16'}`}>
-        <div className="min-h-screen flex flex-col items-center justify-center p-8">
+      <div className={`flex-1 transition-all duration-300 ${menuOpen ? 'md:ml-64' : 'md:ml-16'} ml-0`}>
+        <div className="min-h-screen flex flex-col items-center justify-center p-4 md:p-8">
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-dashboard-accent3 to-green-400 text-transparent bg-clip-text">
               Diagnóstico 360

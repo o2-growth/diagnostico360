@@ -99,7 +99,7 @@ export const commercialQuestions: Question[] = [
     hasEvidence: "SIM"
   },
   {
-    item: "3.1",
+    item: "3.10",
     title: "Indicadores",
     question: "Existem indicadores de vendas (como # de propostas, taxa de conversão, ticket médio, outro indicador)?",
     applicable: "SIM",

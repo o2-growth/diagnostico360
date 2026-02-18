@@ -6,6 +6,8 @@ import DashboardContent from '@/components/dashboard/DashboardContent';
 import DepartmentsList from '@/components/departments/DepartmentsList';
 import EvolutionContent from '@/components/evolution/EvolutionContent';
 import SettingsContent from '@/components/settings/SettingsContent';
+import { useAssessmentDB } from '@/hooks/useAssessmentDB';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Index = () => {
   const location = useLocation();
@@ -14,6 +16,7 @@ const Index = () => {
   });
   const navigate = useNavigate();
   const [isMenuExpanded, setIsMenuExpanded] = useState(true);
+  const { loading: dbLoading } = useAssessmentDB();
 
   const handleDepartmentClick = (deptId: string) => {
     navigate(`/department/${deptId}`);
@@ -51,7 +54,17 @@ const Index = () => {
         }`}
       >
         <div className="p-8">
-          {renderContent()}
+          {dbLoading ? (
+            <div className="space-y-6">
+              <Skeleton className="h-8 w-48" />
+              <Skeleton className="h-4 w-64" />
+              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mt-8">
+                {Array(10).fill(0).map((_, i) => (
+                  <Skeleton key={i} className="h-32 rounded-lg" />
+                ))}
+              </div>
+            </div>
+          ) : renderContent()}
         </div>
       </div>
     </div>

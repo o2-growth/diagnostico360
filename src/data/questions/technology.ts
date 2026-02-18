@@ -13,7 +13,6 @@ export const technologyQuestions: Question[] = [
     ],
     evidence: "Nome das ferramentas atualmente utilizadas",
     hasEvidence: "SIM",
-    evaluation: "EXISTE E FUNCIONA PERFEITAMENTE"
   },
   {
     item: "2.2",
@@ -25,7 +24,6 @@ export const technologyQuestions: Question[] = [
     ],
     evidence: "Relatório de atendimento, chamados abertos e atendidos, contratos de suporte e SLA's com as Software Houses",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   },
   {
     item: "2.3",
@@ -38,7 +36,6 @@ export const technologyQuestions: Question[] = [
     ],
     evidence: "Local onde é realizado o backup e periodicidade",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   },
   {
     item: "2.4",
@@ -51,27 +48,30 @@ export const technologyQuestions: Question[] = [
     ],
     evidence: "Inventário dos equipamentos ou lista dos principais itens da infraestrutura",
     hasEvidence: "SIM",
-    evaluation: "NÃO EXISTE"
   },
   {
     item: "2.5",
     title: "Integração de Sistemas",
-    question: "",
+    question: "Os sistemas utilizados pela empresa estão integrados entre si, permitindo o fluxo de informações entre as diferentes áreas sem necessidade de retrabalho manual?",
     applicable: "SIM",
-    application: [],
-    evidence: "",
+    application: [
+      "1) Entrevistas com gestão e pessoal de TI;",
+      "2) Solicitar Evidências"
+    ],
+    evidence: "Mapa de integrações entre sistemas, documentação de APIs e fluxos de dados",
     hasEvidence: "SIM",
-    evaluation: "NÃO EXISTE"
   },
   {
     item: "2.6",
     title: "Inovação Tecnológica",
-    question: "",
+    question: "A empresa acompanha tendências tecnológicas e avalia periodicamente oportunidades de inovação para melhorar seus processos e competitividade?",
     applicable: "SIM",
-    application: [],
-    evidence: "",
+    application: [
+      "1) Entrevistas com gestão e pessoal de TI;",
+      "2) Solicitar Evidências"
+    ],
+    evidence: "Plano de inovação tecnológica, cronograma de atualizações, projetos de melhoria",
     hasEvidence: "SIM",
-    evaluation: "NÃO EXISTE"
   },
   {
     item: "2.7",
@@ -83,6 +83,5 @@ export const technologyQuestions: Question[] = [
     ],
     evidence: "",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   }
 ];

@@ -110,7 +110,7 @@ const EvolutionContent = () => {
   return (
     <>
       <header className="mb-8">
-        <h1 className="text-3xl font-medium mb-2">Evolução</h1>
+        <h1 className="text-3xl font-medium mb-2">Histórico de Diagnósticos</h1>
         <p className="text-dashboard-muted">Acompanhe a evolução do nível de excelência ao longo do tempo</p>
       </header>
 

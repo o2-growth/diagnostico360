@@ -14,6 +14,7 @@ import Department from "./pages/Department";
 import Assessment from "./pages/Assessment";
 import OngoingAssessment from "./pages/OngoingAssessment";
 import Auth from "./pages/Auth";
+import Report from "./pages/Report";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,6 +42,7 @@ function App() {
                 <Route path="/department/:id" element={<ProtectedRoute><Department /></ProtectedRoute>} />
                 <Route path="/assessment" element={<ProtectedRoute><Assessment /></ProtectedRoute>} />
                 <Route path="/ongoing-assessment" element={<ProtectedRoute><OngoingAssessment /></ProtectedRoute>} />
+                <Route path="/report" element={<ProtectedRoute><Report /></ProtectedRoute>} />
               </Routes>
             </BrowserRouter>
           </TooltipProvider>

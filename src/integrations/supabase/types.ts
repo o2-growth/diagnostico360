@@ -38,6 +38,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_assessments: {
+        Row: {
+          id: string
+          user_id: string
+          answers: Json
+          gates: Json
+          recommendations: Json
+          status: string
+          started_at: string
+          updated_at: string
+          completed_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          answers?: Json
+          gates?: Json
+          recommendations?: Json
+          status?: string
+          started_at?: string
+          updated_at?: string
+          completed_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          answers?: Json
+          gates?: Json
+          recommendations?: Json
+          status?: string
+          started_at?: string
+          updated_at?: string
+          completed_at?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string

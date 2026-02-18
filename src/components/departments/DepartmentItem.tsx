@@ -20,19 +20,24 @@ const DepartmentItem = ({
   progress = 0 
 }: DepartmentItemProps) => {
   return (
-    <div 
-      className="flex items-center justify-between p-3 glass-card cursor-pointer hover:bg-white/5 transition-colors"
+    <div
+      className="flex items-center justify-between p-4 glass-card cursor-pointer hover:bg-white/5 hover:border-white/20 transition-all duration-300"
       onClick={onClick}
     >
       <div className="flex items-center gap-3">
-        <Icon className={`w-5 h-5 ${iconColor}`} />
+        <div className="p-2 rounded-lg bg-white/5">
+          <Icon className={`w-5 h-5 ${iconColor}`} />
+        </div>
         <div>
           <p className="font-medium">{title}</p>
-          <p className="text-sm text-gray-400">{description}</p>
+          <p className="text-sm text-dashboard-muted">{description}</p>
         </div>
       </div>
-      <div className="w-24">
-        <Progress value={progress} className="h-2" />
+      <div className="flex items-center gap-3">
+        <span className="text-xs text-dashboard-muted font-medium">{progress}%</span>
+        <div className="w-24">
+          <Progress value={progress} className="h-2" />
+        </div>
       </div>
     </div>
   );

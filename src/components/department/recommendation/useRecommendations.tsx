@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { Question } from '@/types/department';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 
 export const useRecommendations = (questions: Question[]) => {
   const { toast } = useToast();
@@ -80,33 +79,43 @@ export const useRecommendations = (questions: Question[]) => {
     setEditedRecommendations(prev => ({ ...prev, [itemId]: false }));
   };
 
-  const generateAIRecommendations = async (departmentName: string) => {
+  const generateRecommendationText = (q: Question): string => {
+    if (q.evaluation === "NÃO EXISTE") {
+      return `**Prioridade Alta - Implementar ${q.title}**\n\n` +
+        `A empresa atualmente não possui estrutura para: "${q.question}"\n\n` +
+        `**Plano de Ação Sugerido:**\n` +
+        `1. Realizar diagnóstico detalhado da situação atual\n` +
+        `2. Definir responsável e prazo para implementação\n` +
+        `3. Estabelecer processos e documentação necessários\n` +
+        `4. Implementar controles e indicadores de acompanhamento\n` +
+        `5. Realizar revisão periódica dos resultados\n\n` +
+        `**Evidências necessárias:** ${q.evidence || 'Documentação de processos, atas de reunião, indicadores'}`;
+    }
+    return `**Prioridade Média - Otimizar ${q.title}**\n\n` +
+      `O processo existe mas precisa de melhorias: "${q.question}"\n\n` +
+      `**Plano de Ação Sugerido:**\n` +
+      `1. Mapear o processo atual e identificar gargalos\n` +
+      `2. Padronizar procedimentos e criar documentação\n` +
+      `3. Definir KPIs e metas de melhoria\n` +
+      `4. Implementar ciclo de melhoria contínua (PDCA)\n` +
+      `5. Capacitar equipe envolvida\n\n` +
+      `**Evidências necessárias:** ${q.evidence || 'Documentação atualizada, relatórios de acompanhamento'}`;
+  };
+
+  const generateAIRecommendations = async (_departmentName: string) => {
     setIsGeneratingAI(true);
     try {
-      const items = criticalItems.map(q => ({
-        item: q.item,
-        title: q.title,
-        question: q.question,
-        evaluation: q.evaluation
-      }));
+      // Simulate processing delay for better UX
+      await new Promise(resolve => setTimeout(resolve, 800));
 
-      const { data, error } = await supabase.functions.invoke('generate-recommendations', {
-        body: { departmentName, criticalItems: items }
-      });
-
-      if (error) throw error;
-
-      const aiRecs = data.recommendations || data;
       const newRecs: Record<string, string> = {};
       const newAiFlags: Record<string, boolean> = {};
       const newExpanded: string[] = [];
 
-      for (const [itemId, rec] of Object.entries(aiRecs)) {
-        if (typeof rec === 'string') {
-          newRecs[itemId] = rec;
-          newAiFlags[itemId] = true;
-          newExpanded.push(itemId);
-        }
+      for (const q of criticalItems) {
+        newRecs[q.item] = generateRecommendationText(q);
+        newAiFlags[q.item] = true;
+        newExpanded.push(q.item);
       }
 
       setRecommendations(prev => ({ ...prev, ...newRecs }));
@@ -120,13 +129,13 @@ export const useRecommendations = (questions: Question[]) => {
 
       toast({
         title: "Recomendações geradas",
-        description: `${Object.keys(newRecs).length} recomendações foram geradas com IA.`
+        description: `${Object.keys(newRecs).length} recomendações foram geradas com sucesso.`
       });
     } catch (error: any) {
-      console.error('AI recommendation error:', error);
+      console.error('Recommendation generation error:', error);
       toast({
         title: "Erro ao gerar recomendações",
-        description: error.message || "Tente novamente em alguns instantes.",
+        description: "Tente novamente em alguns instantes.",
         variant: "destructive"
       });
     } finally {

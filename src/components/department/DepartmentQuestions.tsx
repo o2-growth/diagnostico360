@@ -8,9 +8,10 @@ import { useParams } from 'react-router-dom';
 
 interface DepartmentQuestionsProps {
   questions: Question[];
+  isAdmin?: boolean;
 }
 
-const DepartmentQuestions = ({ questions }: DepartmentQuestionsProps) => {
+const DepartmentQuestions = ({ questions, isAdmin }: DepartmentQuestionsProps) => {
   const { id: departmentId } = useParams();
   const {
     expandedItems,
@@ -34,10 +35,12 @@ const DepartmentQuestions = ({ questions }: DepartmentQuestionsProps) => {
     <div className="space-y-4">
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-xl font-medium">Lista de Verificação</h3>
-        <div className="flex gap-2">
-          <ExportButton questions={questions} departmentName={departmentId} />
-          <ImageUploader />
-        </div>
+        {isAdmin && (
+          <div className="flex gap-2">
+            <ExportButton questions={questions} departmentName={departmentId} />
+            <ImageUploader />
+          </div>
+        )}
       </div>
       <div className="space-y-4">
         {questions.map((item) => (
@@ -59,6 +62,7 @@ const DepartmentQuestions = ({ questions }: DepartmentQuestionsProps) => {
             onEvidenceChange={handleEvidenceChange}
             onEvaluationChange={handleEvaluationChange}
             onScoreChange={handleScoreChange}
+            isAdmin={isAdmin}
           />
         ))}
       </div>

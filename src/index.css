@@ -83,6 +83,15 @@
   body {
     @apply bg-dashboard-dark text-dashboard-light;
   }
+
+  * {
+    @apply border-border;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 @layer components {
@@ -93,12 +102,14 @@
   .dashboard-card {
     @apply p-6 transition-all duration-300 hover:border-white/20;
     @apply bg-dashboard-card bg-opacity-50 backdrop-blur-lg border border-white/10 rounded-xl;
+    @apply shadow-sm shadow-black/10;
   }
 
   .metric-card {
     @apply relative flex flex-col items-center justify-center p-8;
     @apply bg-dashboard-card bg-opacity-50 backdrop-blur-lg border border-white/10 rounded-xl;
     @apply transition-all duration-300 hover:border-white/20;
+    @apply shadow-sm shadow-black/10;
   }
 
   :root.light .glass-card {
@@ -106,11 +117,11 @@
   }
 
   :root.light .dashboard-card {
-    @apply border-black/20 hover:border-black/30 shadow-sm;
+    @apply border-black/20 hover:border-black/30 shadow-md shadow-black/5;
   }
 
   :root.light .metric-card {
-    @apply border-black/20 hover:border-black/30 shadow-sm;
+    @apply border-black/20 hover:border-black/30 shadow-md shadow-black/5;
   }
 
   :root.light [data-state="active"] {
@@ -119,5 +130,158 @@
 
   :root.light [role="tablist"] button {
     @apply text-dashboard-light;
+  }
+}
+
+@media print {
+  /* Reset all backgrounds and colors for print */
+  * {
+    color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body {
+    background: white !important;
+    color: #1f2937 !important;
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Cards */
+  .glass-card, .dashboard-card, .metric-card {
+    border: 1px solid #d1d5db !important;
+    background: #fafafa !important;
+    color: #1f2937 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Hide navigation/sidebar */
+  [data-print-hide] {
+    display: none !important;
+  }
+
+  /* Reset padding from sidebar */
+  .print\:pl-0 {
+    padding-left: 0 !important;
+  }
+
+  /* Tables */
+  table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+  }
+
+  th, td {
+    border-bottom: 1px solid #e5e7eb !important;
+    color: #1f2937 !important;
+    padding: 6px 8px !important;
+  }
+
+  th {
+    background: #f3f4f6 !important;
+    font-weight: 600 !important;
+  }
+
+  tr.bg-red-500\/5 {
+    background: #fef2f2 !important;
+  }
+
+  /* Text colors for print */
+  .text-dashboard-muted {
+    color: #6b7280 !important;
+  }
+
+  .text-dashboard-text {
+    color: #374151 !important;
+  }
+
+  .text-dashboard-accent3 {
+    color: #059669 !important;
+  }
+
+  /* Progress bars - make visible */
+  .h-2.rounded-full {
+    border: 1px solid #d1d5db !important;
+    background: #f3f4f6 !important;
+  }
+
+  /* Headings */
+  h1, h2, h3, h4 {
+    color: #111827 !important;
+    page-break-after: avoid !important;
+  }
+
+  /* Sections break smart */
+  section {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Department analysis cards can break */
+  section > .dashboard-card {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+  }
+
+  /* Badges/labels */
+  span[style*="backgroundColor"] {
+    border: 1px solid currentColor !important;
+  }
+
+  /* Recharts - ensure SVG renders */
+  .recharts-wrapper {
+    break-inside: avoid !important;
+  }
+
+  /* Hide CTA/WhatsApp section in print */
+  a[href*="wa.me"] {
+    display: none !important;
+  }
+
+  /* Gradient text fix - print doesn't support gradient text */
+  .bg-gradient-to-r.text-transparent {
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    background-clip: unset !important;
+    -webkit-text-fill-color: #059669 !important;
+    color: #059669 !important;
+  }
+
+  /* Link styles for print */
+  a {
+    color: #1f2937 !important;
+    text-decoration: none !important;
+  }
+
+  /* Grid adjustments */
+  .grid {
+    break-inside: avoid !important;
+  }
+
+  /* Page margins */
+  @page {
+    margin: 1.5cm 1cm;
+    size: A4;
+  }
+
+  /* First page header */
+  header {
+    break-inside: avoid !important;
+  }
+
+  /* Circular progress - needs to be visible */
+  .CircularProgressbar {
+    break-inside: avoid !important;
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid #d1d5db !important;
+    break-inside: avoid !important;
   }
 }

@@ -8,9 +8,11 @@ import DepartmentQuestions from '@/components/department/DepartmentQuestions';
 import DepartmentRecommendations from '@/components/department/DepartmentRecommendations';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDepartmentData } from '@/hooks/useDepartmentData';
-import { evolutionData } from '@/data/evolutionData';
 import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from '@/hooks/useAuth';
+import { useAssessmentDB } from '@/hooks/useAssessmentDB';
 import { Question } from '@/types/department';
+import { Skeleton } from '@/components/ui/skeleton';
 import { marketingQuestions } from '@/data/questions/marketing';
 import { financialQuestions } from '@/data/questions/financial';
 import { technologyQuestions } from '@/data/questions/technology';
@@ -30,16 +32,19 @@ const Department = () => {
   const [isEditing, setIsEditing] = useState(false);
   const { departmentInfo } = useDepartmentData(id);
   const { toast } = useToast();
+  const { isAdmin } = useAuth();
+  const { loading: dbLoading } = useAssessmentDB();
   const [questions, setQuestions] = useState<Question[]>([]);
 
   useEffect(() => {
+    if (dbLoading) return; // Wait for DB data to hydrate localStorage
     const baseQuestions = getDepartmentQuestions();
-    
+
     // Load stored answers from localStorage if available
     const storedAnswers = localStorage.getItem('departmentAnswers');
     if (storedAnswers) {
       const parsedAnswers = JSON.parse(storedAnswers);
-      
+
       // Merge department questions with saved answers
       const updatedQuestions = baseQuestions.map(question => {
         const savedQuestion = parsedAnswers[question.item];
@@ -47,17 +52,16 @@ const Department = () => {
           return {
             ...question,
             evaluation: savedQuestion.evaluation,
-            // Merge any other properties that might have been updated
           };
         }
         return question;
       });
-      
+
       setQuestions(updatedQuestions);
     } else {
       setQuestions(baseQuestions);
     }
-  }, [id]);
+  }, [id, dbLoading]);
 
   if (!departmentInfo) {
     return (
@@ -73,14 +77,6 @@ const Department = () => {
 
   const handleMenuToggle = (isOpen: boolean) => {
     setIsMenuExpanded(isOpen);
-  };
-
-  const calculateTotalCost = () => {
-    const employeeCost = departmentInfo.team.reduce((acc, emp) => 
-      acc + (emp.salary + emp.benefits), 0);
-    const toolsCost = departmentInfo.tools.reduce((acc, tool) => 
-      acc + tool.monthlyCost, 0);
-    return employeeCost + toolsCost;
   };
 
   const getDepartmentQuestions = (): Question[] => {
@@ -113,7 +109,7 @@ const Department = () => {
   return (
     <div className="min-h-screen">
       <SidePanel onTabChange={handleTabChange} onMenuToggle={handleMenuToggle} />
-      <div 
+      <div
         className={`transition-all duration-300 ${
           isMenuExpanded ? 'pl-64' : 'pl-16'
         }`}
@@ -124,6 +120,7 @@ const Department = () => {
             isEditing={isEditing}
             onEditToggle={() => setIsEditing(!isEditing)}
             onBack={() => navigate('/dashboard', { state: { activeTab: 'dashboard' } })}
+            isAdmin={isAdmin}
           />
           <Tabs defaultValue="overview" className="mt-6">
             <TabsList>
@@ -134,13 +131,11 @@ const Department = () => {
             <TabsContent value="overview">
               <DepartmentOverview
                 departmentInfo={departmentInfo}
-                calculateTotalCost={calculateTotalCost}
-                evolutionData={evolutionData}
                 questions={questions}
               />
             </TabsContent>
             <TabsContent value="questions">
-              <DepartmentQuestions questions={questions} />
+              <DepartmentQuestions questions={questions} isAdmin={isAdmin} />
             </TabsContent>
             <TabsContent value="recommendations">
               <DepartmentRecommendations questions={questions} />

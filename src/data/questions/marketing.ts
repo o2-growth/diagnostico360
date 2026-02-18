@@ -35,37 +35,49 @@ export const marketingQuestions: Question[] = [
   {
     item: "4.4",
     title: "Traqueamento das campanhas",
-    question: "",
+    question: "As campanhas de marketing possuem rastreamento adequado (UTMs, pixels, tags) para mensurar resultados e atribuir conversões corretamente?",
     applicable: "SIM",
-    application: [],
-    evidence: "",
+    application: [
+      "1) Entrevistas com gestão e serviço e marketing;",
+      "2) Solicitar Evidências"
+    ],
+    evidence: "Relatórios de rastreamento, configuração de pixels e tags, dashboards de atribuição",
     hasEvidence: "SIM"
   },
   {
     item: "4.5",
     title: "Investimento em mídia",
-    question: "",
+    question: "A empresa possui um orçamento definido e estruturado para investimento em mídia paga (Google Ads, Meta Ads, LinkedIn Ads ou outros canais)?",
     applicable: "SIM",
-    application: [],
-    evidence: "",
+    application: [
+      "1) Entrevistas com gestão e serviço e marketing;",
+      "2) Solicitar Evidências"
+    ],
+    evidence: "Orçamento de mídia, relatórios de investimento e retorno por canal",
     hasEvidence: "SIM"
   },
   {
     item: "4.6",
     title: "Produção de conteúdo",
-    question: "",
+    question: "A empresa possui uma estratégia de produção de conteúdo (blog, redes sociais, vídeos, e-mail marketing) com calendário editorial definido?",
     applicable: "SIM",
-    application: [],
-    evidence: "",
+    application: [
+      "1) Entrevistas com gestão e serviço e marketing;",
+      "2) Solicitar Evidências"
+    ],
+    evidence: "Calendário editorial, exemplos de conteúdos produzidos, métricas de engajamento",
     hasEvidence: "SIM"
   },
   {
     item: "4.7",
     title: "Estratégia de tráfego orgânico",
-    question: "",
+    question: "A empresa possui estratégia de tráfego orgânico (SEO, conteúdo, redes sociais) para atrair visitantes e potenciais clientes sem depender exclusivamente de mídia paga?",
     applicable: "SIM",
-    application: [],
-    evidence: "",
+    application: [
+      "1) Entrevistas com gestão e serviço e marketing;",
+      "2) Solicitar Evidências"
+    ],
+    evidence: "Relatórios de tráfego orgânico, posicionamento em buscadores, métricas de redes sociais",
     hasEvidence: "SIM"
   },
   {

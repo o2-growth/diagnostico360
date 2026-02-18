@@ -9,10 +9,10 @@ interface DepartmentScoresProps {
 const DepartmentScores = ({ questions }: DepartmentScoresProps) => {
   const data = questions.map(question => ({
     name: question.title,
-    score: Number(question.evaluation === "EXISTE E FUNCIONA PERFEITAMENTE" ? 100 : 
-           question.evaluation === "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)" ? 70 : 0),
-    remaining: Number(question.evaluation === "EXISTE E FUNCIONA PERFEITAMENTE" ? 0 : 
-               question.evaluation === "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)" ? 30 : 100)
+    score: Number(question.evaluation === "EXISTE E FUNCIONA PERFEITAMENTE" ? 100 :
+           question.evaluation === "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)" ? 50 : 0),
+    remaining: Number(question.evaluation === "EXISTE E FUNCIONA PERFEITAMENTE" ? 0 :
+               question.evaluation === "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)" ? 50 : 100)
   }));
 
   return (
@@ -24,7 +24,6 @@ const DepartmentScores = ({ questions }: DepartmentScoresProps) => {
           layout="vertical"
           margin={{ top: 5, right: 30, bottom: 5, left: 180 }}
           barSize={30}
-          stackOffset="expand"
         >
           <CartesianGrid horizontal={false} stroke="rgba(255,255,255,0.1)" />
           <XAxis 
@@ -40,15 +39,17 @@ const DepartmentScores = ({ questions }: DepartmentScoresProps) => {
             tick={{ fill: '#828179', fontSize: 13 }}
             interval={0}
           />
-          <Bar 
-            dataKey="score" 
-            fill="#1F3B28"
+          <Bar
+            dataKey="score"
+            fill="#7EBF8E"
             stackId="stack"
+            radius={[0, 0, 0, 0]}
           />
-          <Bar 
-            dataKey="remaining" 
-            fill="#7EBF8E" 
+          <Bar
+            dataKey="remaining"
+            fill="rgba(255,255,255,0.08)"
             stackId="stack"
+            radius={[0, 4, 4, 0]}
           />
         </BarChart>
       </ResponsiveContainer>

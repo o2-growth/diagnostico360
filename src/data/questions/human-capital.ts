@@ -13,7 +13,6 @@ export const humanCapitalQuestions: Question[] = [
     ],
     evidence: "Plano de Cargos e Salários, Modelo de Remuneração Estratégica (PPLR), Registro de Treinamento",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   },
   {
     item: "9.2",
@@ -26,7 +25,6 @@ export const humanCapitalQuestions: Question[] = [
     ],
     evidence: "Lista dos benefícios, juntamente com os comprovantes de pagamentos do último mês realizado",
     hasEvidence: "SIM",
-    evaluation: "EXISTE E FUNCIONA PERFEITAMENTE"
   },
   {
     item: "9.3",
@@ -39,7 +37,6 @@ export const humanCapitalQuestions: Question[] = [
     ],
     evidence: "Comprovantes do recolhimento dos encargos do último mês realizado",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   },
   {
     item: "9.4",
@@ -52,6 +49,5 @@ export const humanCapitalQuestions: Question[] = [
     ],
     evidence: "Plano de Cargos e Salários, Modelo de Remuneração Estratégica (PPLR), Registro de Treinamento",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   }
 ];

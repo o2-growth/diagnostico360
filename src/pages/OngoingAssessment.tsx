@@ -43,6 +43,7 @@ const OngoingAssessment = () => {
     getDepartmentFromQuestion,
     answeredCount,
     totalQuestions,
+    totalSteps,
   } = useAssessment(questions);
 
   const handleTabChange = (value: string) => {};
@@ -128,7 +129,7 @@ const OngoingAssessment = () => {
 
               <NavigationButtons
                 isFirstQuestion={currentQuestionIndex === 0}
-                isLastQuestion={false}
+                isLastQuestion={currentQuestionIndex === totalSteps - 1}
                 onPrevious={handlePrevious}
                 onNext={handleNext}
                 onSaveAndExit={handleSaveAndExit}

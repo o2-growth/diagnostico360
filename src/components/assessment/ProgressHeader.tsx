@@ -22,8 +22,8 @@ const ProgressHeader = ({
     <header className="mb-8">
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-3xl font-medium">Diagnóstico em Andamento</h1>
-        <div className="text-sm text-dashboard-muted">
-          {currentQuestionIndex} de {totalQuestions} respondidas
+        <div className="text-sm text-dashboard-muted font-medium">
+          <span className="text-dashboard-accent3">{currentQuestionIndex}</span> de {totalQuestions} respondidas
         </div>
       </div>
       <Progress value={progress} className="h-2" />
@@ -31,7 +31,7 @@ const ProgressHeader = ({
         <p className="text-sm text-dashboard-muted">
           Questão atual: {currentQuestionIndex + 1} de {totalQuestions}
         </p>
-        <p className="text-sm text-dashboard-accent3 cursor-pointer hover:underline" onClick={onViewDepartment}>
+        <p className="text-sm text-dashboard-accent3 cursor-pointer hover:underline transition-colors duration-200" onClick={onViewDepartment}>
           Ver na área completa
         </p>
       </div>

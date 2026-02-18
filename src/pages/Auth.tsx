@@ -59,19 +59,19 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
+    <div className="min-h-screen flex items-center justify-center bg-dashboard-dark px-4">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-foreground">Diagnóstico 360°</h1>
-          <p className="mt-2 text-muted-foreground">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-dashboard-accent3 to-green-400 text-transparent bg-clip-text">Diagnóstico 360°</h1>
+          <p className="mt-2 text-dashboard-muted">
             {isLogin ? 'Entre na sua conta' : 'Crie sua conta'}
           </p>
         </div>
 
-        <div className="glass-card p-8 rounded-xl space-y-6">
+        <div className="dashboard-card space-y-6">
           <Button
             variant="outline"
-            className="w-full gap-2"
+            className="w-full gap-2 border-white/10 hover:border-white/20 hover:bg-white/5 transition-all duration-300"
             onClick={handleGoogleLogin}
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -85,10 +85,10 @@ const Auth = () => {
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-border" />
+              <span className="w-full border-t border-white/10" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-2 text-muted-foreground">ou</span>
+              <span className="bg-dashboard-card px-2 text-dashboard-muted">ou</span>
             </div>
           </div>
 
@@ -116,16 +116,16 @@ const Auth = () => {
                 minLength={6}
               />
             </div>
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full bg-gradient-to-r from-dashboard-accent3 to-green-400 hover:opacity-90 transition-all duration-300 text-white" disabled={loading}>
               {loading ? 'Carregando...' : isLogin ? 'Entrar' : 'Cadastrar'}
             </Button>
           </form>
 
-          <p className="text-center text-sm text-muted-foreground">
+          <p className="text-center text-sm text-dashboard-muted">
             {isLogin ? 'Não tem conta?' : 'Já tem conta?'}{' '}
             <button
               onClick={() => setIsLogin(!isLogin)}
-              className="text-primary hover:underline font-medium"
+              className="text-dashboard-accent3 hover:underline font-medium transition-colors"
             >
               {isLogin ? 'Cadastre-se' : 'Faça login'}
             </button>

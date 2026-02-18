@@ -1,6 +1,6 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LayoutDashboard, Settings, Building2, TrendingUp, PanelLeftClose, PanelLeftOpen, Download, Home, LogOut } from "lucide-react";
+import { LayoutDashboard, Settings, Building2, History, PanelLeftClose, PanelLeftOpen, Download, Home, LogOut } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -64,8 +64,8 @@ const SidePanel = ({ onTabChange, onMenuToggle }: SidePanelProps) => {
   };
 
   return (
-    <div 
-      className={`h-screen fixed left-0 top-0 glass-card border-r border-white/10 transition-all duration-300 flex flex-col ${
+    <div
+      className={`h-screen fixed left-0 top-0 z-50 glass-card border-r border-white/10 transition-all duration-300 flex flex-col ${
         isOpen ? 'w-64' : 'w-16'
       }`}
     >
@@ -73,7 +73,7 @@ const SidePanel = ({ onTabChange, onMenuToggle }: SidePanelProps) => {
         <Button
           variant="ghost"
           size="icon"
-          className="mb-4 self-end"
+          className="mb-6 self-end hover:bg-white/10 transition-colors duration-200"
           onClick={toggleMenu}
         >
           {isOpen ? (
@@ -83,63 +83,64 @@ const SidePanel = ({ onTabChange, onMenuToggle }: SidePanelProps) => {
           )}
         </Button>
 
-        <Tabs 
+        <Tabs
           defaultValue={getCurrentTab()}
           value={getCurrentTab()}
-          orientation="vertical" 
+          orientation="vertical"
           className="w-full flex flex-col h-full"
           onValueChange={handleTabChange}
         >
-          <TabsList className="flex flex-col h-auto bg-transparent text-white">
-            <TabsTrigger 
-              value="home" 
-              className={`w-full justify-${isOpen ? 'start' : 'center'} gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white p-3`}
+          <TabsList className="flex flex-col h-auto bg-transparent text-white gap-1">
+            <TabsTrigger
+              value="home"
+              className={`w-full ${isOpen ? 'justify-start' : 'justify-center'} gap-3 data-[state=active]:bg-white/10 data-[state=active]:text-white p-3 rounded-lg hover:bg-white/5 transition-all duration-200`}
             >
               <Home className="w-5 h-5 shrink-0" />
               {isOpen && "Início"}
             </TabsTrigger>
-            <TabsTrigger 
-              value="dashboard" 
-              className={`w-full justify-${isOpen ? 'start' : 'center'} gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white p-3`}
+            <TabsTrigger
+              value="dashboard"
+              className={`w-full ${isOpen ? 'justify-start' : 'justify-center'} gap-3 data-[state=active]:bg-white/10 data-[state=active]:text-white p-3 rounded-lg hover:bg-white/5 transition-all duration-200`}
             >
               <LayoutDashboard className="w-5 h-5 shrink-0" />
               {isOpen && "Resultado"}
             </TabsTrigger>
-            <TabsTrigger 
-              value="evolution" 
-              className={`w-full justify-${isOpen ? 'start' : 'center'} gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white p-3`}
+            <TabsTrigger
+              value="evolution"
+              className={`w-full ${isOpen ? 'justify-start' : 'justify-center'} gap-3 data-[state=active]:bg-white/10 data-[state=active]:text-white p-3 rounded-lg hover:bg-white/5 transition-all duration-200`}
             >
-              <TrendingUp className="w-5 h-5 shrink-0" />
-              {isOpen && "Evolução"}
+              <History className="w-5 h-5 shrink-0" />
+              {isOpen && "Histórico"}
             </TabsTrigger>
-            <TabsTrigger 
-              value="areas" 
-              className={`w-full justify-${isOpen ? 'start' : 'center'} gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white p-3`}
+            <TabsTrigger
+              value="areas"
+              className={`w-full ${isOpen ? 'justify-start' : 'justify-center'} gap-3 data-[state=active]:bg-white/10 data-[state=active]:text-white p-3 rounded-lg hover:bg-white/5 transition-all duration-200`}
             >
               <Building2 className="w-5 h-5 shrink-0" />
               {isOpen && "Áreas"}
             </TabsTrigger>
           </TabsList>
           <div className="flex-1" />
-          <TabsList className="flex flex-col h-auto bg-transparent text-white mt-auto">
-            <Button 
+          <TabsList className="flex flex-col h-auto bg-transparent text-white mt-auto gap-1">
+            <Button
               variant="ghost"
-              className={`w-full justify-${isOpen ? 'start' : 'center'} gap-2 text-white p-3`}
+              className={`w-full ${isOpen ? 'justify-start' : 'justify-center'} gap-3 text-dashboard-text hover:text-white hover:bg-white/5 p-3 rounded-lg transition-all duration-200`}
               onClick={handleExport}
             >
               <Download className="w-5 h-5 shrink-0" />
               {isOpen && "Exportar"}
             </Button>
-            <TabsTrigger 
-              value="settings" 
-              className={`w-full justify-${isOpen ? 'start' : 'center'} gap-2 data-[state=active]:bg-white/10 data-[state=active]:text-white p-3`}
+            <TabsTrigger
+              value="settings"
+              className={`w-full ${isOpen ? 'justify-start' : 'justify-center'} gap-3 data-[state=active]:bg-white/10 data-[state=active]:text-white p-3 rounded-lg hover:bg-white/5 transition-all duration-200`}
             >
               <Settings className="w-5 h-5 shrink-0" />
               {isOpen && "Configurações"}
             </TabsTrigger>
-            <Button 
+            <div className="border-t border-white/10 my-2" />
+            <Button
               variant="ghost"
-              className={`w-full justify-${isOpen ? 'start' : 'center'} gap-2 text-red-400 hover:text-red-300 p-3`}
+              className={`w-full ${isOpen ? 'justify-start' : 'justify-center'} gap-3 text-red-400 hover:text-red-300 hover:bg-red-500/10 p-3 rounded-lg transition-all duration-200`}
               onClick={signOut}
             >
               <LogOut className="w-5 h-5 shrink-0" />

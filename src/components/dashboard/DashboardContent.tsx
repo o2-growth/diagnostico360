@@ -1,36 +1,16 @@
 
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CustomerRequests from '@/components/CustomerRequests';
 import MetricCard from '@/components/MetricCard';
-import { useDepartmentData } from '@/hooks/useDepartmentData';
-
-import { useAuth } from '@/hooks/useAuth';
-import { generateSampleAnswers, generateSampleGates } from '@/utils/sampleAssessmentData';
 import { calculateScores } from '@/utils/scoreCalculator';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
-import { Zap } from 'lucide-react';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
+import { FileText } from 'lucide-react';
 
 const DashboardContent = () => {
   const navigate = useNavigate();
-  const { user, isAdmin } = useAuth();
-  const { toast } = useToast();
-  const [filling, setFilling] = useState(false);
-  
-  const { departmentScores } = calculateScores();
+
+  const { departmentScores, overallScore } = calculateScores();
+  const hasCompletedAssessment = overallScore > 0;
 
   const areas = [
     { id: 'financeiro', title: 'Financeiro', color: '#7EBF8E' },
@@ -49,37 +29,6 @@ const DashboardContent = () => {
     navigate(`/department/${areaId}`);
   };
 
-  const handleQuickFill = async () => {
-    if (!user) return;
-    setFilling(true);
-    try {
-      const sampleAnswers = generateSampleAnswers();
-      const sampleGates = generateSampleGates();
-
-      localStorage.setItem('departmentAnswers', JSON.stringify(sampleAnswers));
-      localStorage.setItem('departmentGates', JSON.stringify(sampleGates));
-
-      const { departmentScores, overallScore } = calculateScores();
-
-      await supabase.from('assessment_snapshots').insert({
-        user_id: user.id,
-        overall_score: overallScore,
-        department_scores: departmentScores,
-      });
-
-      toast({
-        title: "Teste rápido preenchido!",
-        description: "Dados simulados foram inseridos com sucesso. A página será recarregada.",
-      });
-
-      setTimeout(() => window.location.reload(), 1000);
-    } catch (err) {
-      toast({ title: "Erro", description: "Falha ao preencher dados de teste.", variant: "destructive" });
-    } finally {
-      setFilling(false);
-    }
-  };
-
   return (
     <>
       <header className="mb-8 flex items-center justify-between">
@@ -87,33 +36,46 @@ const DashboardContent = () => {
           <h1 className="text-3xl font-medium mb-2">Resultado</h1>
           <p className="text-dashboard-muted">Acompanhe o nível de excelência atual de cada área</p>
         </div>
-        {isAdmin && (
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-2">
-                <Zap className="h-4 w-4" />
-                Preencher Teste Rápido
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Preencher dados de teste?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Isso irá substituir todas as respostas atuais do diagnóstico por dados simulados de uma empresa fictícia e salvar um snapshot. Esta ação não pode ser desfeita.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                <AlertDialogAction onClick={handleQuickFill} disabled={filling}>
-                  {filling ? 'Preenchendo...' : 'Confirmar'}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        )}
+        <div className="flex items-center gap-3">
+          <Button onClick={() => navigate('/report')} variant="outline" size="sm" className="gap-2 border-white/10 hover:border-white/20 hover:bg-white/5 transition-all duration-300">
+            <FileText className="h-4 w-4" />
+            Ver Relatório Completo
+          </Button>
+        </div>
       </header>
 
       <div className="flex flex-col gap-6">
+        {hasCompletedAssessment && (
+          <div className="dashboard-card flex items-center justify-between">
+            <div>
+              <p className="text-sm text-dashboard-muted mb-1">Score Geral</p>
+              <span
+                className="text-4xl font-bold"
+                style={{
+                  color: overallScore <= 25 ? '#EF4444'
+                    : overallScore <= 50 ? '#F97316'
+                    : overallScore <= 75 ? '#EAB308'
+                    : '#7EBF8E',
+                }}
+              >
+                {overallScore}%
+              </span>
+            </div>
+            <div className="w-48 h-2 rounded-full overflow-hidden bg-white/10">
+              <div
+                className="h-full rounded-full transition-all duration-500"
+                style={{
+                  width: `${overallScore}%`,
+                  backgroundColor: overallScore <= 25 ? '#EF4444'
+                    : overallScore <= 50 ? '#F97316'
+                    : overallScore <= 75 ? '#EAB308'
+                    : '#7EBF8E',
+                }}
+              />
+            </div>
+          </div>
+        )}
+
         <CustomerRequests />
 
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
@@ -131,6 +93,34 @@ const DashboardContent = () => {
             </div>
           ))}
         </div>
+
+        {hasCompletedAssessment && (
+          <div className="dashboard-card p-6 flex items-center justify-between" style={{
+            background: 'linear-gradient(135deg, rgba(126, 191, 142, 0.08), rgba(97, 170, 242, 0.08))',
+            border: '1px solid rgba(126, 191, 142, 0.2)',
+          }}>
+            <div>
+              <h3 className="font-semibold text-lg mb-1">Precisa de ajuda com os resultados?</h3>
+              <p className="text-dashboard-muted text-sm">
+                Seu score geral é <strong>{overallScore}%</strong>. Fale com um especialista para melhorar seus pontos críticos.
+              </p>
+            </div>
+            <a
+              href={`https://wa.me/5511999999999?text=${encodeURIComponent(
+                `Olá! Fiz o Diagnóstico 360 e meu score geral foi ${overallScore}%. Gostaria de falar com um especialista.`
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm whitespace-nowrap transition-all hover:scale-105"
+              style={{
+                background: 'linear-gradient(135deg, #7EBF8E, #61AAF2)',
+                color: '#fff',
+              }}
+            >
+              Falar com Especialista
+            </a>
+          </div>
+        )}
       </div>
     </>
   );

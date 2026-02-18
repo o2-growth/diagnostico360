@@ -13,7 +13,6 @@ export const taxQuestions: Question[] = [
     ],
     evidence: "Regime fiscal de apuração dos tributos através da Contabilidade, Estudos de Impacto de Carga Tributária, Relatório de Acompanhamento mensal de Tributos, Relatório de Recolhimentos.",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   },
   {
     item: "7.2",
@@ -26,7 +25,6 @@ export const taxQuestions: Question[] = [
     ],
     evidence: "Comprovante de regularidade fiscal: Federal, Estadual e Municipal",
     hasEvidence: "SIM",
-    evaluation: "NÃO EXISTE"
   },
   {
     item: "7.3",
@@ -39,17 +37,18 @@ export const taxQuestions: Question[] = [
     ],
     evidence: "Extrato de apuração dos tributos",
     hasEvidence: "SIM",
-    evaluation: "EXISTE E FUNCIONA PERFEITAMENTE"
   },
   {
     item: "7.4",
     title: "Conformidade Fiscal e Tributária",
-    question: "",
+    question: "A empresa mantém todas as obrigações acessórias fiscais e tributárias em dia (SPED, EFD, DCTF, DIRF e demais declarações obrigatórias)?",
     applicable: "SIM",
-    application: [],
-    evidence: "",
+    application: [
+      "1) Entrevistas com gestão, financeiro e contabilidade;",
+      "2) Solicitar Evidências"
+    ],
+    evidence: "Comprovantes de envio das obrigações acessórias, certidões negativas de débitos",
     hasEvidence: "SIM",
-    evaluation: "EXISTE E FUNCIONA PERFEITAMENTE"
   },
   {
     item: "7.5",
@@ -62,6 +61,5 @@ export const taxQuestions: Question[] = [
     ],
     evidence: "",
     hasEvidence: "NÃO",
-    evaluation: "NÃO EXISTE"
   }
 ];

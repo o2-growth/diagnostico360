@@ -1,23 +1,32 @@
 
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from 'recharts';
 import { useTheme } from '@/components/theme/theme-provider';
+import { calculateScores } from '@/utils/scoreCalculator';
 
-const data = [
-  { subject: 'Financeiro', value: 65, target: 100 },
-  { subject: 'Tecnologia', value: 45, target: 100 },
-  { subject: 'Planejamento', value: 35, target: 100 },
-  { subject: 'Contábil', value: 55, target: 100 },
-  { subject: 'Controladoria', value: 40, target: 100 },
-  { subject: 'Fiscal', value: 60, target: 100 },
-  { subject: 'Comercial', value: 70, target: 100 },
-  { subject: 'Marketing', value: 50, target: 100 },
-  { subject: 'Societário', value: 45, target: 100 },
-  { subject: 'Capital Humano', value: 55, target: 100 }
-];
+const AREA_CONFIG: Record<string, string> = {
+  'financeiro': 'Financeiro',
+  'tecnologia': 'Tecnologia',
+  'planejamento': 'Planejamento',
+  'contabil': 'Contábil',
+  'controladoria': 'Controladoria',
+  'fiscal': 'Fiscal',
+  'comercial': 'Comercial',
+  'marketing': 'Marketing',
+  'societario': 'Societário',
+  'capital-humano': 'Capital Humano',
+};
 
 const CustomerRequests = () => {
   const { theme } = useTheme();
   const isLight = theme === 'light';
+
+  const { departmentScores } = calculateScores();
+
+  const data = Object.entries(AREA_CONFIG).map(([id, name]) => ({
+    subject: name,
+    value: departmentScores[id] ?? 0,
+    target: 100,
+  }));
 
   return (
     <div className="dashboard-card h-[400px]">
@@ -25,8 +34,8 @@ const CustomerRequests = () => {
       <ResponsiveContainer width="100%" height="100%">
         <RadarChart data={data} margin={{ top: 20, right: 30, bottom: 20, left: 30 }}>
           <PolarGrid stroke={isLight ? "rgba(0,0,0,0.2)" : "rgba(255,255,255,0.1)"} />
-          <PolarAngleAxis 
-            dataKey="subject" 
+          <PolarAngleAxis
+            dataKey="subject"
             stroke={isLight ? "#333333" : "#828179"}
             tickLine={false}
             fontSize={12}

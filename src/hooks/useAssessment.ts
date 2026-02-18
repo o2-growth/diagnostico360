@@ -5,6 +5,7 @@ import { questionGroups, QuestionGroup } from '@/data/questions';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { calculateScores } from '@/utils/scoreCalculator';
+import { useAssessmentDB } from './useAssessmentDB';
 
 export type GateAnswer = 'sim' | 'parcialmente' | 'nao' | null;
 
@@ -51,6 +52,7 @@ export const useAssessment = (allQuestions: Question[]) => {
   const [skippedMessage, setSkippedMessage] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { syncToDB, completeAssessment: completeInDB } = useAssessmentDB();
 
   const steps = useMemo(() => buildSteps(gates), [gates]);
   const currentStep = steps[currentStepIndex];
@@ -203,6 +205,7 @@ export const useAssessment = (allQuestions: Question[]) => {
         score: 0,
       };
       localStorage.setItem(ANSWERS_STORAGE_KEY, JSON.stringify(parsed));
+      syncToDB();
     } catch (error) {
       console.error("Error saving answer:", error);
       toast({ title: "Erro ao salvar resposta", variant: "destructive" });
@@ -225,6 +228,8 @@ export const useAssessment = (allQuestions: Question[]) => {
       if (error) {
         console.error('Snapshot insert error:', error);
         toast({ title: "Erro ao salvar snapshot", description: error.message, variant: "destructive" });
+      } else {
+        await completeInDB();
       }
     } catch (error) {
       console.error('Error saving snapshot:', error);
@@ -249,6 +254,7 @@ export const useAssessment = (allQuestions: Question[]) => {
       const newGates = { ...gates, [group.id]: gateValue };
       setGates(newGates);
       saveGates(newGates);
+      syncToDB();
 
       if (gateValue === 'nao') {
         skipGroupQuestions(group);

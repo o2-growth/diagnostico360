@@ -13,7 +13,6 @@ export const accountingQuestions: Question[] = [
     ],
     evidence: "Balancete mensal, preferencialmente dos últimos 3 meses realizados",
     hasEvidence: "SIM",
-    evaluation: "EXISTE E FUNCIONA PERFEITAMENTE"
   },
   {
     item: "8.2",
@@ -26,7 +25,6 @@ export const accountingQuestions: Question[] = [
     ],
     evidence: "1) Visita com demonstração e relato",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   },
   {
     item: "8.3",
@@ -39,37 +37,42 @@ export const accountingQuestions: Question[] = [
     ],
     evidence: "Extratos bancários, comprovantes de pagamentos (notas fiscais e/ou cupons fiscais)",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   },
   {
     item: "8.4",
     title: "Precisão dos Registros e Conformidade",
-    question: "",
+    question: "Os registros contábeis refletem com precisão a realidade financeira da empresa, e estão em conformidade com as normas contábeis vigentes (CPC/IFRS)?",
     applicable: "SIM",
-    application: [],
-    evidence: "",
+    application: [
+      "1) Entrevistas com gestão e Financeiro e contabilidade;",
+      "2) Solicitar Evidências"
+    ],
+    evidence: "Balancetes, relatórios de auditoria, notas explicativas",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   },
   {
     item: "8.5",
     title: "Fechamento e Reporte",
-    question: "",
+    question: "O fechamento contábil mensal é realizado dentro do prazo e os relatórios são entregues à gestão de forma tempestiva para suportar a tomada de decisão?",
     applicable: "SIM",
-    application: [],
-    evidence: "",
+    application: [
+      "1) Entrevistas com gestão e Financeiro e contabilidade;",
+      "2) Solicitar Evidências"
+    ],
+    evidence: "Cronograma de fechamento, relatórios mensais entregues",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   },
   {
     item: "8.6",
     title: "Gestão de Tributos",
-    question: "",
+    question: "A contabilidade realiza o acompanhamento e a gestão dos tributos de forma integrada, garantindo o correto cálculo, registro e recolhimento dentro dos prazos legais?",
     applicable: "SIM",
-    application: [],
-    evidence: "",
+    application: [
+      "1) Entrevistas com gestão e Financeiro e contabilidade;",
+      "2) Solicitar Evidências"
+    ],
+    evidence: "Guias de recolhimento, relatórios de apuração de tributos, calendário fiscal",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   },
   {
     item: "8.7",
@@ -82,6 +85,5 @@ export const accountingQuestions: Question[] = [
     ],
     evidence: "Cronograma de Reuniões, Atas",
     hasEvidence: "SIM",
-    evaluation: "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
   }
 ];

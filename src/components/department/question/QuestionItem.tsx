@@ -22,6 +22,7 @@ interface QuestionItemProps {
   onEvidenceChange: (item: string, value: string) => void;
   onEvaluationChange: (item: string, value: EvaluationStatus) => void;
   onScoreChange: (item: string, value: string) => void;
+  isAdmin?: boolean;
 }
 
 const QuestionItem = ({
@@ -40,7 +41,8 @@ const QuestionItem = ({
   onApplicableChange,
   onEvidenceChange,
   onEvaluationChange,
-  onScoreChange
+  onScoreChange,
+  isAdmin
 }: QuestionItemProps) => {
   const [editingQuestion, setEditingQuestion] = useState<string | null>(null);
   const [questionText, setQuestionText] = useState("");
@@ -73,40 +75,42 @@ const QuestionItem = ({
             {item.item} - {item.title}
           </span>
         </div>
-        <div className="flex gap-2">
-          {isEditMode ? (
-            <>
+        {isAdmin && (
+          <div className="flex gap-2">
+            {isEditMode ? (
+              <>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => onSaveChanges(item.item)}
+                  className="flex items-center gap-1"
+                >
+                  <Save className="h-3.5 w-3.5" />
+                  Salvar
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => onCancelChanges(item.item)}
+                  className="flex items-center gap-1"
+                >
+                  <X className="h-3.5 w-3.5" />
+                  Cancelar
+                </Button>
+              </>
+            ) : (
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => onSaveChanges(item.item)}
+                onClick={() => onToggleEditMode(item.item)}
                 className="flex items-center gap-1"
               >
-                <Save className="h-3.5 w-3.5" />
-                Salvar
+                <Pen className="h-3.5 w-3.5" />
+                Editar
               </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => onCancelChanges(item.item)}
-                className="flex items-center gap-1"
-              >
-                <X className="h-3.5 w-3.5" />
-                Cancelar
-              </Button>
-            </>
-          ) : (
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => onToggleEditMode(item.item)}
-              className="flex items-center gap-1"
-            >
-              <Pen className="h-3.5 w-3.5" />
-              Editar
-            </Button>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
 
       {isExpanded && (

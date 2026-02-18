@@ -13,19 +13,37 @@ export const useQuestions = (questions: Question[]) => {
   const [isEditMode, setIsEditMode] = useState<Record<string, boolean>>({});
   const { toast } = useToast();
 
-  // Initialize state from questions
+  // Initialize state from localStorage (user's answers) falling back to question data
   useEffect(() => {
+    let savedAnswers: Record<string, any> = {};
+    try {
+      const stored = localStorage.getItem('departmentAnswers');
+      if (stored) savedAnswers = JSON.parse(stored);
+    } catch {}
+
     setApplicableAnswers(
-      questions.reduce((acc, q) => ({ ...acc, [q.item]: q.applicable || "SIM" }), {})
+      questions.reduce((acc, q) => ({
+        ...acc,
+        [q.item]: savedAnswers[q.item]?.applicable || q.applicable || "SIM"
+      }), {})
     );
     setEvidenceAnswers(
-      questions.reduce((acc, q) => ({ ...acc, [q.item]: q.hasEvidence || "NÃO" }), {})
+      questions.reduce((acc, q) => ({
+        ...acc,
+        [q.item]: savedAnswers[q.item]?.hasEvidence || q.hasEvidence || "NÃO"
+      }), {})
     );
     setEvaluations(
-      questions.reduce((acc, q) => ({ ...acc, [q.item]: q.evaluation || "NÃO EXISTE" }), {})
+      questions.reduce((acc, q) => ({
+        ...acc,
+        [q.item]: savedAnswers[q.item]?.evaluation || q.evaluation || "NÃO EXISTE"
+      }), {} as Record<string, EvaluationStatus>)
     );
     setScores(
-      questions.reduce((acc, q) => ({ ...acc, [q.item]: q.score || 0 }), {})
+      questions.reduce((acc, q) => ({
+        ...acc,
+        [q.item]: savedAnswers[q.item]?.score || q.score || 0
+      }), {})
     );
   }, [questions]);
 

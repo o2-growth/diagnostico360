@@ -15,8 +15,8 @@ const MetricCard = ({ title, value, color }: MetricCardProps) => {
   const isLight = theme === 'light';
 
   return (
-    <div className="metric-card">
-      <div className="relative w-32 h-32 mb-6">
+    <div className="metric-card group hover:scale-[1.02]">
+      <div className="relative w-32 h-32 mb-6 transition-transform duration-300 group-hover:scale-105">
         <CircularProgressbar
           value={value}
           text={`${value}%`}
@@ -25,6 +25,7 @@ const MetricCard = ({ title, value, color }: MetricCardProps) => {
             pathColor: color,
             textColor: color,
             trailColor: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)',
+            pathTransitionDuration: 0.8,
           })}
         />
       </div>

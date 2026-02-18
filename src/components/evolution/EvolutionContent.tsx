@@ -14,6 +14,8 @@ interface Snapshot {
   completed_at: string;
   overall_score: number;
   department_scores: Record<string, number>;
+  answers?: Record<string, unknown>;
+  gates?: Record<string, string>;
 }
 
 const AREA_CONFIG: Record<string, { name: string; color: string }> = {
@@ -133,6 +135,46 @@ const EvolutionContent = () => {
               title={area.name}
             />
           ))}
+        </div>
+
+        {/* Lista de diagnósticos anteriores */}
+        <div className="dashboard-card">
+          <h2 className="text-xl font-medium mb-4">Diagnósticos Realizados</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-white/10">
+                  <th className="text-left py-2 px-3 text-dashboard-muted font-medium">Data</th>
+                  <th className="text-left py-2 px-3 text-dashboard-muted font-medium">Score Geral</th>
+                  <th className="text-right py-2 px-3 text-dashboard-muted font-medium">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...snapshots].reverse().map((s) => (
+                  <tr key={s.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                    <td className="py-3 px-3">
+                      {format(new Date(s.completed_at), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+                    </td>
+                    <td className="py-3 px-3">
+                      <span className={`font-semibold ${s.overall_score >= 70 ? 'text-green-400' : s.overall_score >= 40 ? 'text-yellow-400' : 'text-red-400'}`}>
+                        {s.overall_score}%
+                      </span>
+                    </td>
+                    <td className="py-3 px-3 text-right">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => navigate(`/history/${s.id}`)}
+                        disabled={!s.answers || Object.keys(s.answers as Record<string, unknown>).length === 0}
+                      >
+                        Ver Detalhes
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </>

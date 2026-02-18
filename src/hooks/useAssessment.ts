@@ -220,10 +220,14 @@ export const useAssessment = (allQuestions: Question[]) => {
         return;
       }
       const { departmentScores, overallScore } = calculateScores();
+      const storedAnswers = localStorage.getItem(ANSWERS_STORAGE_KEY) || '{}';
+      const storedGates = localStorage.getItem(GATE_STORAGE_KEY) || '{}';
       const { error } = await supabase.from('assessment_snapshots').insert({
         user_id: user.id,
         overall_score: overallScore,
         department_scores: departmentScores,
+        answers: JSON.parse(storedAnswers),
+        gates: JSON.parse(storedGates),
       } as any);
       if (error) {
         console.error('Snapshot insert error:', error);

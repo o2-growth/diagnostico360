@@ -16,22 +16,28 @@ export type Database = {
     Tables: {
       assessment_snapshots: {
         Row: {
+          answers: Json | null
           completed_at: string
           department_scores: Json
+          gates: Json | null
           id: string
           overall_score: number
           user_id: string
         }
         Insert: {
+          answers?: Json | null
           completed_at?: string
           department_scores?: Json
+          gates?: Json | null
           id?: string
           overall_score?: number
           user_id: string
         }
         Update: {
+          answers?: Json | null
           completed_at?: string
           department_scores?: Json
+          gates?: Json | null
           id?: string
           overall_score?: number
           user_id?: string

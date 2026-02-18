@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import CustomerRequests from '@/components/CustomerRequests';
 import MetricCard from '@/components/MetricCard';
 import { useDepartmentData } from '@/hooks/useDepartmentData';
-import { questions } from '@/data/questions';
+
 import { useAuth } from '@/hooks/useAuth';
 import { generateSampleAnswers, generateSampleGates } from '@/utils/sampleAssessmentData';
 import { calculateScores } from '@/utils/scoreCalculator';
@@ -30,29 +30,7 @@ const DashboardContent = () => {
   const { toast } = useToast();
   const [filling, setFilling] = useState(false);
   
-  const calculateDepartmentScore = (deptId: string) => {
-    const deptQuestions = questions.filter(q => q.item.startsWith(
-      deptId === 'financeiro' ? '5' :
-      deptId === 'tecnologia' ? '2' :
-      deptId === 'planejamento' ? '10' :
-      deptId === 'contabil' ? '8' :
-      deptId === 'controladoria' ? '6' :
-      deptId === 'fiscal' ? '7' :
-      deptId === 'comercial' ? '3' :
-      deptId === 'marketing' ? '4' :
-      deptId === 'societario' ? '1' :
-      deptId === 'capital-humano' ? '9' : ''
-    ));
-
-    if (!deptQuestions || deptQuestions.length === 0) return 0;
-    
-    const totalAnswered = deptQuestions.filter(q => 
-      q.evaluation === "EXISTE E FUNCIONA PERFEITAMENTE" || 
-      q.evaluation === "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)"
-    ).length;
-    
-    return Math.round((totalAnswered / deptQuestions.length) * 100);
-  };
+  const { departmentScores } = calculateScores();
 
   const areas = [
     { id: 'financeiro', title: 'Financeiro', color: '#7EBF8E' },
@@ -147,7 +125,7 @@ const DashboardContent = () => {
             >
               <MetricCard
                 title={area.title}
-                value={calculateDepartmentScore(area.id)}
+                value={departmentScores[area.id] ?? 0}
                 color={area.color}
               />
             </div>

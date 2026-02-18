@@ -1,82 +1,86 @@
 
-# Corrigir Persistencia de Dados no Banco de Dados
 
-## Problema Identificado
+# Historico Completo de Diagnosticos + Botao Admin de Preenchimento Rapido
 
-A tabela `user_assessments` foi removida do banco de dados, mas o codigo ainda tenta acessá-la. Isso causa erros 404 repetidos. Os dados do diagnostico (respostas, gates, recomendacoes) ficam apenas no localStorage do navegador, ou seja:
+## Resumo
 
-- Se trocar de dispositivo ou limpar o navegador, perde tudo
-- O historico aparece na aba "Evolucao" porque os snapshots vao para a tabela `assessment_snapshots` (que existe), mas as respostas detalhadas nao ficam salvas
-- Dashboard e areas aparecem vazios em dispositivos diferentes
+Duas funcionalidades serao implementadas:
 
-## O Que Sera Feito
+1. **Historico detalhado**: Salvar todas as respostas de cada diagnostico concluido no banco de dados, permitindo que o usuario clique em um diagnostico antigo e veja exatamente como a empresa estava naquele momento.
 
-### 1. Recriar a tabela `user_assessments` no banco de dados
+2. **Botao Admin de preenchimento rapido**: Adicionar um botao visivel apenas para administradores na pagina inicial (Home) que preenche automaticamente todos os dados com respostas simuladas e salva o snapshot, sem precisar responder pergunta por pergunta.
 
-Criar novamente a tabela com as colunas necessarias:
-- `id` (UUID, chave primaria)
-- `user_id` (UUID, referencia ao usuario)
-- `answers` (JSONB - todas as respostas)
-- `gates` (JSONB - respostas de filtro por area)
-- `recommendations` (JSONB - recomendacoes)
-- `status` (texto: 'in_progress' ou 'completed')
-- `started_at`, `updated_at`, `completed_at` (timestamps)
+---
 
-Incluir politicas de seguranca (RLS) para que cada usuario so acesse seus proprios dados.
+## Feature 1: Historico Detalhado
 
-### 2. Atualizar o arquivo de tipos
+### Problema atual
+A tabela `assessment_snapshots` so guarda `overall_score` e `department_scores`. Nao guarda as respostas individuais (answers, gates). Entao nao e possivel "voltar no tempo" e ver os detalhes de um diagnostico antigo.
 
-Adicionar a definicao da tabela `user_assessments` no arquivo de tipos para que o codigo funcione sem erros.
+### Solucao
 
-### 3. Resultado Esperado
+**1. Alterar a tabela `assessment_snapshots`** - Adicionar colunas JSONB para guardar o estado completo:
+- `answers` (JSONB) - todas as respostas individuais
+- `gates` (JSONB) - respostas das perguntas de filtro
 
-- As respostas do diagnostico serao salvas no banco de dados
-- Ao fazer login em outro dispositivo, os dados serao carregados automaticamente
-- O dashboard e areas mostrarao os dados corretos
-- Os erros 404 desaparecerao
+**2. Atualizar o codigo de salvamento do snapshot** - Nos pontos onde o snapshot e salvo (`useAssessment.ts` e `SettingsContent.tsx`), incluir os dados de `answers` e `gates` junto com os scores.
+
+**3. Criar pagina de visualizacao do historico** - Uma nova rota `/history/:snapshotId` que:
+- Carrega o snapshot do banco de dados
+- Exibe o relatório completo daquele periodo (score geral, scores por departamento, tabela com cada pergunta e sua avaliacao)
+- Mostra a data de quando foi concluido
+
+**4. Atualizar a pagina de Evolucao** - Adicionar uma lista clicavel dos diagnosticos passados abaixo dos graficos, com:
+- Data de conclusao
+- Score geral
+- Botao "Ver Detalhes" que navega para `/history/:snapshotId`
+
+### Fluxo do usuario
+
+```text
+Evolucao (graficos)
+    |
+    v
+Lista de diagnosticos anteriores
+    |
+    +-- [12/02/26 - Score: 65%] --> Clique --> Pagina de detalhes completa
+    +-- [10/01/26 - Score: 48%] --> Clique --> Pagina de detalhes completa
+```
+
+---
+
+## Feature 2: Botao Admin - Preenchimento Rapido
+
+### Solucao
+
+Adicionar na pagina Home (`src/pages/Home.tsx`) um botao visivel apenas para usuarios admin que:
+- Gera respostas simuladas usando `generateSampleAnswers()` e `generateSampleGates()`
+- Salva no localStorage
+- Calcula os scores e salva um snapshot completo no banco (incluindo answers e gates)
+- Recarrega a pagina para mostrar os resultados
+
+O botao tera confirmacao via AlertDialog para evitar cliques acidentais.
+
+---
 
 ## Detalhes Tecnicos
 
 ### Migracao SQL
 
 ```sql
-CREATE TABLE public.user_assessments (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL,
-  answers JSONB DEFAULT '{}'::jsonb,
-  gates JSONB DEFAULT '{}'::jsonb,
-  recommendations JSONB DEFAULT '{}'::jsonb,
-  status TEXT NOT NULL DEFAULT 'in_progress',
-  started_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  completed_at TIMESTAMPTZ
-);
-
-ALTER TABLE public.user_assessments ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Users can view own assessments"
-  ON public.user_assessments FOR SELECT
-  USING (auth.uid() = user_id);
-
-CREATE POLICY "Users can insert own assessments"
-  ON public.user_assessments FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
-
-CREATE POLICY "Users can update own assessments"
-  ON public.user_assessments FOR UPDATE
-  USING (auth.uid() = user_id);
-
-CREATE POLICY "Users can delete own assessments"
-  ON public.user_assessments FOR DELETE
-  USING (auth.uid() = user_id);
-
-CREATE TRIGGER update_user_assessments_updated_at
-  BEFORE UPDATE ON public.user_assessments
-  FOR EACH ROW
-  EXECUTE FUNCTION update_updated_at_column();
+ALTER TABLE public.assessment_snapshots
+  ADD COLUMN answers JSONB DEFAULT '{}'::jsonb,
+  ADD COLUMN gates JSONB DEFAULT '{}'::jsonb;
 ```
 
-### Arquivos a modificar
+### Arquivos a criar
+- `src/pages/HistoryDetail.tsx` - Pagina de visualizacao de um snapshot historico
 
-- `src/integrations/supabase/types.ts` - Adicionar tipagem da tabela (sera regenerado automaticamente)
-- Nenhuma mudanca de codigo necessaria - o `useAssessmentDB.ts` ja esta implementado corretamente, so precisa da tabela existir
+### Arquivos a modificar
+- `src/integrations/supabase/types.ts` - Adicionar colunas `answers` e `gates` ao tipo `assessment_snapshots`
+- `src/hooks/useAssessment.ts` - Incluir answers e gates ao salvar snapshot
+- `src/components/settings/SettingsContent.tsx` - Incluir answers e gates no quick fill
+- `src/components/evolution/EvolutionContent.tsx` - Adicionar lista de snapshots clicaveis
+- `src/pages/Home.tsx` - Adicionar botao admin de preenchimento rapido
+- `src/App.tsx` - Adicionar rota `/history/:snapshotId`
+

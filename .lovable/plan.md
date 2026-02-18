@@ -1,86 +1,57 @@
 
 
-# Historico Completo de Diagnosticos + Botao Admin de Preenchimento Rapido
+# Reviver Diagnostico Historico - Experiencia Completa
 
-## Resumo
+## O Que Muda
 
-Duas funcionalidades serao implementadas:
+Hoje ao clicar em "Ver Detalhes" de um diagnostico antigo, voce ve apenas uma tabela basica com perguntas e avaliacoes. O objetivo e transformar essa pagina para que ela mostre **exatamente** o mesmo relatorio completo que aparece quando voce finaliza um diagnostico agora, incluindo:
 
-1. **Historico detalhado**: Salvar todas as respostas de cada diagnostico concluido no banco de dados, permitindo que o usuario clique em um diagnostico antigo e veja exatamente como a empresa estava naquele momento.
+- Grafico circular (CircularProgressbar) com o score geral e classificacao (Critico/Em Desenvolvimento/Bom/Excelente)
+- Grafico radar com visao geral por departamento
+- Cards resumo de cada departamento (total, perfeito, a melhorar, ausente)
+- Tabela detalhada por departamento com avaliacoes coloridas (badges)
+- Recomendacoes automaticas por departamento
+- Plano de acao com matriz de prioridades (itens criticos, para melhoria, pontos fortes)
+- CTA para falar com especialista
+- Botoes de imprimir e exportar PDF
 
-2. **Botao Admin de preenchimento rapido**: Adicionar um botao visivel apenas para administradores na pagina inicial (Home) que preenche automaticamente todos os dados com respostas simuladas e salva o snapshot, sem precisar responder pergunta por pergunta.
+Basicamente, a pagina `/history/:snapshotId` vai "reviver" o relatorio usando os dados salvos no snapshot ao inves de ler do localStorage.
 
----
+## Como Funciona
 
-## Feature 1: Historico Detalhado
+A pagina `Report.tsx` atual le os dados do `localStorage`. A nova `HistoryDetail.tsx` vai usar a **mesma estrutura visual** porem alimentada pelos dados do snapshot salvo no banco de dados (`answers`, `gates`, `department_scores`, `overall_score`).
 
-### Problema atual
-A tabela `assessment_snapshots` so guarda `overall_score` e `department_scores`. Nao guarda as respostas individuais (answers, gates). Entao nao e possivel "voltar no tempo" e ver os detalhes de um diagnostico antigo.
-
-### Solucao
-
-**1. Alterar a tabela `assessment_snapshots`** - Adicionar colunas JSONB para guardar o estado completo:
-- `answers` (JSONB) - todas as respostas individuais
-- `gates` (JSONB) - respostas das perguntas de filtro
-
-**2. Atualizar o codigo de salvamento do snapshot** - Nos pontos onde o snapshot e salvo (`useAssessment.ts` e `SettingsContent.tsx`), incluir os dados de `answers` e `gates` junto com os scores.
-
-**3. Criar pagina de visualizacao do historico** - Uma nova rota `/history/:snapshotId` que:
-- Carrega o snapshot do banco de dados
-- Exibe o relatório completo daquele periodo (score geral, scores por departamento, tabela com cada pergunta e sua avaliacao)
-- Mostra a data de quando foi concluido
-
-**4. Atualizar a pagina de Evolucao** - Adicionar uma lista clicavel dos diagnosticos passados abaixo dos graficos, com:
-- Data de conclusao
-- Score geral
-- Botao "Ver Detalhes" que navega para `/history/:snapshotId`
-
-### Fluxo do usuario
-
-```text
-Evolucao (graficos)
-    |
-    v
-Lista de diagnosticos anteriores
-    |
-    +-- [12/02/26 - Score: 65%] --> Clique --> Pagina de detalhes completa
-    +-- [10/01/26 - Score: 48%] --> Clique --> Pagina de detalhes completa
-```
-
----
-
-## Feature 2: Botao Admin - Preenchimento Rapido
-
-### Solucao
-
-Adicionar na pagina Home (`src/pages/Home.tsx`) um botao visivel apenas para usuarios admin que:
-- Gera respostas simuladas usando `generateSampleAnswers()` e `generateSampleGates()`
-- Salva no localStorage
-- Calcula os scores e salva um snapshot completo no banco (incluindo answers e gates)
-- Recarrega a pagina para mostrar os resultados
-
-O botao tera confirmacao via AlertDialog para evitar cliques acidentais.
-
----
+O usuario clica no diagnostico antigo na lista de Evolucao e ve o relatorio completo daquele periodo, como se tivesse acabado de finalizar.
 
 ## Detalhes Tecnicos
 
-### Migracao SQL
+### Arquivo a modificar
 
-```sql
-ALTER TABLE public.assessment_snapshots
-  ADD COLUMN answers JSONB DEFAULT '{}'::jsonb,
-  ADD COLUMN gates JSONB DEFAULT '{}'::jsonb;
-```
+- `src/pages/HistoryDetail.tsx` - Reescrever completamente para replicar a experiencia do `Report.tsx`, mas usando dados do snapshot ao inves de localStorage
 
-### Arquivos a criar
-- `src/pages/HistoryDetail.tsx` - Pagina de visualizacao de um snapshot historico
+### Estrutura da nova pagina HistoryDetail
 
-### Arquivos a modificar
-- `src/integrations/supabase/types.ts` - Adicionar colunas `answers` e `gates` ao tipo `assessment_snapshots`
-- `src/hooks/useAssessment.ts` - Incluir answers e gates ao salvar snapshot
-- `src/components/settings/SettingsContent.tsx` - Incluir answers e gates no quick fill
-- `src/components/evolution/EvolutionContent.tsx` - Adicionar lista de snapshots clicaveis
-- `src/pages/Home.tsx` - Adicionar botao admin de preenchimento rapido
-- `src/App.tsx` - Adicionar rota `/history/:snapshotId`
+1. **Header** com data do diagnostico e botoes (Voltar, Imprimir, Exportar PDF)
+2. **Score Geral** com CircularProgressbar e classificacao colorida (Critico/Em Desenvolvimento/Bom/Excelente) + legenda
+3. **Grafico Radar** com visao geral por departamento usando Recharts RadarChart
+4. **Grid de Cards** por departamento mostrando score, barra de progresso e contagem (perfeito/a melhorar/ausente)
+5. **Analise Detalhada** por departamento com tabela de perguntas e badges coloridos de avaliacao + recomendacoes
+6. **Plano de Acao** com matriz de prioridades: itens criticos, itens para melhoria e pontos fortes
+7. **CTA** para falar com especialista
 
+### Dados utilizados
+
+Todos os dados vem do snapshot carregado do banco:
+- `snapshot.overall_score` para o score geral
+- `snapshot.department_scores` para scores por area
+- `snapshot.answers` para avaliacoes individuais de cada pergunta
+- `snapshot.gates` para identificar areas marcadas como inexistentes
+- `questionGroups` (dados estaticos) para nomes e estrutura das perguntas
+
+### Dependencias ja existentes no projeto
+
+- `react-circular-progressbar` (ja instalado)
+- `recharts` RadarChart (ja instalado)
+- Mesmos helpers de classificacao e avaliacao do Report.tsx
+
+Nenhuma mudanca no banco de dados e necessaria - os dados ja estao sendo salvos corretamente nos snapshots.

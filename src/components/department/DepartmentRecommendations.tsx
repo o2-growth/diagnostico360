@@ -15,13 +15,11 @@ const DepartmentRecommendations = ({ questions }: DepartmentRecommendationsProps
   const { id: departmentId } = useParams();
   const {
     recommendations,
-    expandedItems,
     isEditMode,
     editedRecommendations,
     aiGeneratedItems,
     isGeneratingAI,
     criticalItems,
-    toggleItem,
     toggleEditMode,
     handleRecommendationChange,
     saveRecommendation,
@@ -32,7 +30,7 @@ const DepartmentRecommendations = ({ questions }: DepartmentRecommendationsProps
   if (criticalItems.length === 0) {
     return (
       <div className="dashboard-card">
-        <p className="text-dashboard-muted">Não há itens críticos nesta área.</p>
+        <p className="text-muted-foreground">Não há itens críticos nesta área.</p>
       </div>
     );
   }
@@ -67,17 +65,15 @@ const DepartmentRecommendations = ({ questions }: DepartmentRecommendationsProps
           />
         </div>
       </div>
-      <div className="space-y-4" data-recommendations>
+      <div className="grid grid-cols-1 gap-4" data-recommendations>
         {criticalItems.map((item) => (
           <RecommendationItem
             key={item.item}
             item={item}
             isEditMode={isEditMode[item.item] || false}
-            isExpanded={expandedItems.includes(item.item)}
             isEdited={editedRecommendations[item.item] || false}
             isAIGenerated={aiGeneratedItems[item.item] || false}
             recommendation={recommendations[item.item] || ''}
-            onToggleExpand={toggleItem}
             onToggleEditMode={toggleEditMode}
             onSaveRecommendation={saveRecommendation}
             onCancelRecommendation={cancelRecommendation}

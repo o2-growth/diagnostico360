@@ -1,18 +1,18 @@
 
-import { ChevronDown, ChevronRight, Save, X, Check, Pen, Sparkles } from 'lucide-react';
+import { Save, X, Pen, Sparkles, MessageSquarePlus } from 'lucide-react';
 import { Question } from '@/types/department';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Check } from 'lucide-react';
 
 interface RecommendationItemProps {
   item: Question;
   isEditMode: boolean;
-  isExpanded: boolean;
   isEdited: boolean;
   isAIGenerated: boolean;
   recommendation: string;
-  onToggleExpand: (item: string) => void;
   onToggleEditMode: (item: string) => void;
   onSaveRecommendation: (item: string) => void;
   onCancelRecommendation: (item: string) => void;
@@ -22,39 +22,29 @@ interface RecommendationItemProps {
 const RecommendationItem = ({
   item,
   isEditMode,
-  isExpanded,
   isEdited,
   isAIGenerated,
   recommendation,
-  onToggleExpand,
   onToggleEditMode,
   onSaveRecommendation,
   onCancelRecommendation,
   onRecommendationChange
 }: RecommendationItemProps) => {
+  const isInexistent = item.evaluation === "NÃO EXISTE";
+  const borderColor = isInexistent
+    ? 'border-l-destructive'
+    : 'border-l-yellow-500';
+
   return (
-    <div key={item.item} className="border border-dashboard-border rounded-lg">
-      <div 
-        className="flex items-center justify-between p-4 cursor-pointer hover:bg-dashboard-card-hover"
-      >
-        <div 
-          className="flex items-center gap-2 flex-1"
-          onClick={() => onToggleExpand(item.item)}
-        >
-          {isExpanded ? (
-            <ChevronDown className="h-4 w-4 text-dashboard-muted" />
-          ) : (
-            <ChevronRight className="h-4 w-4 text-dashboard-muted" />
-          )}
-          <span className="font-medium">
-            {item.item} - {item.title}
-          </span>
-          {item.evaluation === "NÃO EXISTE" && (
+    <div className={`rounded-lg border bg-card text-card-foreground shadow-sm border-l-4 ${borderColor}`}>
+      {/* Header: Badges + Edit button */}
+      <div className="flex items-center justify-between p-5 pb-0">
+        <div className="flex items-center gap-2 flex-wrap">
+          {isInexistent ? (
             <Badge variant="destructive" className="text-xs">
               Inexistente
             </Badge>
-          )}
-          {item.evaluation === "EXISTE DE FORMA PADRONIZADA (MAS PODE SER MELHORADO)" && (
+          ) : (
             <Badge className="text-xs bg-yellow-500/15 text-yellow-600 border-yellow-500/30 hover:bg-yellow-500/20">
               Pode melhorar
             </Badge>
@@ -103,34 +93,49 @@ const RecommendationItem = ({
         </div>
       </div>
 
-      {isExpanded && (
-        <div className="space-y-3">
-          <p className="text-sm text-dashboard-muted">{item.question}</p>
+      {/* Title + Question */}
+      <div className="px-5 pt-4 space-y-1">
+        <h4 className="font-semibold text-base">
+          {item.item} - {item.title}
+        </h4>
+        <p className="text-sm text-muted-foreground">{item.question}</p>
+      </div>
 
-          <div className="space-y-2">
-            <label htmlFor={`recommendation-${item.item}`} className="block text-sm font-medium text-dashboard-muted">
-              Recomendações de Melhoria
-            </label>
+      <div className="px-5 pt-4">
+        <Separator />
+      </div>
+
+      {/* Recommendation content */}
+      <div className="p-5 space-y-3">
+        <span className="text-sm font-medium text-muted-foreground">Recomendação</span>
+
+        {isEditMode ? (
+          <>
             <Textarea
               id={`recommendation-${item.item}`}
               placeholder="Digite suas recomendações para melhorar este item..."
               value={recommendation || ''}
               onChange={(e) => onRecommendationChange(item.item, e.target.value)}
-              className="min-h-[100px]"
-              disabled={!isEditMode}
+              className="min-h-[120px]"
             />
-          </div>
-          
-          {isEdited && isEditMode && (
-            <div className="bg-green-500/10 p-2 rounded text-sm mt-4">
-              <div className="flex items-center">
-                <Check className="h-4 w-4 text-green-500 mr-2" />
-                <span>Alterações pendentes. Clique em Salvar para confirmar.</span>
+            {isEdited && (
+              <div className="bg-green-500/10 p-2 rounded text-sm">
+                <div className="flex items-center">
+                  <Check className="h-4 w-4 text-green-500 mr-2" />
+                  <span>Alterações pendentes. Clique em Salvar para confirmar.</span>
+                </div>
               </div>
-            </div>
-          )}
-        </div>
-      )}
+            )}
+          </>
+        ) : recommendation ? (
+          <p className="text-sm leading-relaxed whitespace-pre-wrap">{recommendation}</p>
+        ) : (
+          <div className="flex items-center gap-3 py-4 text-muted-foreground">
+            <MessageSquarePlus className="h-5 w-5" />
+            <span className="text-sm">Clique em Editar para adicionar uma recomendação ou gere com IA.</span>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

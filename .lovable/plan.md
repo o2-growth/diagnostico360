@@ -1,57 +1,74 @@
 
+# Redesign da Tela de Recomendacoes - UI/UX Moderno
 
-# Reviver Diagnostico Historico - Experiencia Completa
+## Problema Atual
 
-## O Que Muda
+Os cards de recomendacao usam um layout accordion escuro e apertado que causa:
+- Efeito de "cascata" confuso ao expandir
+- Bloco escuro estranho com pouco contraste
+- Textarea desabilitado que parece um elemento morto
+- Conteudo expandido fica "preso" dentro do card sem respiracao visual
+- Badges e botoes amontoados na mesma linha
 
-Hoje ao clicar em "Ver Detalhes" de um diagnostico antigo, voce ve apenas uma tabela basica com perguntas e avaliacoes. O objetivo e transformar essa pagina para que ela mostre **exatamente** o mesmo relatorio completo que aparece quando voce finaliza um diagnostico agora, incluindo:
+## Nova Abordagem de Design
 
-- Grafico circular (CircularProgressbar) com o score geral e classificacao (Critico/Em Desenvolvimento/Bom/Excelente)
-- Grafico radar com visao geral por departamento
-- Cards resumo de cada departamento (total, perfeito, a melhorar, ausente)
-- Tabela detalhada por departamento com avaliacoes coloridas (badges)
-- Recomendacoes automaticas por departamento
-- Plano de acao com matriz de prioridades (itens criticos, para melhoria, pontos fortes)
-- CTA para falar com especialista
-- Botoes de imprimir e exportar PDF
+Trocar o modelo accordion (expandir/colapsar dentro do card) por **cards abertos e independentes**, onde cada recomendacao ja mostra suas informacoes principais visiveis, sem precisar clicar para expandir.
 
-Basicamente, a pagina `/history/:snapshotId` vai "reviver" o relatorio usando os dados salvos no snapshot ao inves de ler do localStorage.
+### Layout de Cada Card
 
-## Como Funciona
+```text
++----------------------------------------------------------+
+|  [Badge Status]  [Badge IA]                    [Editar]   |
+|                                                           |
+|  P.01 - Titulo do Item                                    |
+|  Pergunta do diagnostico em texto menor                   |
+|                                                           |
+|  ---- separador sutil ----                                |
+|                                                           |
+|  Recomendacao:                                            |
+|  Texto da recomendacao ja visivel, formatado              |
+|  em area legivel (nao textarea desabilitado)              |
+|                                                           |
++----------------------------------------------------------+
+```
 
-A pagina `Report.tsx` atual le os dados do `localStorage`. A nova `HistoryDetail.tsx` vai usar a **mesma estrutura visual** porem alimentada pelos dados do snapshot salvo no banco de dados (`answers`, `gates`, `department_scores`, `overall_score`).
+Quando em modo edicao, o texto vira um Textarea editavel com botoes Salvar/Cancelar.
 
-O usuario clica no diagnostico antigo na lista de Evolucao e ve o relatorio completo daquele periodo, como se tivesse acabado de finalizar.
+### Mudancas Visuais
+
+1. **Cards abertos** - Sem accordion. Cada item e um card independente com todo conteudo visivel
+2. **Fundo claro** - Usar `bg-card` com borda suave ao inves do bloco escuro
+3. **Hierarquia visual** - Badge de status no topo, titulo em destaque, pergunta em texto muted, recomendacao em area separada
+4. **Recomendacao como texto** - Quando nao esta editando, mostrar como texto formatado (nao textarea desabilitado)
+5. **Espacamento generoso** - Padding e gaps maiores para respiracao
+6. **Indicador lateral de prioridade** - Borda esquerda colorida (vermelha para inexistente, amarela para pode melhorar)
+
+### Estado Vazio (sem recomendacao)
+
+Mostrar um placeholder convidativo com icone e texto "Clique em Editar para adicionar uma recomendacao" ou "Gere recomendacoes com IA"
 
 ## Detalhes Tecnicos
 
-### Arquivo a modificar
+### Arquivos a modificar
 
-- `src/pages/HistoryDetail.tsx` - Reescrever completamente para replicar a experiencia do `Report.tsx`, mas usando dados do snapshot ao inves de localStorage
+- `src/components/department/recommendation/RecommendationItem.tsx` - Reescrever completamente com novo layout de card aberto
+- `src/components/department/DepartmentRecommendations.tsx` - Remover logica de expandedItems (nao precisa mais), simplificar grid
 
-### Estrutura da nova pagina HistoryDetail
+### Arquivos que NAO mudam
 
-1. **Header** com data do diagnostico e botoes (Voltar, Imprimir, Exportar PDF)
-2. **Score Geral** com CircularProgressbar e classificacao colorida (Critico/Em Desenvolvimento/Bom/Excelente) + legenda
-3. **Grafico Radar** com visao geral por departamento usando Recharts RadarChart
-4. **Grid de Cards** por departamento mostrando score, barra de progresso e contagem (perfeito/a melhorar/ausente)
-5. **Analise Detalhada** por departamento com tabela de perguntas e badges coloridos de avaliacao + recomendacoes
-6. **Plano de Acao** com matriz de prioridades: itens criticos, itens para melhoria e pontos fortes
-7. **CTA** para falar com especialista
+- `src/components/department/recommendation/useRecommendations.tsx` - Hook permanece igual, apenas `expandedItems` e `toggleItem` deixam de ser usados nos componentes
 
-### Dados utilizados
+### Resumo das mudancas no RecommendationItem
 
-Todos os dados vem do snapshot carregado do banco:
-- `snapshot.overall_score` para o score geral
-- `snapshot.department_scores` para scores por area
-- `snapshot.answers` para avaliacoes individuais de cada pergunta
-- `snapshot.gates` para identificar areas marcadas como inexistentes
-- `questionGroups` (dados estaticos) para nomes e estrutura das perguntas
+- Remover ChevronDown/ChevronRight (sem accordion)
+- Remover onClick de expand (tudo ja visivel)
+- Badge de status posicionado no topo esquerdo do card
+- Borda esquerda colorida por prioridade (4px solid red/yellow)
+- Recomendacao exibida como texto `<p>` quando nao editando, `<Textarea>` quando editando
+- Espacamento p-5 com gap-4 entre secoes
+- Separador visual entre pergunta e recomendacao
 
-### Dependencias ja existentes no projeto
+### Resumo das mudancas no DepartmentRecommendations
 
-- `react-circular-progressbar` (ja instalado)
-- `recharts` RadarChart (ja instalado)
-- Mesmos helpers de classificacao e avaliacao do Report.tsx
-
-Nenhuma mudanca no banco de dados e necessaria - os dados ja estao sendo salvos corretamente nos snapshots.
+- Remover props `isExpanded` e `onToggleExpand` do RecommendationItem
+- Layout com `grid grid-cols-1 gap-4` (sem mudanca funcional, apenas limpeza)

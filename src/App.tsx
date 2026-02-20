@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import LandingPage from "./pages/LandingPage";
 import Home from "./pages/Home";
 import Index from "./pages/Index";
 import Department from "./pages/Department";
@@ -40,8 +41,9 @@ function App() {
             <ErrorBoundary>
               <BrowserRouter>
                 <Routes>
+                <Route path="/" element={<LandingPage />} />
                   <Route path="/auth" element={<Auth />} />
-                  <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+                  <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
                   <Route path="/dashboard" element={<ProtectedRoute><Index /></ProtectedRoute>} />
                   <Route path="/department/:id" element={<ProtectedRoute><Department /></ProtectedRoute>} />
                   <Route path="/assessment" element={<ProtectedRoute><Assessment /></ProtectedRoute>} />

@@ -72,6 +72,17 @@ export const useAssessment = (allQuestions: Question[]) => {
 
   const progress = (answeredCount / totalQuestions) * 100;
 
+  // Question-only counters for display (excluding gates)
+  const questionOnlyTotal = useMemo(() => steps.filter(s => s.type === 'question').length, [steps]);
+  const currentQuestionNumber = useMemo(() => {
+    if (!currentStep) return 0;
+    if (currentStep.type === 'gate') {
+      // Show count of questions before this gate
+      return steps.slice(0, currentStepIndex).filter(s => s.type === 'question').length;
+    }
+    return steps.slice(0, currentStepIndex + 1).filter(s => s.type === 'question').length;
+  }, [steps, currentStepIndex, currentStep]);
+
   // Build a "currentQuestion" compatible object for the UI
   const currentQuestion = currentStep?.type === 'question' 
     ? currentStep.question! 
@@ -370,7 +381,8 @@ export const useAssessment = (allQuestions: Question[]) => {
     handleSaveAndExit,
     getDepartmentFromQuestion,
     hasOngoingAssessment,
-    totalSteps: steps.length,
+    totalSteps: questionOnlyTotal,
+    currentQuestionNumber,
     answeredCount,
     totalQuestions,
   };

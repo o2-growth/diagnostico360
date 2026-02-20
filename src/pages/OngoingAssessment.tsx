@@ -44,6 +44,7 @@ const OngoingAssessment = () => {
     answeredCount,
     totalQuestions,
     totalSteps,
+    currentQuestionNumber,
   } = useAssessment(questions);
 
   const handleMenuToggle = (isOpen: boolean) => setIsMenuExpanded(isOpen);
@@ -99,7 +100,7 @@ const OngoingAssessment = () => {
           <ProgressHeader
             answeredCount={answeredCount}
             totalQuestions={totalQuestions}
-            currentStep={currentStepIndex + 1}
+            currentStep={currentQuestionNumber || 1}
             totalSteps={totalSteps}
             progress={progress}
             questionId={currentQuestion.item}

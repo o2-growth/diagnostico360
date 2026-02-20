@@ -1,74 +1,53 @@
 
-# Redesign da Tela de Recomendacoes - UI/UX Moderno
+# Conectar Recomendacoes a IA Real
 
-## Problema Atual
+## Problema
 
-Os cards de recomendacao usam um layout accordion escuro e apertado que causa:
-- Efeito de "cascata" confuso ao expandir
-- Bloco escuro estranho com pouco contraste
-- Textarea desabilitado que parece um elemento morto
-- Conteudo expandido fica "preso" dentro do card sem respiracao visual
-- Badges e botoes amontoados na mesma linha
+O botao "Gerar Recomendacoes com IA" nao usa IA de verdade. Ele gera texto template identico para todos os itens (sempre os mesmos 5 passos genericos). A edge function `generate-recommendations` ja existe e esta configurada corretamente com o gateway de IA, mas nunca e chamada pelo frontend.
 
-## Nova Abordagem de Design
+## O Que Muda
 
-Trocar o modelo accordion (expandir/colapsar dentro do card) por **cards abertos e independentes**, onde cada recomendacao ja mostra suas informacoes principais visiveis, sem precisar clicar para expandir.
+1. O hook `useRecommendations.tsx` vai passar a chamar a edge function real via `supabase.functions.invoke('generate-recommendations')`
+2. A edge function vai receber os itens criticos com contexto (nome do departamento, titulo, pergunta, avaliacao) e devolver recomendacoes personalizadas geradas pela IA
+3. O prompt da edge function sera melhorado para gerar recomendacoes mais ricas e detalhadas (com plano de acao, prazos sugeridos e evidencias)
+4. Erros de rate limit (429) e creditos (402) serao tratados e exibidos como toasts ao usuario
 
-### Layout de Cada Card
+## Fluxo
 
 ```text
-+----------------------------------------------------------+
-|  [Badge Status]  [Badge IA]                    [Editar]   |
-|                                                           |
-|  P.01 - Titulo do Item                                    |
-|  Pergunta do diagnostico em texto menor                   |
-|                                                           |
-|  ---- separador sutil ----                                |
-|                                                           |
-|  Recomendacao:                                            |
-|  Texto da recomendacao ja visivel, formatado              |
-|  em area legivel (nao textarea desabilitado)              |
-|                                                           |
-+----------------------------------------------------------+
+Usuario clica "Gerar Recomendacoes com IA"
+    |
+    v
+useRecommendations chama supabase.functions.invoke('generate-recommendations')
+    |
+    v
+Edge function envia itens criticos para o gateway de IA (Gemini Flash)
+    |
+    v
+IA analisa cada item no contexto do departamento e gera recomendacao personalizada
+    |
+    v
+Resposta volta como JSON { recommendations: { "1.1": "texto...", "1.2": "texto..." } }
+    |
+    v
+Cards sao atualizados com as recomendacoes reais da IA
 ```
-
-Quando em modo edicao, o texto vira um Textarea editavel com botoes Salvar/Cancelar.
-
-### Mudancas Visuais
-
-1. **Cards abertos** - Sem accordion. Cada item e um card independente com todo conteudo visivel
-2. **Fundo claro** - Usar `bg-card` com borda suave ao inves do bloco escuro
-3. **Hierarquia visual** - Badge de status no topo, titulo em destaque, pergunta em texto muted, recomendacao em area separada
-4. **Recomendacao como texto** - Quando nao esta editando, mostrar como texto formatado (nao textarea desabilitado)
-5. **Espacamento generoso** - Padding e gaps maiores para respiracao
-6. **Indicador lateral de prioridade** - Borda esquerda colorida (vermelha para inexistente, amarela para pode melhorar)
-
-### Estado Vazio (sem recomendacao)
-
-Mostrar um placeholder convidativo com icone e texto "Clique em Editar para adicionar uma recomendacao" ou "Gere recomendacoes com IA"
 
 ## Detalhes Tecnicos
 
 ### Arquivos a modificar
 
-- `src/components/department/recommendation/RecommendationItem.tsx` - Reescrever completamente com novo layout de card aberto
-- `src/components/department/DepartmentRecommendations.tsx` - Remover logica de expandedItems (nao precisa mais), simplificar grid
+**`src/components/department/recommendation/useRecommendations.tsx`**
+- Importar `supabase` do client
+- Reescrever `generateAIRecommendations` para chamar a edge function real
+- Enviar `departmentName` (nome legivel, ex: "Planejamento") e `criticalItems` (array com item, title, question, evaluation)
+- Tratar erros 429 e 402 com mensagens especificas em toasts
+- Manter fallback: se a chamada falhar, usar o template local como backup
+- Remover o `generateRecommendationText` (ou manter apenas como fallback)
 
-### Arquivos que NAO mudam
+**`supabase/functions/generate-recommendations/index.ts`**
+- Melhorar o prompt para gerar recomendacoes mais ricas e detalhadas
+- Pedir a IA que inclua: diagnostico do problema, plano de acao com 3-5 passos concretos, prazo sugerido, e evidencias necessarias
+- Aumentar o limite de 2-3 frases para recomendacoes mais completas e uteis
 
-- `src/components/department/recommendation/useRecommendations.tsx` - Hook permanece igual, apenas `expandedItems` e `toggleItem` deixam de ser usados nos componentes
-
-### Resumo das mudancas no RecommendationItem
-
-- Remover ChevronDown/ChevronRight (sem accordion)
-- Remover onClick de expand (tudo ja visivel)
-- Badge de status posicionado no topo esquerdo do card
-- Borda esquerda colorida por prioridade (4px solid red/yellow)
-- Recomendacao exibida como texto `<p>` quando nao editando, `<Textarea>` quando editando
-- Espacamento p-5 com gap-4 entre secoes
-- Separador visual entre pergunta e recomendacao
-
-### Resumo das mudancas no DepartmentRecommendations
-
-- Remover props `isExpanded` e `onToggleExpand` do RecommendationItem
-- Layout com `grid grid-cols-1 gap-4` (sem mudanca funcional, apenas limpeza)
+### Nenhuma mudanca no banco de dados - tudo ja esta configurado

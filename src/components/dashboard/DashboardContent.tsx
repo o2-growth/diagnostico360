@@ -108,7 +108,7 @@ const DashboardContent = () => {
                 <div>
                   <h3 className="font-bold text-lg mb-1">Transforme seus resultados em ação</h3>
                   <p className="text-dashboard-muted text-sm">
-                    Nossos especialistas já ajudaram <strong>+200 empresas</strong> a evoluir. Seu score é <strong>{overallScore}%</strong> — vamos melhorar juntos.
+                    Nossos especialistas já ajudaram <strong>+2000 empresas</strong> a evoluir. Seu score é <strong>{overallScore}%</strong> — vamos melhorar juntos.
                   </p>
                 </div>
               </div>

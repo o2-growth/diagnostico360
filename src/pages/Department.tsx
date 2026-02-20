@@ -14,6 +14,7 @@ import { useAssessmentDB } from '@/hooks/useAssessmentDB';
 import { Question } from '@/types/department';
 import { Skeleton } from '@/components/ui/skeleton';
 import { questionGroups } from '@/data/questions';
+import CtaBanner from '@/components/CtaBanner';
 
 const STORAGE_KEYS = { ANSWERS: 'departmentAnswers', GATES: 'departmentGates', RECOMMENDATIONS: 'departmentRecommendations' } as const;
 
@@ -112,6 +113,9 @@ const Department = () => {
               <DepartmentRecommendations questions={questions} />
             </TabsContent>
           </Tabs>
+          <div className="mt-6">
+            <CtaBanner />
+          </div>
         </div>
       </div>
     </div>

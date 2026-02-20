@@ -1,11 +1,60 @@
 
-import { Save, X, Pen, Sparkles, MessageSquarePlus } from 'lucide-react';
+import { Save, X, Pen, Sparkles, MessageSquarePlus, Check } from 'lucide-react';
 import { Question } from '@/types/department';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Check } from 'lucide-react';
+
+const renderMarkdown = (text: string): string => {
+  const lines = text.split('\n');
+  const html: string[] = [];
+  let i = 0;
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    // Blank line = paragraph break
+    if (line.trim() === '') {
+      i++;
+      continue;
+    }
+
+    // Unordered list
+    if (/^[-•]\s+/.test(line)) {
+      html.push('<ul class="list-disc pl-5 my-2 space-y-1">');
+      while (i < lines.length && /^[-•]\s+/.test(lines[i])) {
+        const content = lines[i].replace(/^[-•]\s+/, '');
+        html.push(`<li>${applyInline(content)}</li>`);
+        i++;
+      }
+      html.push('</ul>');
+      continue;
+    }
+
+    // Ordered list
+    if (/^\d+\.\s+/.test(line)) {
+      html.push('<ol class="list-decimal pl-5 my-2 space-y-1">');
+      while (i < lines.length && /^\d+\.\s+/.test(lines[i])) {
+        const content = lines[i].replace(/^\d+\.\s+/, '');
+        html.push(`<li>${applyInline(content)}</li>`);
+        i++;
+      }
+      html.push('</ol>');
+      continue;
+    }
+
+    // Regular paragraph
+    html.push(`<p class="my-1.5">${applyInline(line)}</p>`);
+    i++;
+  }
+
+  return html.join('');
+};
+
+const applyInline = (text: string): string => {
+  return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+};
 
 interface RecommendationItemProps {
   item: Question;
@@ -128,7 +177,10 @@ const RecommendationItem = ({
             )}
           </>
         ) : recommendation ? (
-          <p className="text-sm leading-relaxed whitespace-pre-wrap">{recommendation}</p>
+          <div
+            className="text-sm leading-relaxed prose prose-sm dark:prose-invert max-w-none"
+            dangerouslySetInnerHTML={{ __html: renderMarkdown(recommendation) }}
+          />
         ) : (
           <div className="flex items-center gap-3 py-4 text-muted-foreground">
             <MessageSquarePlus className="h-5 w-5" />

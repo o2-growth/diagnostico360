@@ -1,36 +1,35 @@
 
-# Melhorar CTA "Falar com Especialista"
 
-## O que muda
+# Corrigir Contagem de "Questao Atual X de Y"
 
-O card CTA atual e discreto demais -- fundo quase transparente, botao estatico sem animacao. Vamos tornar mais chamativo e convidativo:
+## Problema
 
-### Visual do Card
-- Fundo com gradiente mais vibrante e visivel (opacidade maior)
-- Borda com brilho sutil esverdeado
-- Icone de WhatsApp ou MessageCircle ao lado do titulo para contexto visual
+O header do diagnostico mostra "Questao atual: 79 de 79" quando deveria mostrar algo como "Questao atual: 50 de 69". Isso acontece porque:
 
-### Botao "Falar com Especialista"
-- Adicionar animacao de pulso sutil (`animate-pulse` ou custom) para atrair o olhar
-- Sombra colorida (glow verde) ao redor do botao
-- Icone de WhatsApp (MessageCircle do lucide) dentro do botao
-- Efeito hover mais pronunciado com scale e brilho
-- Tamanho ligeiramente maior (padding e fonte)
+- `totalSteps` usa `steps.length`, que inclui as 10 perguntas de filtro (gates) alem das questoes reais
+- `currentStepIndex` e o indice bruto dentro de todos os steps (gates + questoes), entao tambem fica inflado
 
-### Texto
-- Headline mais persuasiva: "Transforme seus resultados em acao"
-- Subtexto com senso de urgencia: "Nossos especialistas ja ajudaram +200 empresas..."
+## Solucao
+
+Modificar o hook `useAssessment.ts` para expor dois valores corrigidos:
+
+1. **`totalSteps`**: contar apenas steps do tipo `question` (excluindo gates)
+2. **`currentStepIndex` para exibicao**: contar apenas steps do tipo `question` ate a posicao atual
 
 ## Detalhes Tecnicos
 
-### Arquivo a modificar
+### Arquivo: `src/hooks/useAssessment.ts`
 
-**`src/components/dashboard/DashboardContent.tsx`**
+Adicionar dois valores calculados:
 
-- Importar `MessageCircle` do `lucide-react`
-- Atualizar o card CTA (linhas 97-127):
-  - Gradiente de fundo com opacidade ~0.15 ao inves de 0.08
-  - Borda mais visivel com cor verde
-  - Headline atualizada com icone
-  - Botao com classes de animacao, sombra glow, icone e tamanho maior
-  - Adicionar keyframe CSS inline ou classe para pulso customizado no botao
+- `questionOnlyTotal`: `steps.filter(s => s.type === 'question').length`
+- `questionOnlyIndex`: Para o step atual, contar quantos steps do tipo `question` existem antes dele (inclusive). Se o step atual for um gate, mostrar o indice da ultima questao respondida ou o proximo.
+
+Atualizar o retorno do hook:
+- `totalSteps` passa a ser `questionOnlyTotal` em vez de `steps.length`
+- Adicionar um `currentQuestionNumber` que reflete a posicao real entre as questoes
+
+### Arquivo: `src/pages/OngoingAssessment.tsx`
+
+Atualizar para usar o novo valor `currentQuestionNumber` em vez de `currentStepIndex + 1` no ProgressHeader, para que a contagem reflita apenas questoes reais.
+

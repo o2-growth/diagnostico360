@@ -19,7 +19,7 @@ const Auth = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    if (user) navigate('/', { replace: true });
+    if (user) navigate('/home', { replace: true });
   }, [user, navigate]);
 
   const isEmailValid = (value: string) => {

@@ -20,7 +20,17 @@ const renderMarkdown = (text: string): string => {
       continue;
     }
 
-    // Unordered list
+    // Headings (###, ##, #)
+    const headingMatch = line.match(/^(#{1,3})\s+(.*)/);
+    if (headingMatch) {
+      const level = headingMatch[1].length;
+      const sizes = { 1: 'text-lg', 2: 'text-base', 3: 'text-sm' };
+      html.push(`<p class="font-semibold ${sizes[level as 1|2|3]} mt-3 mb-1">${applyInline(headingMatch[2])}</p>`);
+      i++;
+      continue;
+    }
+
+
     if (/^[-•]\s+/.test(line)) {
       html.push('<ul class="list-disc pl-5 my-2 space-y-1">');
       while (i < lines.length && /^[-•]\s+/.test(lines[i])) {

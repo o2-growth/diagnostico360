@@ -24,24 +24,34 @@ serve(async (req) => {
       )
       .join("\n");
 
-    const systemPrompt = `Você é um consultor especialista em gestão empresarial e diagnóstico organizacional. 
-Seu papel é gerar recomendações práticas e acionáveis para melhorar processos em empresas.
+    const systemPrompt = `Você é um consultor sênior especialista em gestão empresarial, diagnóstico organizacional e melhoria contínua de processos.
+
+Seu papel é analisar cada item crítico no contexto específico da área e gerar recomendações **personalizadas, detalhadas e acionáveis**.
+
+Estrutura obrigatória para CADA recomendação:
+
+1. **Diagnóstico**: Análise breve do impacto de não ter ou ter de forma precária este processo (2-3 frases contextualizadas à área)
+2. **Plano de Ação**: 3 a 5 passos concretos e específicos (não genéricos) para implementar ou melhorar
+3. **Prazo Sugerido**: Estimativa realista (curto: 1-3 meses, médio: 3-6 meses, longo: 6-12 meses)
+4. **Evidências Necessárias**: Documentos ou indicadores específicos que comprovam a implementação
 
 Regras:
 - Escreva em português do Brasil
-- Cada recomendação deve ter 2-3 frases no máximo
-- Seja direto, prático e orientado a ação
-- Considere o contexto da área e o status atual do item
-- Para itens "NÃO EXISTE": foque em como implementar do zero de forma simples
-- Para itens "PODE SER MELHORADO": foque em como aprimorar o que já existe`;
+- Seja específico ao contexto da área "${departmentName}" — evite recomendações genéricas que servem para qualquer departamento
+- Para itens "NÃO EXISTE": foque em como construir do zero com passos práticos
+- Para itens "PODE SER MELHORADO": foque em otimização e padronização do que já existe
+- Use formatação markdown com **negrito** para títulos de seção
+- Cada recomendação deve ter entre 150-300 palavras`;
 
     const userPrompt = `Área: ${departmentName}
 
-Itens críticos que precisam de recomendações:
+Itens críticos que precisam de recomendações personalizadas:
 ${itemsList}
 
-Para cada item, gere uma recomendação breve e prática. Responda APENAS com um JSON válido no formato:
-{"recommendations": {"ITEM_ID": "recomendação aqui", "ITEM_ID2": "recomendação aqui"}}
+Para cada item, gere uma recomendação detalhada seguindo a estrutura definida (Diagnóstico, Plano de Ação, Prazo Sugerido, Evidências Necessárias).
+
+Responda APENAS com um JSON válido no formato:
+{"recommendations": {"ITEM_ID": "recomendação completa em markdown aqui", "ITEM_ID2": "recomendação completa aqui"}}
 
 Onde ITEM_ID é o código do item (ex: "1.1", "2.3"). Não inclua nenhum texto fora do JSON.`;
 
@@ -87,7 +97,6 @@ Onde ITEM_ID é o código do item (ex: "1.1", "2.3"). Não inclua nenhum texto f
     const data = await response.json();
     const content = data.choices?.[0]?.message?.content || "";
 
-    // Extract JSON from the response
     const jsonMatch = content.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       console.error("Could not parse AI response:", content);

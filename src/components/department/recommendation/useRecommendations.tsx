@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import { Question } from '@/types/department';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { questionGroups } from '@/data/questions/index';
 
 export const useRecommendations = (questions: Question[]) => {
   const { toast } = useToast();
@@ -79,7 +81,7 @@ export const useRecommendations = (questions: Question[]) => {
     setEditedRecommendations(prev => ({ ...prev, [itemId]: false }));
   };
 
-  const generateRecommendationText = (q: Question): string => {
+  const generateFallbackText = (q: Question): string => {
     if (q.evaluation === "NÃO EXISTE") {
       return `**Prioridade Alta - Implementar ${q.title}**\n\n` +
         `A empresa atualmente não possui estrutura para: "${q.question}"\n\n` +
@@ -88,8 +90,7 @@ export const useRecommendations = (questions: Question[]) => {
         `2. Definir responsável e prazo para implementação\n` +
         `3. Estabelecer processos e documentação necessários\n` +
         `4. Implementar controles e indicadores de acompanhamento\n` +
-        `5. Realizar revisão periódica dos resultados\n\n` +
-        `**Evidências necessárias:** ${q.evidence || 'Documentação de processos, atas de reunião, indicadores'}`;
+        `5. Realizar revisão periódica dos resultados`;
     }
     return `**Prioridade Média - Otimizar ${q.title}**\n\n` +
       `O processo existe mas precisa de melhorias: "${q.question}"\n\n` +
@@ -98,44 +99,93 @@ export const useRecommendations = (questions: Question[]) => {
       `2. Padronizar procedimentos e criar documentação\n` +
       `3. Definir KPIs e metas de melhoria\n` +
       `4. Implementar ciclo de melhoria contínua (PDCA)\n` +
-      `5. Capacitar equipe envolvida\n\n` +
-      `**Evidências necessárias:** ${q.evidence || 'Documentação atualizada, relatórios de acompanhamento'}`;
+      `5. Capacitar equipe envolvida`;
   };
 
-  const generateAIRecommendations = async (_departmentName: string) => {
+  const resolveDepartmentName = (departmentId: string): string => {
+    const group = questionGroups.find(g => g.id === departmentId);
+    return group?.name || departmentId;
+  };
+
+  const generateAIRecommendations = async (departmentId: string) => {
     setIsGeneratingAI(true);
     try {
-      // Simulate processing delay for better UX
-      await new Promise(resolve => setTimeout(resolve, 800));
+      const departmentName = resolveDepartmentName(departmentId);
+
+      const itemsPayload = criticalItems.map(q => ({
+        item: q.item,
+        title: q.title,
+        question: q.question,
+        evaluation: q.evaluation,
+      }));
+
+      const { data, error } = await supabase.functions.invoke('generate-recommendations', {
+        body: { departmentName, criticalItems: itemsPayload },
+      });
+
+      if (error) {
+        const status = (error as any)?.status || (error as any)?.context?.status;
+        if (status === 429) {
+          toast({ title: "Limite de requisições", description: "Tente novamente em alguns minutos.", variant: "destructive" });
+        } else if (status === 402) {
+          toast({ title: "Créditos insuficientes", description: "Adicione créditos de IA na sua conta.", variant: "destructive" });
+        } else {
+          throw error;
+        }
+        return;
+      }
+
+      // Check for error in response body
+      if (data?.error) {
+        toast({ title: "Erro", description: data.error, variant: "destructive" });
+        return;
+      }
+
+      const aiRecs: Record<string, string> = data?.recommendations || {};
 
       const newRecs: Record<string, string> = {};
       const newAiFlags: Record<string, boolean> = {};
-      const newExpanded: string[] = [];
 
       for (const q of criticalItems) {
-        newRecs[q.item] = generateRecommendationText(q);
-        newAiFlags[q.item] = true;
-        newExpanded.push(q.item);
+        if (aiRecs[q.item]) {
+          newRecs[q.item] = aiRecs[q.item];
+          newAiFlags[q.item] = true;
+        }
+      }
+
+      if (Object.keys(newRecs).length === 0) {
+        toast({ title: "Erro", description: "A IA não retornou recomendações. Tente novamente.", variant: "destructive" });
+        return;
       }
 
       setRecommendations(prev => ({ ...prev, ...newRecs }));
       setAiGeneratedItems(prev => ({ ...prev, ...newAiFlags }));
-      setExpandedItems(prev => [...new Set([...prev, ...newExpanded])]);
 
-      // Save to localStorage
       const stored = localStorage.getItem('departmentRecommendations') || '{}';
       const parsed = JSON.parse(stored);
       localStorage.setItem('departmentRecommendations', JSON.stringify({ ...parsed, ...newRecs }));
 
       toast({
-        title: "Recomendações geradas",
-        description: `${Object.keys(newRecs).length} recomendações foram geradas com sucesso.`
+        title: "Recomendações geradas com IA",
+        description: `${Object.keys(newRecs).length} recomendações personalizadas foram geradas.`
       });
     } catch (error: any) {
-      console.error('Recommendation generation error:', error);
+      console.error('AI recommendation error:', error);
+
+      // Fallback to local templates
+      const newRecs: Record<string, string> = {};
+      for (const q of criticalItems) {
+        newRecs[q.item] = generateFallbackText(q);
+      }
+      setRecommendations(prev => ({ ...prev, ...newRecs }));
+
+      const stored = localStorage.getItem('departmentRecommendations') || '{}';
+      const parsed = JSON.parse(stored);
+      localStorage.setItem('departmentRecommendations', JSON.stringify({ ...parsed, ...newRecs }));
+
       toast({
-        title: "Erro ao gerar recomendações",
-        description: "Tente novamente em alguns instantes.",
+        title: "Recomendações geradas (modo offline)",
+        description: "Não foi possível usar IA. Recomendações genéricas foram aplicadas.",
         variant: "destructive"
       });
     } finally {

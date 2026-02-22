@@ -1,140 +1,88 @@
 
-# Landing Page Completa — Diagnóstico 360 by O2 Inc. + Stripe
+# Dar Vida a Landing Page -- Animacoes e Efeitos Interativos
 
-## Visão Geral
+## Visao Geral
 
-Criar uma LP de alto nível no estilo premium das melhores SaaS/consultoria do mercado (inspirado no design da própria O2 Inc.: fundo escuro, verde neon como cor de destaque, tipografia bold de impacto, prova social forte). A LP será a rota `/` quando o usuário não está logado, e o fluxo termina em checkout Stripe pelo preço de R$197.
+Transformar a LP de estatica para dinamica com 5 camadas de movimento: (1) particulas flutuantes no fundo que reagem ao mouse, (2) elementos que aparecem ao rolar a pagina (scroll-reveal), (3) micro-interacoes nos cards e botoes, (4) contadores animados nos numeros, e (5) efeito parallax sutil no hero.
 
----
-
-## Arquitetura de Rotas
-
-- **`/`** — Landing Page pública (não requer login)
-- **`/auth`** — Tela de login/cadastro (após compra ou acesso direto)
-- **`/dashboard`** — App interno (protegido, apenas pós-login)
-
-A rota `/` atualmente redireciona para Home (que é protegida). Vamos separar a LP pública da Home autenticada.
+Tudo feito com CSS puro + hooks React nativos -- sem dependencias externas como framer-motion.
 
 ---
 
-## Estrutura da Landing Page
+## Camadas de Animacao
 
-### 1. Navbar fixa
-- Logo O2 Inc. + "Diagnóstico 360"
-- Links: Como funciona | Resultados | Preço
-- CTA: "Começar Agora" (verde neon)
+### 1. Particulas Flutuantes com Interacao do Mouse (Hero)
 
-### 2. Hero Section
-- Badge: "Powered by O2 Inc. · Porto Alegre"
-- H1 impactante em duas linhas:
-  - *"Descubra onde sua empresa* 
-  - *está deixando dinheiro na mesa."*
-- Subtítulo: em 30 minutos, você terá um diagnóstico completo das 10 áreas críticas da sua empresa
-- CTA primário: "Fazer o Diagnóstico — R$197"
-- CTA secundário: "Ver como funciona ↓"
-- Social proof imediata: +2.000 empresas | NPS 88 | +R$2BI em operações
+Um componente `FloatingParticles` que renderiza ~20 circulos verdes translucidos (`#7EBF8E`) flutuando lentamente. Ao mover o mouse, as particulas mais proximas se afastam suavemente (efeito repulsao).
 
-### 3. Logos/Credenciais (Social Proof Strip)
-- Faixa com: "Confiado por empresas como…" + logos genéricos de setores
+- Implementado com `useRef` + `requestAnimationFrame` em um `<canvas>`
+- Responsivo: desabilita em telas menores que 768px
+- Performance: usa `will-change: transform` e `pointer-events: none`
 
-### 4. Como Funciona (3 passos)
-- Cards em grid 3 colunas com ícones
-- Passo 1: Responda 69 perguntas sobre as 10 áreas da empresa (~30 min)
-- Passo 2: Receba seu score de 0-100% por departamento
-- Passo 3: Plano de ação priorizado com recomendações de especialistas
+### 2. Scroll-Reveal (Intersection Observer)
 
-### 5. O que você vai descobrir (10 áreas)
-- Grid visual com as 10 áreas: Financeiro, Tecnologia, Planejamento, Contábil, Controladoria, Fiscal, Comercial, Marketing, Societário, Capital Humano
-- Cada card com ícone temático e descrição curta
+Criar um hook `useScrollReveal` que aplica animacoes de entrada conforme elementos entram no viewport:
 
-### 6. Prova Social — Depoimentos
-- 3 depoimentos fictícios mas realistas de PMEs brasileiras
-- Formato: foto (avatar), nome, cargo, empresa, cidade
+- Sections: fade-in + translateY de 40px para 0
+- Cards (areas, steps, testimonials): staggered entry -- cada card entra 100ms depois do anterior
+- Deliverables (Results): slide-in da esquerda
 
-### 7. Seção de Resultados (Preview do produto)
-- Mockup visual do dashboard com score
-- "Você vai sair com isso em mãos"
-- Lista: Score Geral, Score por área, Plano de Ação, Relatório PDF exportável
+Implementacao com `IntersectionObserver` nativo e classes CSS de transicao.
 
-### 8. Pricing / Oferta (Anchor da compra)
-- Card de preço único centralizado
-- Preço riscado: ~~R$497~~ → R$197
-- Lista de benefícios inclusos (checkmarks verdes)
-- Garantia 7 dias
-- Botão Stripe: "Garantir meu acesso — R$197"
-- Selos: Pagamento seguro, Stripe, Garantia
+### 3. Contadores Animados (Count-Up)
 
-### 9. FAQ
-- 5-6 perguntas frequentes em accordion
-- "Para quem é?", "Quanto tempo leva?", "E se eu não gostar?", "É só uma vez?", etc.
+Os numeros do hero (+2.000, NPS 88, +R\$2BI) e o score mockup (78%) animam de 0 ate o valor final quando entram no viewport.
 
-### 10. Footer CTA Final
-- Repetição do CTA com urgência
-- Footer simples: © O2 Inc. + links
+- Hook `useCountUp` com `requestAnimationFrame`
+- Duracao: ~2 segundos com easing cubic-bezier
+- Ativa apenas quando o elemento esta visivel (Intersection Observer)
+
+### 4. Glow que Segue o Mouse (Hero + Pricing)
+
+O radial glow verde do hero acompanha sutilmente a posicao do mouse com um delay suave (lerp). O mesmo efeito no card de pricing -- um brilho na borda que segue o cursor.
+
+- `onMouseMove` no container com `useState` para posicao
+- CSS `radial-gradient` atualizado via `style` inline
+- Transicao suave com CSS `transition` de 300ms
+
+### 5. Micro-Interacoes Aprimoradas
+
+- **Botao CTA principal**: pulse glow continuo + scale no hover
+- **Cards de area**: rotate3d sutil no hover (tilt effect de 2-3 graus)
+- **Social proof badges**: marquee infinito horizontal (auto-scroll)
+- **Scroll indicator do hero**: bounce animation suave
 
 ---
 
-## Identidade Visual
+## Detalhes Tecnicos
 
-Seguindo o site oficial da O2 Inc. (o2inc.com.br):
-- **Background**: `#0A0A0A` (preto profundo)
-- **Verde principal**: `#7EBF8E` (do sistema atual) com acento mais vibrante `#4CAF50` nos CTAs
-- **Verde neon destaque** (hover/destaque): `#00E676`
-- **Cinza texto**: `#A0A0A0` para textos secundários
-- **Cards**: `rgba(255,255,255,0.04)` com borda `rgba(255,255,255,0.08)`
-- **Tipografia**: font-weight 800-900 para headlines, bold limpo sem serifa
-- Gradientes sutis em seções alternadas
+### Novos Arquivos
 
----
-
-## Integração Stripe
-
-### Setup
-1. Habilitar Stripe no projeto via ferramenta nativa do Lovable
-2. Criar produto "Diagnóstico 360" com preço de R$197 (BRL, pagamento único)
-3. Edge Function `create-checkout` que gera sessão de pagamento Stripe Checkout
-4. Após pagamento bem-sucedido → redirecionar para `/auth?plan=paid` que cria conta e libera acesso
-
-### Fluxo de compra
-```
-LP → Clica "Garantir Acesso" → Stripe Checkout (nova aba/redirect) → Pagamento OK → /auth (criar conta) → /dashboard
-```
-
-### Edge Function
-- `supabase/functions/create-checkout/index.ts`
-- Cria sessão Stripe com `success_url` e `cancel_url`
-- Produto: preço único R$197
-
----
-
-## Arquivos a criar/modificar
-
-| Arquivo | Ação |
+| Arquivo | Descricao |
 |---|---|
-| `src/pages/LandingPage.tsx` | **CRIAR** — LP completa |
-| `src/components/landing/LPNavbar.tsx` | **CRIAR** — navbar fixa |
-| `src/components/landing/LPHero.tsx` | **CRIAR** — hero section |
-| `src/components/landing/LPHowItWorks.tsx` | **CRIAR** — 3 passos |
-| `src/components/landing/LPAreas.tsx` | **CRIAR** — 10 áreas |
-| `src/components/landing/LPTestimonials.tsx` | **CRIAR** — depoimentos |
-| `src/components/landing/LPPricing.tsx` | **CRIAR** — preço + Stripe |
-| `src/components/landing/LPFAQ.tsx` | **CRIAR** — accordion FAQ |
-| `src/components/landing/LPFooter.tsx` | **CRIAR** — footer |
-| `src/App.tsx` | **EDITAR** — rota `/` = LP pública, `/home` = Home autenticada |
-| `supabase/functions/create-checkout/index.ts` | **CRIAR** — edge function Stripe |
+| `src/components/landing/FloatingParticles.tsx` | Canvas de particulas com repulsao ao mouse |
+| `src/hooks/useScrollReveal.ts` | Hook para animacoes de entrada no scroll |
+| `src/hooks/useCountUp.ts` | Hook para animacao de numeros |
+| `src/hooks/useMousePosition.ts` | Hook para tracking de posicao do mouse |
 
----
+### Arquivos Modificados
 
-## Ordem de Execução
+| Arquivo | Mudancas |
+|---|---|
+| `src/components/landing/LPHero.tsx` | Adicionar FloatingParticles, mouse glow, count-up nos stats, bounce no scroll indicator |
+| `src/components/landing/LPSocialProof.tsx` | Marquee auto-scroll infinito nos badges |
+| `src/components/landing/LPHowItWorks.tsx` | Scroll-reveal staggered nos cards de steps |
+| `src/components/landing/LPAreas.tsx` | Scroll-reveal staggered + tilt hover nos cards |
+| `src/components/landing/LPResults.tsx` | Scroll-reveal + count-up nas barras de progresso (animam de 0 ao valor) |
+| `src/components/landing/LPTestimonials.tsx` | Scroll-reveal staggered |
+| `src/components/landing/LPPricing.tsx` | Mouse glow na borda do card + scroll-reveal |
+| `src/components/landing/LPFAQ.tsx` | Scroll-reveal |
+| `src/components/landing/LPFooter.tsx` | Scroll-reveal no CTA final |
+| `src/index.css` | Adicionar keyframes: bounce, marquee, glow-pulse |
 
-1. Habilitar Stripe e configurar produto R$197
-2. Criar edge function `create-checkout`
-3. Criar todos os componentes da LP
-4. Montar `LandingPage.tsx` com todos os componentes
-5. Ajustar rotas em `App.tsx`
+### Performance
 
----
-
-## Nota sobre Stripe
-
-A ativação do Stripe requer sua chave secreta. O próximo passo após aprovação será solicitar isso de forma segura pelo sistema nativo do Lovable.
+- Canvas de particulas usa `requestAnimationFrame` com cleanup no unmount
+- Intersection Observer com `threshold: 0.15` e `triggerOnce: true`
+- Todas as animacoes respeitam `prefers-reduced-motion`
+- `will-change` apenas durante a animacao, removido apos completar

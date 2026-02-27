@@ -87,7 +87,7 @@ export const LPHero = ({ onCheckout, loading }: LPHeroProps) => {
             className="group relative px-8 py-4 rounded-2xl bg-gradient-to-r from-[#4CAF50] to-[#00E676] text-[#0A0A0A] font-black text-lg transition-all duration-300 shadow-xl shadow-[#4CAF50]/30 hover:shadow-[#00E676]/50 hover:scale-[1.03] disabled:opacity-60 animate-glow-pulse"
           >
             <span className="relative z-10">
-              {loading ? "Redirecionando..." : "Fazer o Diagnóstico — R$197"}
+              {loading ? "Redirecionando..." : "Fazer o Diagnóstico"}
             </span>
           </button>
           <button

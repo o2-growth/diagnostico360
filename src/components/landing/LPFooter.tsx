@@ -27,9 +27,8 @@ export const LPFooter = ({ onCheckout, loading }: LPFooterProps) => {
             disabled={loading}
             className="px-10 py-5 rounded-2xl bg-gradient-to-r from-[#4CAF50] to-[#00E676] text-[#0A0A0A] font-black text-xl transition-all duration-300 hover:shadow-2xl hover:shadow-[#4CAF50]/40 hover:scale-[1.03] disabled:opacity-60 animate-glow-pulse"
           >
-            {loading ? "Aguarde..." : "Quero meu diagnóstico — R$197"}
+            {loading ? "Aguarde..." : "Quero meu diagnóstico"}
           </button>
-          <p className="text-[#505050] text-sm mt-4">Garantia de 7 dias · Pagamento seguro via Stripe</p>
         </div>
       </section>
 

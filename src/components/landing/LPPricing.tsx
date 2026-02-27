@@ -46,14 +46,6 @@ export const LPPricing = ({ onCheckout, loading }: LPPricingProps) => {
               </div>
             </div>
 
-            <div className="text-center mb-8 mt-2">
-              <div className="text-[#606060] line-through text-lg mb-1">R$497</div>
-              <div className="flex items-end justify-center gap-2">
-                <span className="text-[#A0A0A0] text-2xl font-bold">R$</span>
-                <span className="text-white font-black text-7xl leading-none">197</span>
-              </div>
-              <div className="text-[#A0A0A0] text-sm mt-2">pagamento único · acesso imediato</div>
-            </div>
 
             <div className="space-y-3 mb-8">
               {benefits.map((b) => (
@@ -69,7 +61,7 @@ export const LPPricing = ({ onCheckout, loading }: LPPricingProps) => {
               disabled={loading}
               className="w-full py-5 rounded-2xl bg-gradient-to-r from-[#4CAF50] to-[#00E676] text-[#0A0A0A] font-black text-lg transition-all duration-300 hover:shadow-xl hover:shadow-[#4CAF50]/40 hover:scale-[1.02] disabled:opacity-60 animate-glow-pulse"
             >
-              {loading ? "Redirecionando para o pagamento..." : "Garantir meu acesso — R$197"}
+              {loading ? "Redirecionando..." : "Garantir meu acesso"}
             </button>
 
             <div className="flex items-center justify-center gap-2 mt-4">

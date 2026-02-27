@@ -62,21 +62,21 @@ export const LPHero = ({ onCheckout, loading }: LPHeroProps) => {
 
         {/* H1 */}
         <h1 ref={h1Ref} className="text-5xl md:text-7xl font-black text-white leading-[1.05] tracking-tight mb-6">
-          Descubra onde sua empresa{" "}
+          Descubra para onde está indo{" "}
           <span className="relative inline-block">
             <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-[#7EBF8E] to-[#00E676]">
-              está deixando
+              o dinheiro
             </span>
           </span>
           <br />
-          dinheiro na mesa.
+          da sua empresa.
         </h1>
 
         {/* Subtítulo */}
         <p ref={subtitleRef} className="text-[#A0A0A0] text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
-          Em <strong className="text-white">30 minutos</strong>, você terá um diagnóstico completo
-          das <strong className="text-white">10 áreas críticas</strong> da sua empresa — com score,
-          benchmarks e um plano de ação priorizado.
+          Em apenas <strong className="text-white">30 minutos</strong>, você terá um diagnóstico completo
+          das <strong className="text-white">10 áreas críticas</strong> da sua empresa e vai receber
+          um plano de ação para parar de perder dinheiro.
         </p>
 
         {/* CTAs */}

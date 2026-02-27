@@ -39,7 +39,7 @@ export const LPPricing = ({ onCheckout, loading }: LPPricingProps) => {
           {/* Mouse glow overlay */}
           <div className="absolute inset-0 pointer-events-none rounded-3xl" style={glowStyle} />
 
-          <div className="relative z-10">
+          <div className="relative z-10 pt-8">
             <div className="absolute -top-4 left-1/2 -translate-x-1/2">
               <div className="px-5 py-1.5 rounded-full bg-gradient-to-r from-[#4CAF50] to-[#00E676] text-[#0A0A0A] text-xs font-black uppercase tracking-wide shadow-lg shadow-[#4CAF50]/40">
                 Melhor custo-benefício

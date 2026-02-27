@@ -1,18 +1,11 @@
 
 
-# Remover valor do botão e bloco de preço
+# Ajustar posição do badge "Melhor custo-benefício"
 
-## Alterações
+O badge está posicionado com `absolute -top-4` e sobrepõe o primeiro item da lista de benefícios.
 
-### 1. `src/components/landing/LPPricing.tsx`
-- Remover o bloco de exibição de preço (R$497 riscado, R$197 grande, "pagamento único · acesso imediato") — linhas 48-55
-- Botão: de `"Garantir meu acesso — R$197"` para `"Garantir meu acesso"`
-- Loading: de `"Redirecionando para o pagamento..."` para `"Redirecionando..."`
+## Alteração
 
-### 2. `src/components/landing/LPHero.tsx`
-- Botão: de `"Fazer o Diagnóstico — R$197"` para `"Fazer o Diagnóstico"`
-
-### 3. `src/components/landing/LPFooter.tsx`
-- Botão: de `"Quero meu diagnóstico — R$197"` para `"Quero meu diagnóstico"`
-- Remover texto `"Garantia de 7 dias · Pagamento seguro via Stripe"` abaixo do botão
+### `src/components/landing/LPPricing.tsx`
+- Adicionar `pt-8` (padding-top) no container interno (`relative z-10`) para criar espaço abaixo do badge, evitando sobreposição com o primeiro benefício.
 

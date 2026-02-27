@@ -1,11 +1,9 @@
 
 
-# Ajustar posição do badge "Melhor custo-benefício"
+# Atualizar textos do Hero
 
-O badge está posicionado com `absolute -top-4` e sobrepõe o primeiro item da lista de benefícios.
+## Alterações em `src/components/landing/LPHero.tsx`
 
-## Alteração
-
-### `src/components/landing/LPPricing.tsx`
-- Adicionar `pt-8` (padding-top) no container interno (`relative z-10`) para criar espaço abaixo do badge, evitando sobreposição com o primeiro benefício.
+1. **Título (h1)**: Trocar de "Descubra onde sua empresa está deixando dinheiro na mesa." para "Descubra para onde está indo o dinheiro da sua empresa"
+2. **Subtítulo (p)**: Trocar para "Em apenas 30 minutos, você terá um diagnóstico completo das 10 áreas críticas da sua empresa e vai receber um plano de ação para parar de perder dinheiro"
 

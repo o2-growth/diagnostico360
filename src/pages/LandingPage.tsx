@@ -1,6 +1,4 @@
-import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 import { LPNavbar } from "@/components/landing/LPNavbar";
 import { LPHero } from "@/components/landing/LPHero";
 import { LPSocialProof } from "@/components/landing/LPSocialProof";
@@ -13,32 +11,10 @@ import { LPFAQ } from "@/components/landing/LPFAQ";
 import { LPFooter } from "@/components/landing/LPFooter";
 
 const LandingPage = () => {
-  const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
+  const navigate = useNavigate();
 
-  const handleCheckout = async () => {
-    setLoading(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("create-checkout", {
-        method: "POST",
-      });
-
-      if (error) throw error;
-      if (data?.url) {
-        window.location.href = data.url;
-      } else {
-        throw new Error("URL de checkout não recebida");
-      }
-    } catch (err: any) {
-      console.error("Checkout error:", err);
-      toast({
-        title: "Erro ao iniciar pagamento",
-        description: "Tente novamente ou entre em contato via WhatsApp.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
+  const handleCheckout = () => {
+    navigate("/auth");
   };
 
   return (
@@ -46,16 +22,16 @@ const LandingPage = () => {
       className="min-h-screen"
       style={{ backgroundColor: "#0A0A0A", color: "#FFFFFF" }}
     >
-      <LPNavbar onCheckout={handleCheckout} loading={loading} />
-      <LPHero onCheckout={handleCheckout} loading={loading} />
+      <LPNavbar onCheckout={handleCheckout} />
+      <LPHero onCheckout={handleCheckout} />
       <LPSocialProof />
       <LPHowItWorks />
       <LPAreas />
       <LPResults />
       <LPTestimonials />
-      <LPPricing onCheckout={handleCheckout} loading={loading} />
+      <LPPricing onCheckout={handleCheckout} />
       <LPFAQ />
-      <LPFooter onCheckout={handleCheckout} loading={loading} />
+      <LPFooter onCheckout={handleCheckout} />
     </div>
   );
 };

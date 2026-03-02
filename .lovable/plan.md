@@ -1,28 +1,43 @@
 
 
-## Problemas identificados
+## Analise do novo payload Eduzz
 
-Dois problemas separados:
+O payload mudou completamente de formato. Vou comparar o que o webhook atual espera vs. o que realmente chega:
 
-### 1. "Link inválido" na página de reset de senha
-A página `/reset-password` mostra "Link inválido" porque o Supabase processa o token da URL **antes** do componente React montar. Quando o componente checa `window.location.hash`, o hash já foi consumido e o evento `PASSWORD_RECOVERY` pode ter disparado antes do listener ser registrado.
+### Formato atual (incorreto)
+```text
+body.event = "myeduzz.invoice_paid"
+body.data.buyer.email
+body.data.buyer.name
+```
 
-**Correção:** Ao montar, também verificar se já existe uma sessão ativa (o que indica que o link de recovery funcionou e logou o usuário automaticamente). Adicionar um estado de loading inicial enquanto verifica.
+### Formato real (novo payload)
+```text
+event_name = "invoice_open" | "invoice_paid" | etc.
+trans_status = 1 (aberto), 3 (pago), etc.
+student_email = "andreylopes.ia@gmail.com"
+student_name = "andrey lopes"
+cus_email = "andreylopes.ia@gmail.com" (comprador)
+cus_name = "JOAO VICTOR PEREIRA" (comprador)
+```
 
-### 2. "You do not have access to this project"
-Isso acontece porque o link de recuperação redireciona para a **URL de preview do Lovable** (`5efc5336...lovableproject.com`), que é restrita a membros do projeto. Usuários finais precisam usar a **URL publicada**: `https://diagnostico360.lovable.app`.
+### Observacoes importantes
 
-**Correção:** Você precisa acessar o app pela URL publicada (`https://diagnostico360.lovable.app/auth`) e não pela URL de preview. Ao usar a URL publicada, o link de recovery vai redirecionar para a URL correta.
+1. O payload que voce enviou tem `event_name: "invoice_open"` e `trans_status: 1` -- isso e uma fatura **aberta** (boleto gerado), nao paga ainda. O evento de pagamento confirmado seria `event_name: "invoice_paid"` com `trans_status: 3`.
 
----
+2. O `student_email` e o email do aluno (quem recebe acesso). O `cus_email` e do comprador. Neste caso sao iguais.
 
-## Alterações técnicas
+3. O payload vem como objeto direto, nao aninhado em `body.data`.
 
-### `src/pages/ResetPassword.tsx`
-- Adicionar estado `checking = true` inicial
-- No `useEffect`, checar `supabase.auth.getSession()` — se existe sessão, mostrar o formulário de nova senha
-- Também checar hash e query params da URL por `type=recovery`
-- Só mostrar "Link inválido" depois de confirmar que **não** há sessão e **não** há token de recovery
+### Alteracoes no `supabase/functions/eduzz-webhook/index.ts`
 
-Isso resolve o problema de timing onde o Supabase já processou o token antes do React montar.
+- Extrair `event_name` diretamente do payload (em vez de `body.event`)
+- Aceitar `event_name === "invoice_paid"` como evento de pagamento confirmado
+- Extrair email de `student_email` (quem recebe acesso) com fallback para `cus_email`
+- Extrair nome de `student_name` com fallback para `cus_name`
+- Manter todo o resto do fluxo igual (criar usuario, atualizar `has_paid`, enviar credenciais para webhook externo)
+
+### Pergunta
+
+O acesso deve ser liberado para o `student_email` (aluno: andreylopes.ia@gmail.com) ou para o `cus_email` (comprador: andreylopes.ia@gmail.com)? Neste caso sao iguais, mas podem ser diferentes. Vou usar `student_email` como padrao pois e quem recebe o acesso ao produto.
 

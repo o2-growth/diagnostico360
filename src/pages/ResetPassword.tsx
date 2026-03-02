@@ -10,21 +10,38 @@ const ResetPassword = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [checking, setChecking] = useState(true);
   const [isRecovery, setIsRecovery] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
-    const hash = window.location.hash;
-    if (hash.includes('type=recovery')) {
-      setIsRecovery(true);
-    }
+    const checkRecovery = async () => {
+      // Check URL hash and query params
+      const hash = window.location.hash;
+      const params = new URLSearchParams(window.location.search);
+      if (hash.includes('type=recovery') || params.get('type') === 'recovery') {
+        setIsRecovery(true);
+        setChecking(false);
+        return;
+      }
+
+      // Check if session already exists (token was already processed by Supabase)
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        setIsRecovery(true);
+      }
+      setChecking(false);
+    };
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'PASSWORD_RECOVERY') {
         setIsRecovery(true);
+        setChecking(false);
       }
     });
+
+    checkRecovery();
 
     return () => subscription.unsubscribe();
   }, []);
@@ -52,6 +69,14 @@ const ResetPassword = () => {
       setLoading(false);
     }
   };
+
+  if (checking) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-dashboard-dark px-4">
+        <p className="text-dashboard-muted">Verificando link de recuperação...</p>
+      </div>
+    );
+  }
 
   if (!isRecovery) {
     return (

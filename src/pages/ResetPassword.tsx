@@ -16,30 +16,55 @@ const ResetPassword = () => {
   const { toast } = useToast();
 
   useEffect(() => {
+    let resolved = false;
+
+    const markRecovery = () => {
+      if (!resolved) {
+        resolved = true;
+        setIsRecovery(true);
+        setChecking(false);
+      }
+    };
+
+    // Set up auth listener FIRST to catch PASSWORD_RECOVERY event
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        markRecovery();
+      } else if (event === 'SIGNED_IN' && session) {
+        // Recovery tokens trigger SIGNED_IN after processing
+        markRecovery();
+      }
+    });
+
     const checkRecovery = async () => {
       // Check URL hash and query params
       const hash = window.location.hash;
       const params = new URLSearchParams(window.location.search);
-      if (hash.includes('type=recovery') || params.get('type') === 'recovery') {
-        setIsRecovery(true);
-        setChecking(false);
+      if (hash.includes('type=recovery') || hash.includes('access_token') || params.get('type') === 'recovery') {
+        markRecovery();
         return;
       }
 
       // Check if session already exists (token was already processed by Supabase)
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        setIsRecovery(true);
+        markRecovery();
+        return;
       }
-      setChecking(false);
-    };
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'PASSWORD_RECOVERY') {
-        setIsRecovery(true);
-        setChecking(false);
+      // Wait a bit more for the token to be processed by Supabase
+      await new Promise(r => setTimeout(r, 2000));
+      
+      if (!resolved) {
+        // Final check
+        const { data: { session: retrySession } } = await supabase.auth.getSession();
+        if (retrySession) {
+          markRecovery();
+        } else {
+          setChecking(false);
+        }
       }
-    });
+    };
 
     checkRecovery();
 

@@ -28,19 +28,23 @@ Deno.serve(async (req) => {
 
     // Eduzz pode enviar como array ou objeto
     const payload = Array.isArray(body) ? body[0] : body;
-    const eventBody = payload?.body ?? payload;
 
-    const event = eventBody?.event;
-    if (event !== "myeduzz.invoice_paid") {
-      console.log("Evento ignorado:", event);
+    const eventName = payload?.event_name;
+    const transStatus = payload?.trans_status;
+
+    // Aceitar apenas invoice_paid (evento de pagamento confirmado)
+    // trans_status 3 = pago
+    if (eventName !== "invoice_paid" && transStatus !== 3) {
+      console.log("Evento ignorado:", eventName, "trans_status:", transStatus);
       return new Response(JSON.stringify({ message: "Evento ignorado" }), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const buyerEmail = eventBody?.data?.buyer?.email;
-    const buyerName = eventBody?.data?.buyer?.name;
+    // student_email = quem recebe acesso, cus_email = comprador (fallback)
+    const buyerEmail = payload?.student_email || payload?.cus_email;
+    const buyerName = payload?.student_name || payload?.cus_name;
 
     if (!buyerEmail) {
       console.error("Email do comprador não encontrado no payload");

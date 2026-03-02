@@ -1,6 +1,7 @@
 import { useMouseGlow } from "@/hooks/useMousePosition";
 import { useCountUp } from "@/hooks/useCountUp";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useNavigate } from "react-router-dom";
 import { FloatingParticles } from "./FloatingParticles";
 
 interface LPHeroProps {
@@ -9,6 +10,7 @@ interface LPHeroProps {
 }
 
 export const LPHero = ({ onCheckout, loading }: LPHeroProps) => {
+  const navigate = useNavigate();
   const { ref: glowRef, pos, handleMouseMove } = useMouseGlow<HTMLElement>();
   const stat1 = useCountUp(2000, 2000, "+", "");
   const stat2 = useCountUp(88, 2000, "NPS ", "");
@@ -97,6 +99,14 @@ export const LPHero = ({ onCheckout, loading }: LPHeroProps) => {
             Ver como funciona ↓
           </button>
         </div>
+
+        {/* Login link */}
+        <button
+          onClick={() => navigate("/auth")}
+          className="text-[#7EBF8E] hover:text-[#00E676] text-sm font-medium transition-colors duration-200 underline underline-offset-4 decoration-[#7EBF8E]/30 hover:decoration-[#00E676]/50 mb-14"
+        >
+          Já comprou? Faça login aqui →
+        </button>
 
         {/* Social proof stats with count-up */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-12">

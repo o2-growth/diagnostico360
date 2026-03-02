@@ -15,6 +15,7 @@ import Department from "./pages/Department";
 import Assessment from "./pages/Assessment";
 import OngoingAssessment from "./pages/OngoingAssessment";
 import Auth from "./pages/Auth";
+import ResetPassword from "./pages/ResetPassword";
 import Report from "./pages/Report";
 import HistoryDetail from "./pages/HistoryDetail";
 import NotFound from "./pages/NotFound";
@@ -43,6 +44,7 @@ function App() {
                 <Routes>
                 <Route path="/" element={<LandingPage />} />
                   <Route path="/auth" element={<Auth />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
                   <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
                   <Route path="/dashboard" element={<ProtectedRoute><Index /></ProtectedRoute>} />
                   <Route path="/department/:id" element={<ProtectedRoute><Department /></ProtectedRoute>} />

@@ -48,16 +48,19 @@ export type Database = {
         Row: {
           created_at: string
           email: string | null
+          has_paid: boolean
           id: string
         }
         Insert: {
           created_at?: string
           email?: string | null
+          has_paid?: boolean
           id: string
         }
         Update: {
           created_at?: string
           email?: string | null
+          has_paid?: boolean
           id?: string
         }
         Relationships: []

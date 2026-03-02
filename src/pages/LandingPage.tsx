@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { LPNavbar } from "@/components/landing/LPNavbar";
 import { LPHero } from "@/components/landing/LPHero";
 import { LPSocialProof } from "@/components/landing/LPSocialProof";
@@ -11,10 +10,8 @@ import { LPFAQ } from "@/components/landing/LPFAQ";
 import { LPFooter } from "@/components/landing/LPFooter";
 
 const LandingPage = () => {
-  const navigate = useNavigate();
-
   const handleCheckout = () => {
-    navigate("/auth");
+    window.open("https://chk.eduzz.com/60EE8Z5K03", "_blank");
   };
 
   return (

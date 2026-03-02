@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 
 interface LPNavbarProps {
   onCheckout: () => void;
@@ -8,6 +8,7 @@ interface LPNavbarProps {
 
 export const LPNavbar = ({ onCheckout, loading }: LPNavbarProps) => {
   const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -56,14 +57,22 @@ export const LPNavbar = ({ onCheckout, loading }: LPNavbarProps) => {
           ))}
         </div>
 
-        {/* CTA */}
-        <button
-          onClick={onCheckout}
-          disabled={loading}
-          className="px-5 py-2 rounded-full bg-[#4CAF50] hover:bg-[#00E676] text-[#0A0A0A] text-sm font-bold transition-all duration-200 shadow-lg shadow-[#4CAF50]/25 hover:shadow-[#00E676]/40 disabled:opacity-60"
-        >
-          {loading ? "Aguarde..." : "Começar Agora"}
-        </button>
+        {/* CTAs */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => navigate("/auth")}
+            className="px-5 py-2 rounded-full border border-[#7EBF8E]/40 text-[#7EBF8E] text-sm font-semibold hover:bg-[#7EBF8E]/10 hover:border-[#7EBF8E]/60 transition-all duration-200"
+          >
+            Já comprei
+          </button>
+          <button
+            onClick={onCheckout}
+            disabled={loading}
+            className="px-5 py-2 rounded-full bg-[#4CAF50] hover:bg-[#00E676] text-[#0A0A0A] text-sm font-bold transition-all duration-200 shadow-lg shadow-[#4CAF50]/25 hover:shadow-[#00E676]/40 disabled:opacity-60"
+          >
+            {loading ? "Aguarde..." : "Começar Agora"}
+          </button>
+        </div>
       </div>
     </nav>
   );

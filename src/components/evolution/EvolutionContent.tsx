@@ -5,6 +5,8 @@ import MonthlyChart from '@/components/MonthlyChart';
 import MetricCard from '@/components/MetricCard';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
 import { supabase } from '@/integrations/supabase/client';
+import { ACTIVE_CLIENT_STORAGE_KEY } from '@/constants/client';
+import { useClients } from '@/hooks/useClients';
 import { Button } from '@/components/ui/button';
 import { BarChart3 } from 'lucide-react';
 import { format } from 'date-fns';
@@ -36,12 +38,21 @@ const EvolutionContent = () => {
   const [snapshots, setSnapshots] = useState<Snapshot[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { activeClient } = useClients();
 
   useEffect(() => {
     const fetchSnapshots = async () => {
+      const activeClientId = localStorage.getItem(ACTIVE_CLIENT_STORAGE_KEY);
+      if (!activeClientId) {
+        setSnapshots([]);
+        setLoading(false);
+        return;
+      }
+
       const { data, error } = await supabase
         .from('assessment_snapshots')
         .select('*')
+        .eq('client_id', activeClientId)
         .order('completed_at', { ascending: true });
 
       if (!error && data) {
@@ -68,10 +79,10 @@ const EvolutionContent = () => {
         </div>
         <div className="text-center">
           <p className="text-lg font-medium mb-1">
-            Nenhum diagnóstico concluído ainda
+            Nenhum diagnóstico concluído para este cliente
           </p>
           <p className="text-sm text-dashboard-muted">
-            Complete seu primeiro diagnóstico para ver o histórico aqui.
+            Selecione um cliente na Home e conclua o primeiro diagnóstico para acompanhar a evolução.
           </p>
         </div>
         <Button
@@ -126,7 +137,9 @@ const EvolutionContent = () => {
     <>
       <header className="mb-8">
         <h1 className="text-3xl font-medium mb-2">Histórico de Diagnósticos</h1>
-        <p className="text-dashboard-muted">Acompanhe a evolução do nível de excelência ao longo do tempo</p>
+        <p className="text-dashboard-muted">
+          {activeClient ? `Cliente: ${activeClient.name} · ` : ''}Acompanhe a evolução do nível de excelência ao longo do tempo
+        </p>
       </header>
 
       <div className="flex flex-col gap-6">

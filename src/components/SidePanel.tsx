@@ -53,6 +53,9 @@ const SidePanel = ({ onTabChange, onMenuToggle }: SidePanelProps) => {
       case 'home':
         navigate('/', { state: { activeTab: 'home' } });
         break;
+      case 'clients':
+        navigate('/clients', { state: { activeTab: 'clients' } });
+        break;
       case 'dashboard':
         navigate('/dashboard', { state: { activeTab: 'dashboard' } });
         break;
@@ -90,6 +93,9 @@ const SidePanel = ({ onTabChange, onMenuToggle }: SidePanelProps) => {
     }
     if (location.pathname === '/dashboard') {
       return location.state?.activeTab || 'dashboard';
+    }
+    if (location.pathname === '/clients') {
+      return 'clients';
     }
     if (location.pathname.includes('/department/')) {
       return 'areas';
@@ -158,6 +164,13 @@ const SidePanel = ({ onTabChange, onMenuToggle }: SidePanelProps) => {
               >
                 <Home className="w-5 h-5 shrink-0" />
                 {isOpen && "Início"}
+              </TabsTrigger>
+              <TabsTrigger
+                value="clients"
+                className={`w-full ${isOpen ? 'justify-start' : 'justify-center'} gap-3 data-[state=active]:bg-white/10 data-[state=active]:text-white p-3 rounded-lg hover:bg-white/5 transition-all duration-200`}
+              >
+                <Building2 className="w-5 h-5 shrink-0" />
+                {isOpen && "Clientes"}
               </TabsTrigger>
               <TabsTrigger
                 value="dashboard"

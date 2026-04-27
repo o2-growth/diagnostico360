@@ -1,13 +1,13 @@
-import { CheckCircle2, Shield, Lock, Clock } from "lucide-react";
+import { CheckCircle2, Shield, Clock, BarChart3 } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useCardGlow } from "@/hooks/useMousePosition";
 
 interface LPPricingProps {
-  onCheckout: () => void;
+  onLogin: () => void;
   loading?: boolean;
 }
 
-export const LPPricing = ({ onCheckout, loading }: LPPricingProps) => {
+export const LPPricing = ({ onLogin, loading }: LPPricingProps) => {
   const benefits = [
     "Diagnóstico completo das 10 áreas da empresa",
     "Score individual por departamento (0–100%)",
@@ -16,18 +16,18 @@ export const LPPricing = ({ onCheckout, loading }: LPPricingProps) => {
     "Relatório executivo em PDF exportável",
     "Gráficos e comparativos visuais",
     "Acesso ilimitado ao dashboard de resultados",
-    "Suporte via WhatsApp da equipe O2 Inc.",
+    "Fluxo simples com entrada via Google",
   ];
 
   const sectionRef = useScrollReveal<HTMLDivElement>();
   const { ref: cardGlowRef, glowStyle, handleMouseMove, handleMouseLeave } = useCardGlow<HTMLDivElement>();
 
   return (
-    <section id="preco" className="py-24 px-6">
+    <section id="beneficios" className="py-24 px-6">
       <div ref={sectionRef} className="max-w-lg mx-auto">
         <div className="text-center mb-10">
-          <span className="text-[#7EBF8E] text-xs font-bold uppercase tracking-widest">Investimento único</span>
-          <h2 className="text-4xl md:text-5xl font-black text-white mt-3 leading-tight">Simples e direto ao ponto</h2>
+          <span className="text-[#7EBF8E] text-xs font-bold uppercase tracking-widest">Acesso direto</span>
+          <h2 className="text-4xl md:text-5xl font-black text-white mt-3 leading-tight">Entre e comece seu diagnóstico</h2>
         </div>
 
         <div
@@ -42,7 +42,7 @@ export const LPPricing = ({ onCheckout, loading }: LPPricingProps) => {
           <div className="relative z-10 pt-8">
             <div className="absolute -top-4 left-1/2 -translate-x-1/2">
               <div className="px-5 py-1.5 rounded-full bg-gradient-to-r from-[#4CAF50] to-[#00E676] text-[#0A0A0A] text-xs font-black uppercase tracking-wide shadow-lg shadow-[#4CAF50]/40">
-                Melhor custo-benefício
+                Login rápido com Google
               </div>
             </div>
 
@@ -57,25 +57,25 @@ export const LPPricing = ({ onCheckout, loading }: LPPricingProps) => {
             </div>
 
             <button
-              onClick={onCheckout}
+              onClick={onLogin}
               disabled={loading}
               className="w-full py-5 rounded-2xl bg-gradient-to-r from-[#4CAF50] to-[#00E676] text-[#0A0A0A] font-black text-lg transition-all duration-300 hover:shadow-xl hover:shadow-[#4CAF50]/40 hover:scale-[1.02] disabled:opacity-60 animate-glow-pulse"
             >
-              {loading ? "Redirecionando..." : "Garantir meu acesso"}
+              {loading ? "Redirecionando..." : "Entrar com Google"}
             </button>
 
             <div className="flex items-center justify-center gap-2 mt-4">
               <Shield className="w-4 h-4 text-[#7EBF8E]" />
-              <span className="text-[#7EBF8E] text-xs font-medium">Garantia de 7 dias — sem perguntas</span>
+              <span className="text-[#7EBF8E] text-xs font-medium">Acesso protegido pela sua conta Google</span>
             </div>
           </div>
         </div>
 
         <div className="flex items-center justify-center gap-6 mt-8">
           {[
-            { icon: Lock, label: "Pagamento seguro" },
-            { icon: Shield, label: "Stripe certificado" },
-            { icon: Clock, label: "Acesso imediato" },
+            { icon: Shield, label: "Login seguro" },
+            { icon: Clock, label: "Entrada imediata" },
+            { icon: BarChart3, label: "Dashboard completo" },
           ].map((badge) => {
             const Icon = badge.icon;
             return (

@@ -8,10 +8,13 @@ import { LPTestimonials } from "@/components/landing/LPTestimonials";
 import { LPPricing } from "@/components/landing/LPPricing";
 import { LPFAQ } from "@/components/landing/LPFAQ";
 import { LPFooter } from "@/components/landing/LPFooter";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
-  const handleCheckout = () => {
-    window.open("https://chk.eduzz.com/60EE8Z5K03", "_blank");
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    navigate("/auth");
   };
 
   return (
@@ -19,16 +22,16 @@ const LandingPage = () => {
       className="min-h-screen"
       style={{ backgroundColor: "#0A0A0A", color: "#FFFFFF" }}
     >
-      <LPNavbar onCheckout={handleCheckout} />
-      <LPHero onCheckout={handleCheckout} />
+      <LPNavbar onLogin={handleLogin} />
+      <LPHero onLogin={handleLogin} />
       <LPSocialProof />
       <LPHowItWorks />
       <LPAreas />
       <LPResults />
       <LPTestimonials />
-      <LPPricing onCheckout={handleCheckout} />
+      <LPPricing onLogin={handleLogin} />
       <LPFAQ />
-      <LPFooter onCheckout={handleCheckout} />
+      <LPFooter onLogin={handleLogin} />
     </div>
   );
 };

@@ -1,43 +1,56 @@
+# Plano — Remover compra e deixar acesso via Google
 
+Vou ajustar o fluxo para que a landing page leve o usuário diretamente para a tela de login, sem checkout, sem pedido de compra e sem bloqueio por pagamento.
 
-## Analise do novo payload Eduzz
+## O que será alterado
 
-O payload mudou completamente de formato. Vou comparar o que o webhook atual espera vs. o que realmente chega:
+1. **Tela de login (`/auth`)**
+   - Remover formulário de email/senha.
+   - Remover cadastro por email/senha.
+   - Remover “esqueci minha senha” da tela principal.
+   - Manter apenas o botão **Entrar com Google**.
+   - Ajustar textos para deixar claro que o acesso é feito via Google.
 
-### Formato atual (incorreto)
+2. **Landing page inicial (`/`)**
+   - Remover qualquer ação que abra checkout Eduzz.
+   - Botões principais como **Começar Agora**, **Fazer o Diagnóstico**, **Quero meu diagnóstico** e similares passarão a levar para `/auth`.
+   - Remover linguagem de compra como “Já comprei”, “preço”, “pagamento”, “garantir acesso”, “investimento único”.
+   - Ajustar navegação da LP para não apontar mais para seção de preço.
+
+3. **Bloqueio por compra/pagamento**
+   - Remover a barreira visual em `ProtectedRoute` que bloqueia usuários sem `has_paid`.
+   - Qualquer usuário autenticado via Google poderá acessar `/home`, `/dashboard`, assessment e relatórios.
+   - Manter proteção de rota apenas para exigir login.
+
+4. **Componentes de preço/compra**
+   - Remover a seção de pricing da landing ou transformá-la em uma seção neutra de benefícios, sem checkout/pagamento.
+   - Atualizar FAQ para remover menções a pagamento, Stripe/Eduzz e acesso pós-compra.
+
+## Resultado esperado
+
+Fluxo final:
+
 ```text
-body.event = "myeduzz.invoice_paid"
-body.data.buyer.email
-body.data.buyer.name
+Landing Page
+  -> Botão inicial
+    -> /auth
+      -> Entrar com Google
+        -> /home
 ```
 
-### Formato real (novo payload)
-```text
-event_name = "invoice_open" | "invoice_paid" | etc.
-trans_status = 1 (aberto), 3 (pago), etc.
-student_email = "andreylopes.ia@gmail.com"
-student_name = "andrey lopes"
-cus_email = "andreylopes.ia@gmail.com" (comprador)
-cus_name = "JOAO VICTOR PEREIRA" (comprador)
-```
+Sem compra, sem checkout, sem `has_paid` como requisito de acesso.
 
-### Observacoes importantes
+## Detalhes técnicos
 
-1. O payload que voce enviou tem `event_name: "invoice_open"` e `trans_status: 1` -- isso e uma fatura **aberta** (boleto gerado), nao paga ainda. O evento de pagamento confirmado seria `event_name: "invoice_paid"` com `trans_status: 3`.
+Arquivos principais a ajustar:
 
-2. O `student_email` e o email do aluno (quem recebe acesso). O `cus_email` e do comprador. Neste caso sao iguais.
+- `src/pages/Auth.tsx`
+- `src/pages/LandingPage.tsx`
+- `src/components/auth/ProtectedRoute.tsx`
+- `src/components/landing/LPNavbar.tsx`
+- `src/components/landing/LPHero.tsx`
+- `src/components/landing/LPPricing.tsx`
+- `src/components/landing/LPFooter.tsx`
+- `src/components/landing/LPFAQ.tsx`
 
-3. O payload vem como objeto direto, nao aninhado em `body.data`.
-
-### Alteracoes no `supabase/functions/eduzz-webhook/index.ts`
-
-- Extrair `event_name` diretamente do payload (em vez de `body.event`)
-- Aceitar `event_name === "invoice_paid"` como evento de pagamento confirmado
-- Extrair email de `student_email` (quem recebe acesso) com fallback para `cus_email`
-- Extrair nome de `student_name` com fallback para `cus_name`
-- Manter todo o resto do fluxo igual (criar usuario, atualizar `has_paid`, enviar credenciais para webhook externo)
-
-### Pergunta
-
-O acesso deve ser liberado para o `student_email` (aluno: andreylopes.ia@gmail.com) ou para o `cus_email` (comprador: andreylopes.ia@gmail.com)? Neste caso sao iguais, mas podem ser diferentes. Vou usar `student_email` como padrao pois e quem recebe o acesso ao produto.
-
+Não vou alterar o backend agora. O webhook Eduzz e o campo `has_paid` podem continuar existindo no banco sem afetar o novo fluxo. Apenas deixaremos de usar isso como bloqueio de acesso no app.

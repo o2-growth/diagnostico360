@@ -7,7 +7,6 @@ export const useAuth = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [hasPaid, setHasPaid] = useState(false);
 
   const checkAdminRole = async (userId: string) => {
     try {
@@ -23,19 +22,6 @@ export const useAuth = () => {
     }
   };
 
-  const checkPaymentStatus = async (userId: string) => {
-    try {
-      const { data } = await supabase
-        .from('profiles')
-        .select('has_paid')
-        .eq('id', userId)
-        .maybeSingle();
-      setHasPaid(!!data?.has_paid);
-    } catch {
-      setHasPaid(false);
-    }
-  };
-
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
@@ -45,11 +31,9 @@ export const useAuth = () => {
         if (session?.user) {
           setTimeout(() => {
             checkAdminRole(session.user.id);
-            checkPaymentStatus(session.user.id);
           }, 0);
         } else {
           setIsAdmin(false);
-          setHasPaid(false);
         }
       }
     );
@@ -60,7 +44,6 @@ export const useAuth = () => {
       setLoading(false);
       if (session?.user) {
         checkAdminRole(session.user.id);
-        checkPaymentStatus(session.user.id);
       }
     });
 
@@ -71,5 +54,5 @@ export const useAuth = () => {
     await supabase.auth.signOut();
   };
 
-  return { user, session, loading, signOut, isAdmin, hasPaid };
+  return { user, session, loading, signOut, isAdmin };
 };

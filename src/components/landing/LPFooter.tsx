@@ -1,11 +1,11 @@
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 interface LPFooterProps {
-  onCheckout: () => void;
+  onLogin: () => void;
   loading?: boolean;
 }
 
-export const LPFooter = ({ onCheckout, loading }: LPFooterProps) => {
+export const LPFooter = ({ onLogin, loading }: LPFooterProps) => {
   const ctaRef = useScrollReveal<HTMLDivElement>();
 
   return (
@@ -23,11 +23,11 @@ export const LPFooter = ({ onCheckout, loading }: LPFooterProps) => {
             Em 30 minutos você vai saber exatamente onde focar para crescer com menos esforço e mais resultado.
           </p>
           <button
-            onClick={onCheckout}
+            onClick={onLogin}
             disabled={loading}
             className="px-10 py-5 rounded-2xl bg-gradient-to-r from-[#4CAF50] to-[#00E676] text-[#0A0A0A] font-black text-xl transition-all duration-300 hover:shadow-2xl hover:shadow-[#4CAF50]/40 hover:scale-[1.03] disabled:opacity-60 animate-glow-pulse"
           >
-            {loading ? "Aguarde..." : "Quero meu diagnóstico"}
+            {loading ? "Aguarde..." : "Entrar com Google"}
           </button>
         </div>
       </section>

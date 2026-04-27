@@ -1,5 +1,5 @@
 
-import { Play, Zap } from 'lucide-react';
+import { Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import SidePanel from '@/components/SidePanel';
@@ -10,6 +10,8 @@ import { useToast } from '@/components/ui/use-toast';
 import { questions } from '@/data/questions';
 import { generateSampleAnswers, generateSampleGates } from '@/utils/sampleAssessmentData';
 import { calculateScores } from '@/utils/scoreCalculator';
+import { ACTIVE_CLIENT_STORAGE_KEY } from '@/constants/client';
+import ClientManager from '@/components/clients/ClientManager';
 import { supabase } from '@/integrations/supabase/client';
 import {
   AlertDialog,
@@ -42,6 +44,11 @@ const Home = () => {
   }, [checkOngoingAssessment]);
 
   const handleStartDiagnosis = () => {
+    const activeClientId = localStorage.getItem(ACTIVE_CLIENT_STORAGE_KEY);
+    if (!activeClientId) {
+      toast({ title: 'Selecione um cliente', description: 'Cadastre ou selecione um cliente antes de iniciar o diagnóstico.', variant: 'destructive' });
+      return;
+    }
     navigate('/assessment');
   };
 
@@ -57,6 +64,11 @@ const Home = () => {
     if (!user) return;
     setFilling(true);
     try {
+      const activeClientId = localStorage.getItem(ACTIVE_CLIENT_STORAGE_KEY);
+      if (!activeClientId) {
+        toast({ title: 'Selecione um cliente', description: 'Escolha o cliente que receberá o diagnóstico de teste.', variant: 'destructive' });
+        return;
+      }
       const sampleAnswers = generateSampleAnswers();
       const sampleGates = generateSampleGates();
       localStorage.setItem('departmentAnswers', JSON.stringify(sampleAnswers));
@@ -68,6 +80,7 @@ const Home = () => {
         department_scores: departmentScores,
         answers: sampleAnswers,
         gates: sampleGates,
+        client_id: activeClientId,
       } as any);
       toast({ title: 'Teste rápido preenchido!', description: 'Dados simulados inseridos. A página será recarregada.' });
       setTimeout(() => window.location.reload(), 1000);
@@ -84,34 +97,21 @@ const Home = () => {
       
       <div className={`flex-1 transition-all duration-300 ${menuOpen ? 'md:ml-64' : 'md:ml-16'} ml-0`}>
         <div className="min-h-screen flex flex-col items-center justify-center p-4 md:p-8">
-          <div className="text-center max-w-3xl mx-auto">
+          <div className="text-center max-w-6xl mx-auto w-full">
             <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-dashboard-accent3 to-green-400 text-transparent bg-clip-text">
               Diagnóstico 360
             </h1>
             
             <p className="text-xl text-dashboard-text mb-12">
-              Avalie o nível de excelência de cada área da sua empresa e identifique 
-              oportunidades de melhoria.
+              Cadastre cada cliente, rode diagnósticos mensais e acompanhe a evolução por área ao longo do tempo.
             </p>
             
             <div className="flex flex-col items-center">
-              <Button
-                onClick={handleStartDiagnosis}
-                size="lg"
-                className="group bg-gradient-to-r from-dashboard-accent3 to-green-400 hover:opacity-90 hover:scale-105 transition-all duration-300 shadow-lg shadow-green-500/20 text-lg px-8 py-6"
-              >
-                <Play className="mr-2 h-5 w-5 group-hover:animate-pulse" />
-                Iniciar Diagnóstico
-              </Button>
-              
-              {hasOngoingAssessment && (
-                <button 
-                  onClick={handleContinueDiagnosis}
-                  className="mt-4 text-dashboard-accent3 hover:underline text-sm font-medium"
-                >
-                  Continuar diagnóstico em andamento
-                </button>
-              )}
+              <ClientManager
+                onStartDiagnosis={handleStartDiagnosis}
+                onContinueDiagnosis={handleContinueDiagnosis}
+                hasOngoingAssessment={hasOngoingAssessment}
+              />
 
               {isAdmin && (
                 <AlertDialog>
@@ -150,15 +150,15 @@ const Home = () => {
             <ul className="space-y-4 text-dashboard-text">
               <li className="flex items-start gap-4">
                 <span className="shrink-0 flex items-center justify-center rounded-full bg-dashboard-accent3/20 text-dashboard-accent3 w-8 h-8 text-sm font-bold">1</span>
-                <span className="pt-1">Responda perguntas específicas para cada departamento da sua empresa</span>
+                <span className="pt-1">Selecione ou cadastre o cliente que será diagnosticado</span>
               </li>
               <li className="flex items-start gap-4">
                 <span className="shrink-0 flex items-center justify-center rounded-full bg-dashboard-accent3/20 text-dashboard-accent3 w-8 h-8 text-sm font-bold">2</span>
-                <span className="pt-1">Visualize resultados em tempo real com gráficos e métricas detalhadas</span>
+                <span className="pt-1">Execute o diagnóstico mensal e salve o resultado no histórico do cliente</span>
               </li>
               <li className="flex items-start gap-4">
                 <span className="shrink-0 flex items-center justify-center rounded-full bg-dashboard-accent3/20 text-dashboard-accent3 w-8 h-8 text-sm font-bold">3</span>
-                <span className="pt-1">Receba recomendações personalizadas para melhorar cada área</span>
+                <span className="pt-1">Compare os períodos para mostrar a evolução em cada área</span>
               </li>
             </ul>
           </div>

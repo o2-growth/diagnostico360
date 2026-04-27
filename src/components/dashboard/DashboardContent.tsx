@@ -6,9 +6,11 @@ import { calculateScores } from '@/utils/scoreCalculator';
 import { Button } from '@/components/ui/button';
 import { FileText } from 'lucide-react';
 import CtaBanner from '@/components/CtaBanner';
+import { useClients } from '@/hooks/useClients';
 
 const DashboardContent = () => {
   const navigate = useNavigate();
+  const { activeClient } = useClients();
 
   const { departmentScores, overallScore } = calculateScores();
   const hasCompletedAssessment = overallScore > 0;
@@ -35,7 +37,9 @@ const DashboardContent = () => {
       <header className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-medium mb-2">Resultado</h1>
-          <p className="text-dashboard-muted">Acompanhe o nível de excelência atual de cada área</p>
+          <p className="text-dashboard-muted">
+            {activeClient ? `Cliente: ${activeClient.name} · ` : ''}Acompanhe o nível de excelência atual de cada área
+          </p>
         </div>
         <div className="flex items-center gap-3">
           <Button onClick={() => navigate('/report')} variant="outline" size="sm" className="gap-2 border-white/10 hover:border-white/20 hover:bg-white/5 transition-all duration-300">

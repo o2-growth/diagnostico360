@@ -10,6 +10,7 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { useTheme } from '@/components/theme/theme-provider';
 import { useAssessmentDB } from '@/hooks/useAssessmentDB';
+import { useClients } from '@/hooks/useClients';
 import { Skeleton } from '@/components/ui/skeleton';
 
 function getClassification(score: number) {
@@ -43,6 +44,7 @@ const Report = () => {
   const { theme } = useTheme();
   const [isMenuExpanded, setIsMenuExpanded] = useState(true);
   const { loading: dbLoading } = useAssessmentDB();
+  const { activeClient } = useClients();
 
   const { departmentScores, overallScore } = calculateScores();
   const classification = getClassification(overallScore);
@@ -164,6 +166,9 @@ const Report = () => {
             <p className="text-dashboard-muted text-lg">
               Avaliação completa da maturidade organizacional
             </p>
+            {activeClient && (
+              <p className="text-dashboard-muted text-base mt-1">Cliente: {activeClient.name}</p>
+            )}
             <p className="text-dashboard-muted text-sm mt-1">Gerado em {today}</p>
           </header>
 

@@ -8,6 +8,7 @@ import { questionGroups } from '@/data/questions';
 import { generateSampleAnswers, generateSampleGates } from '@/utils/sampleAssessmentData';
 import { calculateScores } from '@/utils/scoreCalculator';
 import { supabase } from '@/integrations/supabase/client';
+import { ACTIVE_CLIENT_STORAGE_KEY } from '@/constants/client';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -52,6 +53,11 @@ const SettingsContent = () => {
     if (!user) return;
     setFilling(true);
     try {
+      const activeClientId = localStorage.getItem(ACTIVE_CLIENT_STORAGE_KEY);
+      if (!activeClientId) {
+        toast({ title: 'Selecione um cliente', description: 'Escolha o cliente que receberá o diagnóstico de teste.', variant: 'destructive' });
+        return;
+      }
       const sampleAnswers = generateSampleAnswers();
       const sampleGates = generateSampleGates();
       localStorage.setItem('departmentAnswers', JSON.stringify(sampleAnswers));

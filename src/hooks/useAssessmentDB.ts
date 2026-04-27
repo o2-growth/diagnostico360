@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 import { STORAGE_KEYS } from '@/constants/storage';
+import { ACTIVE_CLIENT_STORAGE_KEY } from '@/constants/client';
 
 export const useAssessmentDB = () => {
   const { user } = useAuth();
@@ -11,6 +12,8 @@ export const useAssessmentDB = () => {
   // Load assessment from DB on mount
   useEffect(() => {
     if (!user) { setLoading(false); return; }
+    const activeClientId = localStorage.getItem(ACTIVE_CLIENT_STORAGE_KEY);
+    if (!activeClientId) { setLoading(false); return; }
 
     const loadFromDB = async () => {
       try {
@@ -18,6 +21,7 @@ export const useAssessmentDB = () => {
           .from('user_assessments')
           .select('*')
           .eq('user_id', user.id)
+          .eq('client_id', activeClientId)
           .eq('status', 'in_progress')
           .order('updated_at', { ascending: false })
           .limit(1)
@@ -53,12 +57,14 @@ export const useAssessmentDB = () => {
 
   const ensureAssessment = useCallback(async (): Promise<string | null> => {
     if (!user) return null;
+    const activeClientId = localStorage.getItem(ACTIVE_CLIENT_STORAGE_KEY);
+    if (!activeClientId) return null;
     if (assessmentId) return assessmentId;
 
     try {
       const { data, error } = await supabase
         .from('user_assessments')
-        .insert({ user_id: user.id } as any)
+        .insert({ user_id: user.id, client_id: activeClientId } as any)
         .select('id')
         .single();
 

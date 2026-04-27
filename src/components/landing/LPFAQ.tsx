@@ -10,10 +10,10 @@ export const LPFAQ = () => {
   const faqs = [
     { q: "Para quem é o Diagnóstico 360?", a: "Para donos de PMEs, sócios, diretores e gestores que querem ter clareza sobre o estágio atual da empresa. Não importa o segmento ou tamanho — o diagnóstico se adapta ao contexto do seu negócio." },
     { q: "Quanto tempo leva para fazer o diagnóstico?", a: "Em média 25–35 minutos. As 69 perguntas são objetivas e diretas. Você pode pausar e retomar quando quiser — suas respostas ficam salvas." },
-    { q: "E se eu não gostar? Tem garantia?", a: "Sim. Se dentro de 7 dias você achar que não valeu a pena, basta enviar um e-mail e devolvemos 100% do valor, sem burocracias e sem perguntas." },
+    { q: "Como faço para entrar?", a: "Basta clicar em começar e autenticar com sua conta Google. Depois disso, você será direcionado para a plataforma." },
     { q: "Preciso ter conhecimento técnico para interpretar o resultado?", a: "Não. O relatório foi pensado para ser acessível a qualquer gestor. Os gráficos e as recomendações são claros e diretos, sem termos técnicos desnecessários." },
     { q: "O diagnóstico é feito uma única vez ou posso repetir?", a: "Você pode refazer o diagnóstico a qualquer momento. Recomendamos repetir a cada 6 meses para acompanhar a evolução e medir o progresso das ações implementadas." },
-    { q: "Como funciona o acesso após o pagamento?", a: "Assim que o pagamento é confirmado pelo Stripe, você cria seu acesso e entra direto no dashboard para iniciar o diagnóstico. O processo leva menos de 2 minutos." },
+    { q: "O acesso é liberado imediatamente?", a: "Sim. Após o login com Google, você entra direto no dashboard para iniciar ou continuar seu diagnóstico." },
   ];
 
   const headerRef = useScrollReveal<HTMLDivElement>();

@@ -24,7 +24,7 @@ export const useAssessmentDB = (options: { hydrateLatestSnapshot?: boolean } = {
 
     const loadFromDB = async () => {
       try {
-        const { data, error } = await supabase
+        const { data, error } = await (supabase as any)
           .from('user_assessments')
           .select('*')
           .eq('user_id', user.id)
@@ -55,7 +55,7 @@ export const useAssessmentDB = (options: { hydrateLatestSnapshot?: boolean } = {
         }
 
         if (hydrateLatestSnapshot) {
-          const { data: snapshot, error: snapshotError } = await supabase
+          const { data: snapshot, error: snapshotError } = await (supabase as any)
             .from('assessment_snapshots')
             .select('answers,gates')
             .eq('user_id', user.id)
@@ -94,7 +94,7 @@ export const useAssessmentDB = (options: { hydrateLatestSnapshot?: boolean } = {
     if (assessmentId) return assessmentId;
 
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('user_assessments')
         .insert({ user_id: user.id, client_id: activeClientId } as any)
         .select('id')
@@ -125,7 +125,7 @@ export const useAssessmentDB = (options: { hydrateLatestSnapshot?: boolean } = {
       const gates = JSON.parse(localStorage.getItem(STORAGE_KEYS.GATES) || '{}');
       const recommendations = JSON.parse(localStorage.getItem(STORAGE_KEYS.RECOMMENDATIONS) || '{}');
 
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('user_assessments')
         .update({
           answers,
@@ -152,7 +152,7 @@ export const useAssessmentDB = (options: { hydrateLatestSnapshot?: boolean } = {
       const gates = JSON.parse(localStorage.getItem(STORAGE_KEYS.GATES) || '{}');
       const recommendations = JSON.parse(localStorage.getItem(STORAGE_KEYS.RECOMMENDATIONS) || '{}');
 
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('user_assessments')
         .update({
           answers,

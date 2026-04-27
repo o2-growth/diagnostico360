@@ -55,6 +55,52 @@ const getOrCreateSampleClient = async (userId: string) => {
   return newClient.id as string;
 };
 
+const saveSingleSampleSnapshot = async (
+  userId: string,
+  sampleClientId: string,
+  sampleAnswers: Record<string, unknown>,
+  sampleGates: Record<string, unknown>,
+) => {
+  const { overallScore, departmentScores } = calculateScores();
+  const payload = {
+    overall_score: overallScore,
+    department_scores: departmentScores,
+    answers: sampleAnswers,
+    gates: sampleGates,
+    client_id: sampleClientId,
+    completed_at: new Date().toISOString(),
+  };
+
+  const { data: existingSnapshot, error: lookupError } = await (supabase as any)
+    .from('assessment_snapshots')
+    .select('id')
+    .eq('user_id', userId)
+    .eq('client_id', sampleClientId)
+    .order('completed_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (lookupError) throw lookupError;
+
+  if (existingSnapshot?.id) {
+    const { error } = await (supabase as any)
+      .from('assessment_snapshots')
+      .update(payload)
+      .eq('id', existingSnapshot.id)
+      .eq('user_id', userId);
+
+    if (error) throw error;
+    return;
+  }
+
+  const { error } = await supabase.from('assessment_snapshots').insert({
+    user_id: userId,
+    ...payload,
+  } as any);
+
+  if (error) throw error;
+};
+
 const SettingsContent = () => {
   const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
@@ -98,19 +144,9 @@ const SettingsContent = () => {
       localStorage.setItem(STORAGE_KEYS.ANSWERS, JSON.stringify(sampleAnswers));
       localStorage.setItem(STORAGE_KEYS.GATES, JSON.stringify(sampleGates));
 
-      const { overallScore, departmentScores } = calculateScores();
-      const { error } = await supabase.from('assessment_snapshots').insert({
-        user_id: user.id,
-        overall_score: overallScore,
-        department_scores: departmentScores,
-        answers: sampleAnswers,
-        gates: sampleGates,
-        client_id: sampleClientId,
-      } as any);
+      await saveSingleSampleSnapshot(user.id, sampleClientId, sampleAnswers, sampleGates);
 
-      if (error) throw error;
-
-      toast({ title: 'Teste rápido criado', description: 'Um diagnóstico foi salvo no cliente fictício desta conta.' });
+      toast({ title: 'Teste rápido atualizado', description: 'O diagnóstico de teste ficou salvo apenas no cliente fictício desta conta.' });
       setTimeout(() => {
         window.location.href = '/dashboard';
       }, 800);

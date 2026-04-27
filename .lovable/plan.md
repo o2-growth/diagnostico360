@@ -1,56 +1,32 @@
-# Plano — Remover compra e deixar acesso via Google
+Plano para corrigir o erro ao cadastrar cliente
 
-Vou ajustar o fluxo para que a landing page leve o usuário diretamente para a tela de login, sem checkout, sem pedido de compra e sem bloqueio por pagamento.
+O erro exibido indica que a interface já está tentando usar a tabela `clients`, mas ela ainda não existe no banco de dados do Lovable Cloud publicado/ativo. Também confirmei que as colunas `client_id` ainda não existem em `user_assessments` e `assessment_snapshots`. Ou seja: o código da funcionalidade foi criado, mas a migração de banco ainda precisa ser aplicada no ambiente Cloud.
 
-## O que será alterado
+O que vou corrigir:
 
-1. **Tela de login (`/auth`)**
-   - Remover formulário de email/senha.
-   - Remover cadastro por email/senha.
-   - Remover “esqueci minha senha” da tela principal.
-   - Manter apenas o botão **Entrar com Google**.
-   - Ajustar textos para deixar claro que o acesso é feito via Google.
+1. Aplicar a estrutura de banco para clientes dos CFOs
+   - Criar a tabela `clients` com dados do cliente: nome, empresa, e-mail, telefone, observações, dono/CFO, datas de criação e atualização.
+   - Ativar segurança por usuário, para que cada CFO veja apenas os próprios clientes.
+   - Criar políticas de leitura, criação, edição e exclusão somente para o dono do cliente.
 
-2. **Landing page inicial (`/`)**
-   - Remover qualquer ação que abra checkout Eduzz.
-   - Botões principais como **Começar Agora**, **Fazer o Diagnóstico**, **Quero meu diagnóstico** e similares passarão a levar para `/auth`.
-   - Remover linguagem de compra como “Já comprei”, “preço”, “pagamento”, “garantir acesso”, “investimento único”.
-   - Ajustar navegação da LP para não apontar mais para seção de preço.
+2. Vincular diagnósticos aos clientes
+   - Adicionar `client_id` em `user_assessments`.
+   - Adicionar `client_id` em `assessment_snapshots`.
+   - Criar índices para melhorar a busca por cliente.
+   - Manter compatibilidade com diagnósticos antigos, deixando `client_id` inicialmente opcional para não quebrar dados existentes.
 
-3. **Bloqueio por compra/pagamento**
-   - Remover a barreira visual em `ProtectedRoute` que bloqueia usuários sem `has_paid`.
-   - Qualquer usuário autenticado via Google poderá acessar `/home`, `/dashboard`, assessment e relatórios.
-   - Manter proteção de rota apenas para exigir login.
+3. Proteger a consistência dos dados
+   - Criar uma validação no banco para impedir que um diagnóstico seja salvo em cliente de outro CFO.
+   - Garantir que o histórico/evolução continue isolado por cliente selecionado.
 
-4. **Componentes de preço/compra**
-   - Remover a seção de pricing da landing ou transformá-la em uma seção neutra de benefícios, sem checkout/pagamento.
-   - Atualizar FAQ para remover menções a pagamento, Stripe/Eduzz e acesso pós-compra.
+4. Ajustar pequenos pontos de estabilidade na interface
+   - Melhorar a mensagem de erro caso o cadastro falhe.
+   - Corrigir o aviso de acessibilidade do modal de novo cliente adicionando descrição ao diálogo.
 
-## Resultado esperado
+5. Validar após a correção
+   - Conferir se a tabela `clients` existe no Cloud.
+   - Conferir se `client_id` existe nas tabelas de diagnóstico.
+   - Testar o fluxo: login Google → Novo Cliente → selecionar cliente → iniciar diagnóstico.
+   - Rodar build para garantir que a aplicação continua funcionando.
 
-Fluxo final:
-
-```text
-Landing Page
-  -> Botão inicial
-    -> /auth
-      -> Entrar com Google
-        -> /home
-```
-
-Sem compra, sem checkout, sem `has_paid` como requisito de acesso.
-
-## Detalhes técnicos
-
-Arquivos principais a ajustar:
-
-- `src/pages/Auth.tsx`
-- `src/pages/LandingPage.tsx`
-- `src/components/auth/ProtectedRoute.tsx`
-- `src/components/landing/LPNavbar.tsx`
-- `src/components/landing/LPHero.tsx`
-- `src/components/landing/LPPricing.tsx`
-- `src/components/landing/LPFooter.tsx`
-- `src/components/landing/LPFAQ.tsx`
-
-Não vou alterar o backend agora. O webhook Eduzz e o campo `has_paid` podem continuar existindo no banco sem afetar o novo fluxo. Apenas deixaremos de usar isso como bloqueio de acesso no app.
+Observação: os erros de `sentry`/`source map 404` que aparecem no console da imagem não são a causa do problema. O erro real é: `Could not find the table 'public.clients' in the schema cache`, causado pela ausência da tabela no banco.

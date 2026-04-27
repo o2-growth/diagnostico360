@@ -10,7 +10,7 @@ import { calculateScores } from '@/utils/scoreCalculator';
 import { supabase } from '@/integrations/supabase/client';
 import { ACTIVE_CLIENT_STORAGE_KEY } from '@/constants/client';
 import { STORAGE_KEYS } from '@/constants/storage';
-import { clearAssessmentState } from '@/utils/clientAssessmentState';
+import { clearAssessmentState, clearInProgressAssessment } from '@/utils/clientAssessmentState';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -93,6 +93,7 @@ const SettingsContent = () => {
       const sampleGates = generateSampleGates();
 
       clearAssessmentState();
+      await clearInProgressAssessment(user.id, sampleClientId);
       localStorage.setItem(ACTIVE_CLIENT_STORAGE_KEY, sampleClientId);
       localStorage.setItem(STORAGE_KEYS.ANSWERS, JSON.stringify(sampleAnswers));
       localStorage.setItem(STORAGE_KEYS.GATES, JSON.stringify(sampleGates));

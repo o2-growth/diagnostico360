@@ -14,7 +14,13 @@ export const useAssessmentDB = (options: { hydrateLatestSnapshot?: boolean } = {
   useEffect(() => {
     if (!user) { setLoading(false); return; }
     const activeClientId = localStorage.getItem(ACTIVE_CLIENT_STORAGE_KEY);
-    if (!activeClientId) { setLoading(false); return; }
+    if (!activeClientId) {
+      localStorage.removeItem(STORAGE_KEYS.ANSWERS);
+      localStorage.removeItem(STORAGE_KEYS.GATES);
+      localStorage.removeItem(STORAGE_KEYS.RECOMMENDATIONS);
+      setLoading(false);
+      return;
+    }
 
     const loadFromDB = async () => {
       try {

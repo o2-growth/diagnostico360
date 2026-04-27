@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useToast } from '@/components/ui/use-toast';
 import { useClients } from '@/hooks/useClients';
 import type { Client } from '@/types/client';
@@ -45,7 +45,10 @@ const ClientManager = ({ onStartDiagnosis, onContinueDiagnosis, hasOngoingAssess
     setSaving(false);
 
     if (error) {
-      toast({ title: 'Erro ao cadastrar cliente', description: error.message, variant: 'destructive' });
+      const description = error.message.includes('schema cache') || error.message.includes('clients')
+        ? 'A base de clientes ainda estava indisponível no Cloud. Atualize a página e tente novamente.'
+        : error.message;
+      toast({ title: 'Erro ao cadastrar cliente', description, variant: 'destructive' });
       return;
     }
 
@@ -104,6 +107,9 @@ const ClientManager = ({ onStartDiagnosis, onContinueDiagnosis, hasOngoingAssess
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Cadastrar novo cliente</DialogTitle>
+              <DialogDescription>
+                Preencha os dados do cliente para vincular os próximos diagnósticos e históricos a ele.
+              </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleCreateClient} className="space-y-4">
               <div className="space-y-2">

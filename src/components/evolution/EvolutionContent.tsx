@@ -61,7 +61,7 @@ const EvolutionContent = () => {
       setLoading(false);
     };
     fetchSnapshots();
-  }, []);
+  }, [activeClient?.id]);
 
   if (loading) {
     return (

@@ -47,3 +47,32 @@ ADD COLUMN client_id uuid REFERENCES public.clients(id) ON DELETE CASCADE;
 CREATE INDEX idx_clients_owner_id ON public.clients(owner_id);
 CREATE INDEX idx_user_assessments_client_id ON public.user_assessments(client_id);
 CREATE INDEX idx_assessment_snapshots_client_id ON public.assessment_snapshots(client_id);
+
+CREATE OR REPLACE FUNCTION public.validate_assessment_client_owner()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  IF NEW.client_id IS NOT NULL AND NOT EXISTS (
+    SELECT 1
+    FROM public.clients
+    WHERE id = NEW.client_id
+      AND owner_id = NEW.user_id
+  ) THEN
+    RAISE EXCEPTION 'Client does not belong to assessment owner';
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER validate_user_assessments_client_owner
+BEFORE INSERT OR UPDATE OF client_id, user_id ON public.user_assessments
+FOR EACH ROW
+EXECUTE FUNCTION public.validate_assessment_client_owner();
+
+CREATE TRIGGER validate_assessment_snapshots_client_owner
+BEFORE INSERT OR UPDATE OF client_id, user_id ON public.assessment_snapshots
+FOR EACH ROW
+EXECUTE FUNCTION public.validate_assessment_client_owner();

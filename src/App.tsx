@@ -10,6 +10,7 @@ import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import LandingPage from "./pages/LandingPage";
 import Home from "./pages/Home";
+import Clients from "./pages/Clients";
 import Index from "./pages/Index";
 import Department from "./pages/Department";
 import Assessment from "./pages/Assessment";
@@ -47,6 +48,7 @@ function App() {
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/reset-password" element={<ResetPassword />} />
                   <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+                  <Route path="/clients" element={<ProtectedRoute><Clients /></ProtectedRoute>} />
                   <Route path="/dashboard" element={<ProtectedRoute><Index /></ProtectedRoute>} />
                   <Route path="/department/:id" element={<ProtectedRoute><Department /></ProtectedRoute>} />
                   <Route path="/assessment" element={<ProtectedRoute><Assessment /></ProtectedRoute>} />

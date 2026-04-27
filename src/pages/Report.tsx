@@ -141,7 +141,7 @@ const Report = () => {
       <div
         className={`transition-all duration-300 ${isMenuExpanded ? 'pl-64' : 'pl-16'} print:pl-0`}
       >
-        <div className="p-8 max-w-6xl mx-auto">
+        <div className="p-8 max-w-6xl mx-auto" data-report-content>
           {/* Action buttons */}
           <div className="flex items-center gap-3 mb-8" data-print-hide>
             <Button variant="outline" size="sm" onClick={() => navigate('/dashboard')} className="gap-2">
@@ -167,7 +167,7 @@ const Report = () => {
               Avaliação completa da maturidade organizacional
             </p>
             {activeClient && (
-              <p className="text-dashboard-muted text-base mt-1">Cliente: {activeClient.name}</p>
+              <p className="text-dashboard-muted text-base mt-1" data-client-name>Cliente: {activeClient.name}</p>
             )}
             <p className="text-dashboard-muted text-sm mt-1">Gerado em {today}</p>
           </header>

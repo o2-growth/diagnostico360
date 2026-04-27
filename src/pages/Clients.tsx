@@ -10,6 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useClients } from '@/hooks/useClients';
+import { hydrateLatestClientSnapshot } from '@/utils/clientAssessmentState';
 import type { Client } from '@/types/client';
 
 interface ClientSnapshotSummary {
@@ -84,11 +85,14 @@ const Clients = () => {
     );
   }, [clients, search]);
 
-  const handleSelectClient = (client: Client, destination: 'dashboard' | 'history' | 'assessment') => {
+  const handleSelectClient = async (client: Client, destination: 'dashboard' | 'history' | 'assessment') => {
     setActiveClientId(client.id);
     if (destination === 'assessment') {
       navigate('/assessment');
       return;
+    }
+    if (user) {
+      await hydrateLatestClientSnapshot(user.id, client.id);
     }
     navigate('/dashboard', { state: { activeTab: destination === 'history' ? 'evolution' : 'dashboard' } });
   };

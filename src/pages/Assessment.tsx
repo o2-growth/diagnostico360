@@ -2,14 +2,17 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
-import { STORAGE_KEYS } from '@/constants/storage';
 import { ACTIVE_CLIENT_STORAGE_KEY } from '@/constants/client';
+import { clearAssessmentState, clearInProgressAssessment } from '@/utils/clientAssessmentState';
+import { useAuth } from '@/hooks/useAuth';
 
 const Assessment = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user, loading } = useAuth();
 
   useEffect(() => {
+    if (loading) return;
     const activeClientId = localStorage.getItem(ACTIVE_CLIENT_STORAGE_KEY);
     if (!activeClientId) {
       toast({
@@ -21,10 +24,10 @@ const Assessment = () => {
       return;
     }
 
-    // Clear previous assessment data for a fresh start
-    localStorage.removeItem(STORAGE_KEYS.ANSWERS);
-    localStorage.removeItem(STORAGE_KEYS.GATES);
-    localStorage.removeItem(STORAGE_KEYS.RECOMMENDATIONS);
+    clearAssessmentState();
+    if (user) {
+      clearInProgressAssessment(user.id, activeClientId);
+    }
 
     toast({
       title: "Novo diagnóstico iniciado",
@@ -33,7 +36,7 @@ const Assessment = () => {
 
     // Redirect to the full assessment with gates
     navigate('/ongoing-assessment', { replace: true });
-  }, [navigate, toast]);
+  }, [loading, navigate, toast, user]);
 
   return (
     <div className="min-h-screen flex items-center justify-center">

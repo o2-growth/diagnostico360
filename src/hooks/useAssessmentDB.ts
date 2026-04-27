@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 import { STORAGE_KEYS } from '@/constants/storage';
 import { ACTIVE_CLIENT_STORAGE_KEY } from '@/constants/client';
+import { clearAssessmentState, hydrateLatestClientSnapshot } from '@/utils/clientAssessmentState';
 
 export const useAssessmentDB = (options: { hydrateLatestSnapshot?: boolean } = {}) => {
   const { hydrateLatestSnapshot = true } = options;
@@ -15,9 +16,7 @@ export const useAssessmentDB = (options: { hydrateLatestSnapshot?: boolean } = {
     if (!user) { setLoading(false); return; }
     const activeClientId = localStorage.getItem(ACTIVE_CLIENT_STORAGE_KEY);
     if (!activeClientId) {
-      localStorage.removeItem(STORAGE_KEYS.ANSWERS);
-      localStorage.removeItem(STORAGE_KEYS.GATES);
-      localStorage.removeItem(STORAGE_KEYS.RECOMMENDATIONS);
+      clearAssessmentState();
       setLoading(false);
       return;
     }
@@ -55,27 +54,7 @@ export const useAssessmentDB = (options: { hydrateLatestSnapshot?: boolean } = {
         }
 
         if (hydrateLatestSnapshot) {
-          const { data: snapshot, error: snapshotError } = await (supabase as any)
-            .from('assessment_snapshots')
-            .select('answers,gates')
-            .eq('user_id', user.id)
-            .eq('client_id', activeClientId)
-            .order('completed_at', { ascending: false })
-            .limit(1)
-            .maybeSingle();
-
-          if (!snapshotError && snapshot) {
-            if (snapshot.answers && Object.keys(snapshot.answers as object).length > 0) {
-              localStorage.setItem(STORAGE_KEYS.ANSWERS, JSON.stringify(snapshot.answers));
-            } else {
-              localStorage.removeItem(STORAGE_KEYS.ANSWERS);
-            }
-            if (snapshot.gates && Object.keys(snapshot.gates as object).length > 0) {
-              localStorage.setItem(STORAGE_KEYS.GATES, JSON.stringify(snapshot.gates));
-            } else {
-              localStorage.removeItem(STORAGE_KEYS.GATES);
-            }
-          }
+          await hydrateLatestClientSnapshot(user.id, activeClientId);
         }
       } catch (err) {
         console.error('Error loading assessment from DB:', err);

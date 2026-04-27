@@ -1,16 +1,14 @@
 import { useMouseGlow } from "@/hooks/useMousePosition";
 import { useCountUp } from "@/hooks/useCountUp";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import { useNavigate } from "react-router-dom";
 import { FloatingParticles } from "./FloatingParticles";
 
 interface LPHeroProps {
-  onCheckout: () => void;
+  onLogin: () => void;
   loading?: boolean;
 }
 
-export const LPHero = ({ onCheckout, loading }: LPHeroProps) => {
-  const navigate = useNavigate();
+export const LPHero = ({ onLogin, loading }: LPHeroProps) => {
   const { ref: glowRef, pos, handleMouseMove } = useMouseGlow<HTMLElement>();
   const stat1 = useCountUp(2000, 2000, "+", "");
   const stat2 = useCountUp(88, 2000, "NPS ", "");
@@ -84,12 +82,12 @@ export const LPHero = ({ onCheckout, loading }: LPHeroProps) => {
         {/* CTAs */}
         <div ref={ctaRef} className="flex flex-col sm:flex-row gap-4 justify-center mb-14">
           <button
-            onClick={onCheckout}
+            onClick={onLogin}
             disabled={loading}
             className="group relative px-8 py-4 rounded-2xl bg-gradient-to-r from-[#4CAF50] to-[#00E676] text-[#0A0A0A] font-black text-lg transition-all duration-300 shadow-xl shadow-[#4CAF50]/30 hover:shadow-[#00E676]/50 hover:scale-[1.03] disabled:opacity-60 animate-glow-pulse"
           >
             <span className="relative z-10">
-              {loading ? "Redirecionando..." : "Fazer o Diagnóstico"}
+              {loading ? "Redirecionando..." : "Fazer login com Google"}
             </span>
           </button>
           <button
@@ -102,10 +100,10 @@ export const LPHero = ({ onCheckout, loading }: LPHeroProps) => {
 
         {/* Login link */}
         <button
-          onClick={() => navigate("/auth")}
+          onClick={onLogin}
           className="text-[#7EBF8E] hover:text-[#00E676] text-sm font-medium transition-colors duration-200 underline underline-offset-4 decoration-[#7EBF8E]/30 hover:decoration-[#00E676]/50 mb-14"
         >
-          Já comprou? Faça login aqui →
+          Entrar na plataforma →
         </button>
 
         {/* Social proof stats with count-up */}

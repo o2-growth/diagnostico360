@@ -1,32 +1,37 @@
-Plano para corrigir o erro ao cadastrar cliente
+Plano para organizar o “teste rápido” e corrigir duplicidade
 
-O erro exibido indica que a interface já está tentando usar a tabela `clients`, mas ela ainda não existe no banco de dados do Lovable Cloud publicado/ativo. Também confirmei que as colunas `client_id` ainda não existem em `user_assessments` e `assessment_snapshots`. Ou seja: o código da funcionalidade foi criado, mas a migração de banco ainda precisa ser aplicada no ambiente Cloud.
+1. Separar teste rápido dos clientes reais
+- O botão “Preencher Teste Rápido” não usará mais o cliente que estiver selecionado.
+- Ao clicar, o sistema vai criar ou reutilizar automaticamente um cliente fictício da própria conta do CFO, por exemplo: “Cliente Fictício - Teste Diagnóstico 360”.
+- Esse cliente ficará salvo na carteira daquele usuário, igual aconteceria para qualquer CFO usando a plataforma.
 
-O que vou corrigir:
+2. Garantir apenas 1 diagnóstico de teste por clique
+- Corrigir a função atual de teste rápido, que hoje insere snapshot sem `client_id` e pode gerar duplicação/resultado repetido.
+- O fluxo passará a:
+  - localizar/criar o cliente fictício;
+  - selecionar esse cliente no `localStorage`;
+  - limpar dados locais do diagnóstico anterior;
+  - gerar respostas simuladas;
+  - salvar exatamente um snapshot vinculado ao cliente fictício;
+  - recarregar/ir para o dashboard já com o resultado desse cliente de teste.
 
-1. Aplicar a estrutura de banco para clientes dos CFOs
-   - Criar a tabela `clients` com dados do cliente: nome, empresa, e-mail, telefone, observações, dono/CFO, datas de criação e atualização.
-   - Ativar segurança por usuário, para que cada CFO veja apenas os próprios clientes.
-   - Criar políticas de leitura, criação, edição e exclusão somente para o dono do cliente.
+3. Evitar duplicidade visual no histórico
+- Adicionar proteção no botão para impedir duplo clique enquanto está preenchendo.
+- Ajustar a lista de históricos, se necessário, para mostrar só registros vinculados ao cliente selecionado e evitar registros antigos sem cliente aparecendo junto.
 
-2. Vincular diagnósticos aos clientes
-   - Adicionar `client_id` em `user_assessments`.
-   - Adicionar `client_id` em `assessment_snapshots`.
-   - Criar índices para melhorar a busca por cliente.
-   - Manter compatibilidade com diagnósticos antigos, deixando `client_id` inicialmente opcional para não quebrar dados existentes.
+4. Refletir o comportamento para todos os CFOs
+- A correção será feita no fluxo padrão da plataforma, não apenas no seu usuário.
+- Cada CFO que usar a ferramenta terá seu próprio cliente fictício de teste dentro da própria conta, isolado dos clientes reais e dos outros usuários.
 
-3. Proteger a consistência dos dados
-   - Criar uma validação no banco para impedir que um diagnóstico seja salvo em cliente de outro CFO.
-   - Garantir que o histórico/evolução continue isolado por cliente selecionado.
+5. Opcional de limpeza dos dados já duplicados
+- Identifiquei no banco um cliente “Empresa teste 01” com 3 diagnósticos recentes: dois com score 61% e um com 38%.
+- Se você aprovar, posso incluir uma migração/ajuste de limpeza para remover duplicados antigos desse caso específico, mantendo apenas o diagnóstico mais recente por resultado duplicado. Se preferir, deixo os dados antigos intactos e apenas corrijo o comportamento daqui para frente.
 
-4. Ajustar pequenos pontos de estabilidade na interface
-   - Melhorar a mensagem de erro caso o cadastro falhe.
-   - Corrigir o aviso de acessibilidade do modal de novo cliente adicionando descrição ao diálogo.
-
-5. Validar após a correção
-   - Conferir se a tabela `clients` existe no Cloud.
-   - Conferir se `client_id` existe nas tabelas de diagnóstico.
-   - Testar o fluxo: login Google → Novo Cliente → selecionar cliente → iniciar diagnóstico.
-   - Rodar build para garantir que a aplicação continua funcionando.
-
-Observação: os erros de `sentry`/`source map 404` que aparecem no console da imagem não são a causa do problema. O erro real é: `Could not find the table 'public.clients' in the schema cache`, causado pela ausência da tabela no banco.
+Detalhes técnicos
+- Arquivos principais a alterar:
+  - `src/components/settings/SettingsContent.tsx`
+  - `src/utils/sampleAssessmentData.ts` ou novo utilitário para cliente fictício/teste
+  - possivelmente `src/utils/clientAssessmentState.ts`
+- O insert em `assessment_snapshots` passará a sempre enviar `client_id` no teste rápido.
+- Usarei `upsert`/busca por nome fixo e `owner_id` para não criar vários clientes fictícios por usuário.
+- Não vou alterar os arquivos auto-gerados da integração do banco.

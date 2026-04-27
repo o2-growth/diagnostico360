@@ -9,6 +9,8 @@ import { generateSampleAnswers, generateSampleGates } from '@/utils/sampleAssess
 import { calculateScores } from '@/utils/scoreCalculator';
 import { supabase } from '@/integrations/supabase/client';
 import { ACTIVE_CLIENT_STORAGE_KEY } from '@/constants/client';
+import { STORAGE_KEYS } from '@/constants/storage';
+import { clearAssessmentState } from '@/utils/clientAssessmentState';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,6 +22,38 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+
+const SAMPLE_CLIENT_NAME = 'Cliente Fictício - Teste Diagnóstico 360';
+
+const getOrCreateSampleClient = async (userId: string) => {
+  const { data: existingClient, error: lookupError } = await (supabase as any)
+    .from('clients')
+    .select('id')
+    .eq('owner_id', userId)
+    .eq('name', SAMPLE_CLIENT_NAME)
+    .order('created_at', { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (lookupError) throw lookupError;
+  if (existingClient?.id) return existingClient.id as string;
+
+  const { data: newClient, error: createError } = await (supabase as any)
+    .from('clients')
+    .insert({
+      owner_id: userId,
+      name: SAMPLE_CLIENT_NAME,
+      company_name: 'Empresa fictícia para testes',
+      email: null,
+      phone: null,
+      notes: 'Cliente criado automaticamente para validar diagnósticos de demonstração sem misturar com clientes reais.',
+    })
+    .select('id')
+    .single();
+
+  if (createError) throw createError;
+  return newClient.id as string;
+};
 
 const SettingsContent = () => {
   const { user, isAdmin } = useAuth();
@@ -51,29 +85,37 @@ const SettingsContent = () => {
 
   const handleQuickFill = async () => {
     if (!user) return;
+    if (filling) return;
     setFilling(true);
     try {
-      const activeClientId = localStorage.getItem(ACTIVE_CLIENT_STORAGE_KEY);
-      if (!activeClientId) {
-        toast({ title: 'Selecione um cliente', description: 'Escolha o cliente que receberá o diagnóstico de teste.', variant: 'destructive' });
-        return;
-      }
+      const sampleClientId = await getOrCreateSampleClient(user.id);
       const sampleAnswers = generateSampleAnswers();
       const sampleGates = generateSampleGates();
-      localStorage.setItem('departmentAnswers', JSON.stringify(sampleAnswers));
-      localStorage.setItem('departmentGates', JSON.stringify(sampleGates));
+
+      clearAssessmentState();
+      localStorage.setItem(ACTIVE_CLIENT_STORAGE_KEY, sampleClientId);
+      localStorage.setItem(STORAGE_KEYS.ANSWERS, JSON.stringify(sampleAnswers));
+      localStorage.setItem(STORAGE_KEYS.GATES, JSON.stringify(sampleGates));
+
       const { overallScore, departmentScores } = calculateScores();
-      await supabase.from('assessment_snapshots').insert({
+      const { error } = await supabase.from('assessment_snapshots').insert({
         user_id: user.id,
         overall_score: overallScore,
         department_scores: departmentScores,
         answers: sampleAnswers,
         gates: sampleGates,
+        client_id: sampleClientId,
       } as any);
-      toast({ title: 'Teste rápido preenchido!', description: 'Dados simulados inseridos. A página será recarregada.' });
-      setTimeout(() => window.location.reload(), 1000);
-    } catch {
-      toast({ title: 'Erro', description: 'Falha ao preencher dados de teste.', variant: 'destructive' });
+
+      if (error) throw error;
+
+      toast({ title: 'Teste rápido criado', description: 'Um diagnóstico foi salvo no cliente fictício desta conta.' });
+      setTimeout(() => {
+        window.location.href = '/dashboard';
+      }, 800);
+    } catch (error) {
+      const description = error instanceof Error ? error.message : 'Falha ao preencher dados de teste.';
+      toast({ title: 'Erro', description, variant: 'destructive' });
     } finally {
       setFilling(false);
     }
@@ -205,7 +247,7 @@ const SettingsContent = () => {
                   <AlertDialogHeader>
                     <AlertDialogTitle>Preencher dados de teste?</AlertDialogTitle>
                     <AlertDialogDescription>
-                      Isso irá substituir todas as respostas atuais por dados simulados de uma empresa fictícia e salvar um snapshot. Esta ação não pode ser desfeita.
+                      Isso cria ou reutiliza um cliente fictício desta conta e salva apenas um diagnóstico simulado vinculado a ele, sem misturar com clientes reais.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>

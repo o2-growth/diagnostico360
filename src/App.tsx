@@ -42,7 +42,8 @@ function App() {
             <ErrorBoundary>
               <BrowserRouter>
                 <Routes>
-                <Route path="/" element={<LandingPage />} />
+                  <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+                  <Route path="/landing" element={<LandingPage />} />
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/reset-password" element={<ResetPassword />} />
                   <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />

@@ -2,13 +2,12 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface LPNavbarProps {
-  onCheckout: () => void;
+  onLogin: () => void;
   loading?: boolean;
 }
 
-export const LPNavbar = ({ onCheckout, loading }: LPNavbarProps) => {
+export const LPNavbar = ({ onLogin, loading }: LPNavbarProps) => {
   const [scrolled, setScrolled] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -45,7 +44,7 @@ export const LPNavbar = ({ onCheckout, loading }: LPNavbarProps) => {
           {[
             { label: "Como funciona", id: "como-funciona" },
             { label: "Áreas", id: "areas" },
-            { label: "Preço", id: "preco" },
+            { label: "Benefícios", id: "beneficios" },
           ].map((item) => (
             <button
               key={item.id}
@@ -60,13 +59,13 @@ export const LPNavbar = ({ onCheckout, loading }: LPNavbarProps) => {
         {/* CTAs */}
         <div className="flex items-center gap-3">
           <button
-            onClick={() => navigate("/auth")}
+            onClick={onLogin}
             className="px-5 py-2 rounded-full border border-[#7EBF8E]/40 text-[#7EBF8E] text-sm font-semibold hover:bg-[#7EBF8E]/10 hover:border-[#7EBF8E]/60 transition-all duration-200"
           >
-            Já comprei
+            Entrar
           </button>
           <button
-            onClick={onCheckout}
+            onClick={onLogin}
             disabled={loading}
             className="px-5 py-2 rounded-full bg-[#4CAF50] hover:bg-[#00E676] text-[#0A0A0A] text-sm font-bold transition-all duration-200 shadow-lg shadow-[#4CAF50]/25 hover:shadow-[#00E676]/40 disabled:opacity-60"
           >

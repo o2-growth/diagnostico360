@@ -17,6 +17,7 @@ export type Database = {
       assessment_snapshots: {
         Row: {
           answers: Json | null
+          client_id: string | null
           completed_at: string
           department_scores: Json
           gates: Json | null
@@ -26,6 +27,7 @@ export type Database = {
         }
         Insert: {
           answers?: Json | null
+          client_id?: string | null
           completed_at?: string
           department_scores?: Json
           gates?: Json | null
@@ -35,12 +37,57 @@ export type Database = {
         }
         Update: {
           answers?: Json | null
+          client_id?: string | null
           completed_at?: string
           department_scores?: Json
           gates?: Json | null
           id?: string
           overall_score?: number
           user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessment_snapshots_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clients: {
+        Row: {
+          company_name: string | null
+          created_at: string
+          email: string | null
+          id: string
+          name: string
+          notes: string | null
+          owner_id: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          company_name?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          owner_id: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          company_name?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          owner_id?: string
+          phone?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -68,6 +115,7 @@ export type Database = {
       user_assessments: {
         Row: {
           answers: Json | null
+          client_id: string | null
           completed_at: string | null
           gates: Json | null
           id: string
@@ -79,6 +127,7 @@ export type Database = {
         }
         Insert: {
           answers?: Json | null
+          client_id?: string | null
           completed_at?: string | null
           gates?: Json | null
           id?: string
@@ -90,6 +139,7 @@ export type Database = {
         }
         Update: {
           answers?: Json | null
+          client_id?: string | null
           completed_at?: string | null
           gates?: Json | null
           id?: string
@@ -99,7 +149,15 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "user_assessments_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {

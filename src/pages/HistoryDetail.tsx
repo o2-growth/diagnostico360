@@ -20,6 +20,7 @@ interface SnapshotDetail {
   department_scores: Record<string, number>;
   answers: Record<string, { evaluation?: string; observation?: string }>;
   gates: Record<string, string>;
+  clients?: { name: string; company_name: string | null } | null;
 }
 
 function getClassification(score: number) {
@@ -56,7 +57,7 @@ const HistoryDetail = () => {
       if (!snapshotId) return;
       const { data, error } = await supabase
         .from('assessment_snapshots')
-        .select('*')
+        .select('*, clients(name, company_name)')
         .eq('id', snapshotId)
         .single();
 
@@ -191,6 +192,11 @@ const HistoryDetail = () => {
             <p className="text-dashboard-muted text-lg">
               Avaliação completa da maturidade organizacional
             </p>
+            {snapshot.clients && (
+              <p className="text-dashboard-muted text-base mt-1">
+                Cliente: {snapshot.clients.name}
+              </p>
+            )}
             <p className="text-dashboard-muted text-sm mt-1">
               Concluído em {completedDateTime}
             </p>

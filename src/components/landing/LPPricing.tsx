@@ -57,7 +57,7 @@ export const LPPricing = ({ onLogin, loading }: LPPricingProps) => {
             </div>
 
             <button
-              onClick={onCheckout}
+              onClick={onLogin}
               disabled={loading}
               className="w-full py-5 rounded-2xl bg-gradient-to-r from-[#4CAF50] to-[#00E676] text-[#0A0A0A] font-black text-lg transition-all duration-300 hover:shadow-xl hover:shadow-[#4CAF50]/40 hover:scale-[1.02] disabled:opacity-60 animate-glow-pulse"
             >

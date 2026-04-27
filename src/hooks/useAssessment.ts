@@ -6,6 +6,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { calculateScores } from '@/utils/scoreCalculator';
 import { useAssessmentDB } from './useAssessmentDB';
+import { ACTIVE_CLIENT_STORAGE_KEY } from '@/constants/client';
 
 export type GateAnswer = 'sim' | 'parcialmente' | 'nao' | null;
 
@@ -52,7 +53,7 @@ export const useAssessment = (allQuestions: Question[]) => {
   const skipTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { syncToDB, completeAssessment: completeInDB } = useAssessmentDB();
+  const { syncToDB, completeAssessment: completeInDB } = useAssessmentDB({ hydrateLatestSnapshot: false });
 
   const steps = useMemo(() => buildSteps(gates), [gates]);
   const currentStep = steps[currentStepIndex];
@@ -237,6 +238,11 @@ export const useAssessment = (allQuestions: Question[]) => {
         toast({ title: "Erro ao salvar snapshot", description: "Usuário não autenticado.", variant: "destructive" });
         return;
       }
+      const activeClientId = localStorage.getItem(ACTIVE_CLIENT_STORAGE_KEY);
+      if (!activeClientId) {
+        toast({ title: 'Cliente não selecionado', description: 'Selecione um cliente antes de salvar o diagnóstico.', variant: 'destructive' });
+        return;
+      }
       const { departmentScores, overallScore } = calculateScores();
       const storedAnswers = localStorage.getItem(STORAGE_KEYS.ANSWERS) || '{}';
       const storedGates = localStorage.getItem(STORAGE_KEYS.GATES) || '{}';
@@ -246,6 +252,7 @@ export const useAssessment = (allQuestions: Question[]) => {
         department_scores: departmentScores,
         answers: JSON.parse(storedAnswers),
         gates: JSON.parse(storedGates),
+        client_id: activeClientId,
       } as any);
       if (error) {
         console.error('Snapshot insert error:', error);
